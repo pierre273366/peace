@@ -18,7 +18,7 @@ function Signin() {
 
   // Fonction qui est appelée lors de la soumission du formulaire de connexion
   const SignInBtn = () => {
-    fetch("http://localhost:3000/users/signin", {
+    fetch("http://10.9.1.105:3000/users/signin", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify({
@@ -28,8 +28,8 @@ function Signin() {
     })
       .then((response) => response.json()) // Résultat de la requête transformé en JSON
       .then((data) => {
+        console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
         if (data.result) { // Si la connexion réussie (data.result est true)
-          console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
           dispatch( // Envoie l'action login à Redux pour mettre à jour l'état global de l'utilisateur
             login({
               username: signInUsername, // Nom d'utilisateur
@@ -43,10 +43,6 @@ function Signin() {
         }
       });
   };
-
-  console.log(user); // Affiche l'état global de l'utilisateur pour déboguer
-
-
 
   const handleSubmit = () => {
     navigation.navigate("Signup");
@@ -63,13 +59,13 @@ function Signin() {
 
       <TextInput
         placeholder="Username"
-        onChange={(e) => setSignInUsername(e.target.value)}
+        onChangeText={(value) => setSignInUsername(value)}
         value={signInUsername}
         style={styles.input}
       />
       <TextInput
         placeholder="Password"
-        onChange={(e) => setSignInPassword(e.target.value)}
+        onChangeText={(value) => setSignInPassword(value)}
         value={signInPassword}
         style={styles.input}
         secureTextEntry={!showPassword} // Si showPassword est faux, le texte est masqué
