@@ -1,9 +1,69 @@
-var express = require('express');
-var router = express.Router();
+var express = require("express"); 
+// On importe le module Express pour créer notre API.
+var router = express.Router(); 
+// On crée un objet `router` d'Express pour gérer les différentes routes de notre API.
+require("../models/connection"); 
+// On importe la configuration de la connexion à la base de données.
+const User = require("../models/users"); 
+// On importe le modèle User pour interagir avec la collection "users" dans la base de données.
+const Coloc = require("../models/coloc");
+const { checkBody } = require("../modules/checkBody"); 
+// On importe une fonction `checkBody` pour valider les données envoyées dans la requête.
+const uid2 = require("uid2"); 
+// On importe le module `uid2` pour générer des tokens uniques pour les utilisateurs.
+const bcrypt = require("bcrypt"); 
+// On importe bcrypt pour hasher et vérifier les mots de passe des utilisateurs.
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+
+
+// Route POST pour l'inscription d'un nouvel utilisateur.
+router.post("/signup", (req, res) => {
+
+  // On vérifie si les champs "username" et "password" sont présents dans le corps de la requête.
+  if (!checkBody(req.body, ["username", "password"])) { 
+    res.json({ result: false, error: "Missing or empty fields" });
+    // Si des champs sont manquants ou vides, on renvoie une erreur avec un message.
+    return;
+  }
+
+   // On cherche si un utilisateur avec le même nom d'utilisateur existe déjà.
+   User.findOne({ username: req.body.username }).then((data) => {
+    if (data === null) { // Si aucun utilisateur n'est trouvé avec ce nom d'utilisateur :
+      // On hash le mot de passe de l'utilisateur avec bcrypt pour plus de sécurité.
+      const hash = bcrypt.hashSync(req.body.password, 10);
+
+ // Créer une nouvelle colocation pour l'utilisateur
+ const newColoc = new Coloc({
+  name: req.body.colocname || "Default Coloc", // Nom de la colocation
+  location: req.body.location || "Unknown", // Emplacement
+  description: req.body.description || "Description de la colocation", // Description
+  maxOccupants: 4, // Exemple de nombre d'occupants
+});
+
+// Enregistrer la colocation dans la base de données
+newColoc.save().then((savedColoc) => {
+  // Créer un nouvel utilisateur et lier à la colocation
+  const newUser = new User({
+    name: req.body.name,
+    username: req.body.username,
+    email: req.body.email,
+    phonenumber: req.body.phonenumber,
+    dateofbirth: req.body.dateofbirth,
+    password: hash,
+    token: uid2(32),
+    firstcoloc: req.body.firstcoloc,
+    coloc_id: savedColoc._id, // Lier l'utilisateur à la colocation
+  });
+
+     // Sauvegarder l'utilisateur dans la base de données
+     newUser.save().then((newDoc) => {
+      res.json({ result: true, token: newDoc.token });
+    });
+  });
+} else {
+  res.json({ result: false, error: "User already exists" });
+}
+});
 });
 
 module.exports = router;
