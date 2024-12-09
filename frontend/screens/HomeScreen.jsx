@@ -1,81 +1,156 @@
 import { useState } from "react";
-import {
+import {View,
   Image,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  
 } from "react-native";
+import Checkbox from 'expo-checkbox'
 
 export default function HomeScreen({ navigation }) {
-  const [nickname, setNickname] = useState("");
 
-  const handleSubmit = () => {
-    navigation.navigate("TabNavigator");
-  };
+  const [isChecked, setChecked] = useState(false);
+
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <Text style={styles.title}>Welcome to Locapic</Text>
+    <SafeAreaView  style={styles.container}>
+      <View style={styles.containerView}>
+      <View style={styles.containerText}>
+        <Text style={styles.title}>Bienvenue</Text>
+        <Text style={styles.title}>dans ta coloc Pierre !</Text>
+      </View>
 
-      <TextInput
-        placeholder="Nickname"
-        onChangeText={(value) => setNickname(value)}
-        value={nickname}
-        style={styles.input}
-      />
-      <TouchableOpacity
-        onPress={() => handleSubmit()}
-        style={styles.button}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.textButton}>Go to map</Text>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
+      <View style={styles.containerTodo}>
+         <Text style={styles.h2}>ToDo du jour</Text>
+
+         <View style={styles.todo}>
+            <Checkbox
+              style={styles.checkbox}
+              value={isChecked}
+              onValueChange={setChecked}
+              color={isChecked ? '#FD703C' : undefined}
+            />
+             <Text style={styles.h2}>Faire qqc</Text>
+        </View>
+
+        <View style={styles.todo}>
+            <Checkbox
+              style={styles.checkbox}
+              value={isChecked}
+              onValueChange={setChecked}
+              color={isChecked ? '#FD703C' : undefined}
+            />
+             <Text style={styles.h2}>Faire qqc</Text>
+        </View>
+      <View>
+        
+        </View>
+
+      </View>
+      
+
+      
+      <View style={styles.containerWidget}>
+
+          <View style={styles.agenda}>
+
+          </View>
+
+          <View style={styles.sondage}>
+              <Text style={styles.h2White}>Sondage</Text>
+          </View>
+
+          <View style={styles.liste}>
+          <Text style={styles.h2}>Liste de course</Text>
+          </View>
+
+          <View style={styles.roue}>
+          <Text style={styles.h2}>Roue</Text>
+          </View>
+      </View>
+        
+    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F7F7FF",
     alignItems: "center",
-    justifyContent: "center",
+    
   },
-  image: {
-    width: "100%",
-    height: "50%",
+  containerView:{
+    width:'100%',
+    padding:16
+  },
+  containerText:{
+    width:'100%',
+    padding:16
   },
   title: {
-    width: "80%",
-    fontSize: 38,
-    fontWeight: "600",
+    fontSize: 24,
+    fontWeight: "bold",
   },
-  input: {
-    width: "80%",
-    marginTop: 25,
-    borderBottomColor: "#ec6e5b",
-    borderBottomWidth: 1,
-    fontSize: 18,
-  },
-  button: {
-    alignItems: "center",
-    paddingTop: 8,
-    width: "80%",
-    marginTop: 30,
-    backgroundColor: "#ec6e5b",
-    borderRadius: 10,
-    marginBottom: 80,
-  },
-  textButton: {
-    color: "#ffffff",
-    height: 30,
-    fontWeight: "600",
+  h2:{
     fontSize: 16,
+    fontWeight: "700",
   },
+  h2White:{
+    color:'white',
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  containerTodo:{
+    backgroundColor:'white',
+    width:'100%',
+    padding:16
+  },
+  todo:{
+    marginTop:15,
+    flexDirection:'row',
+    gap:15,
+  },
+  containerWidget:{
+    backgroundColor: "red",
+    width:'100%',
+    height:'100%',
+    flexDirection:'row',
+    flexWrap:'wrap',
+    justifyContent:'space-between',
+    marginTop:20
+  },
+  agenda:{
+    backgroundColor:'purple',
+    height:100,
+    width:'48%',
+    padding:16
+  },
+  sondage:{
+    backgroundColor:'#5F6095',
+    height:100,
+    width:'48%',
+    padding:16
+  },
+  liste:{
+    backgroundColor:'green',
+    height:100,
+    width:'48%',
+    padding:16
+  },
+  roue:{
+    backgroundColor:'orange',
+    height:100,
+    width:'48%',
+    padding:16
+  }
+  
+  
+  
 });
