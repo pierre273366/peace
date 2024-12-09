@@ -18,7 +18,7 @@ function Signin() {
 
   // Fonction qui est appelée lors de la soumission du formulaire de connexion
   const SignInBtn = () => {
-    fetch("http://10.9.1.105:3000/users/signin", {
+    fetch("http://192.168.1.20:3000/users/signin", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify({
@@ -63,6 +63,7 @@ function Signin() {
         value={signInUsername}
         style={styles.input}
       />
+      <View style={styles.inputContainer}>
       <TextInput
         placeholder="Password"
         onChangeText={(value) => setSignInPassword(value)}
@@ -70,10 +71,14 @@ function Signin() {
         style={styles.input}
         secureTextEntry={!showPassword} // Si showPassword est faux, le texte est masqué
       />
-       <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-        <Text>{showPassword ? 'Hide' : 'Show'} Password</Text>
+       <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.iconContainer}>
+       <FontAwesome
+          name={showPassword ? 'eye-slash' : 'eye'}
+          size={20}
+          color="#5F5F5F"
+        />
       </TouchableOpacity>
-
+      </View>
       <TouchableOpacity
         onPress={() => SignInBtn()}
         style={styles.buttonConnect}
@@ -105,8 +110,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
+    justifyContent:'center',
+    alignItems:'center',
     width: 250,
     height: 150,
+    paddingLeft:55,
   },
   title: {
     width: '80%',
@@ -115,13 +123,25 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 300,
-    height: 40,
+    height: 50,
     marginTop: 25,
+    paddingLeft:20,
     borderBottomColor: '#ec6e5b',
     borderBottomWidth: 1,
     backgroundColor: 'white',
     fontSize: 18,
+    borderRadius: 15,
   },
+inputContainer:{
+  position: 'relative',
+},
+
+iconContainer:{
+  position: 'absolute',
+  right: 10,
+  top: 38,
+  },
+
   buttonConnect: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -132,6 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EC794C',
     borderRadius: 30,
     marginBottom: 80,
+    marginLeft: 50,
   },
   buttonSignUp:{
     alignItems: 'center',
