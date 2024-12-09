@@ -13,6 +13,8 @@ import users from './reducers/users';
 const store = configureStore({
   reducer: { users },
 });
+import AgendaScreen from "./screens/AgendaScreen";
+import EventAddScreen from "./screens/EventAddScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,19 +27,20 @@ const TabNavigator = () => {
           let iconName = "";
 
           if (route.name === "Home") {
-            iconName = "location-arrow";
-          } else if (route.name === "") {
-            iconName = "map-pin";
+            iconName = "home";
+          } else if (route.name === "Agenda") {
+            iconName = "calendar";
           }
 
           return <FontAwesome name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#ec6e5b",
+        tabBarActiveTintColor: "rgb(253, 112, 60)",
         tabBarInactiveTintColor: "#335561",
         headerShown: false,
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Agenda" component={AgendaScreen} />
     </Tab.Navigator>
   );
 };
@@ -49,6 +52,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Signin" component={SigninScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="EventAdd" component={EventAddScreen} />
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
