@@ -6,6 +6,11 @@ import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 import AgendaScreen from "./screens/AgendaScreen";
+import TricountScreen from "./screens/TricountScreen"
+import TricountCreaScreen from "./screens/TricountCreaScreen"
+import DetailTricount from "./screens/DetailTricount";
+
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,7 +26,8 @@ const TabNavigator = () => {
             iconName = "home";
           } else if (route.name === "Agenda") {
             iconName = "calendar";
-          }
+          } else if (route.name ==="Tricount")
+            iconName ="money"
 
           return <FontAwesome name={iconName} size={size} color={color} />;
         },
@@ -32,6 +38,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Agenda" component={AgendaScreen} />
+      <Tab.Screen name="Tricount" component={TricountScreen} />
     </Tab.Navigator>
   );
 };
@@ -42,6 +49,8 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="DetailTricount" component={DetailTricount} />
+        <Tab.Screen name="TricountCrea" component={TricountCreaScreen} />
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
