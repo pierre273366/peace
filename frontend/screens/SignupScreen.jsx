@@ -25,7 +25,7 @@ function Signup() {
 
   // Fonction appelée lors de la soumission du formulaire de création de compte
   const SignUpBtn = () => {
-    const truc = {
+    const infos = {
       name: signUpName, // Envoie le nom de l'utilisateur
       username: signUpUsername, // Envoie le nom d'utilisateur
       email: signUpEmail,
@@ -39,7 +39,7 @@ function Signup() {
     fetch("http://192.168.1.20:3000/users/signup", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
-      body: JSON.stringify(truc),
+      body: JSON.stringify(infos),
     })
       .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
       .then((data) => {
