@@ -1,10 +1,18 @@
-
-import {StyleSheet, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Image} from 'react-native'
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import React, { useState } from "react"; // Importation de React et du hook useState pour gérer l'état local
 import { useDispatch, useSelector } from "react-redux"; // Importation des hooks Redux pour interagir avec le store
 import { login, logout } from "../reducers/users"; // Importation des actions login et logout de Redux
-import { useNavigation } from '@react-navigation/native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from "@react-navigation/native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 function Signin() {
   const navigation = useNavigation();
@@ -18,7 +26,7 @@ function Signin() {
 
   // Fonction qui est appelée lors de la soumission du formulaire de connexion
   const SignInBtn = () => {
-    fetch("http://localhost:3000/users/signin", {
+    fetch("http://10.9.1.105:3000/users/signin", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify({
@@ -28,9 +36,11 @@ function Signin() {
     })
       .then((response) => response.json()) // Résultat de la requête transformé en JSON
       .then((data) => {
-        if (data.result) { // Si la connexion réussie (data.result est true)
+        if (data.result) {
+          // Si la connexion réussie (data.result est true)
           console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
-          dispatch( // Envoie l'action login à Redux pour mettre à jour l'état global de l'utilisateur
+          dispatch(
+            // Envoie l'action login à Redux pour mettre à jour l'état global de l'utilisateur
             login({
               username: signInUsername, // Nom d'utilisateur
               token: data.token, // Token reçu du serveur pour authentifier l'utilisateur
@@ -39,137 +49,135 @@ function Signin() {
           );
           setSignInUsername(""); // Réinitialisation du champ du nom d'utilisateur
           setSignInPassword(""); // Réinitialisation du champ du mot de passe
-          navigation.navigate('TabNavigator')
+          navigation.navigate("TabNavigator");
         }
       });
   };
 
   console.log(user); // Affiche l'état global de l'utilisateur pour déboguer
 
-
-
   const handleSubmit = () => {
     navigation.navigate("Signup");
   };
 
   return (
-    
     <View style={styles.container}>
-<KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}>
-
-      <Image style={styles.image} source={require('../assets/peacelogo.png')} />
-      <Text style={styles.title}>Connexion</Text>
-
-      <TextInput
-        placeholder="Username"
-        onChange={(e) => setSignInUsername(e.target.value)}
-        value={signInUsername}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        onChange={(e) => setSignInPassword(e.target.value)}
-        value={signInPassword}
-        style={styles.input}
-        secureTextEntry={!showPassword} // Si showPassword est faux, le texte est masqué
-      />
-       <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-        <Text>{showPassword ? 'Hide' : 'Show'} Password</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => SignInBtn()}
-        style={styles.buttonConnect}
-        activeOpacity={0.8}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Text style={styles.textButtonConnect}>Se connecter</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => handleSubmit()}
-        style={styles.buttonSignUp}
-        activeOpacity={0.8}
-      >
-        <View style={styles.textContent}>
-        <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
-        <Text style={styles.textButtonSignUp}>S'inscrire</Text>
-        </View>
-      </TouchableOpacity>
-    </KeyboardAvoidingView>
-      </View>
+        <Image
+          style={styles.image}
+          source={require("../assets/peacelogo.png")}
+        />
+        <Text style={styles.title}>Connexion</Text>
 
+        <TextInput
+          placeholder="Username"
+          onChange={(e) => setSignInUsername(e.target.value)}
+          value={signInUsername}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          onChange={(e) => setSignInPassword(e.target.value)}
+          value={signInPassword}
+          style={styles.input}
+          secureTextEntry={!showPassword} // Si showPassword est faux, le texte est masqué
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Text>{showPassword ? "Hide" : "Show"} Password</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => SignInBtn()}
+          style={styles.buttonConnect}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButtonConnect}>Se connecter</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleSubmit()}
+          style={styles.buttonSignUp}
+          activeOpacity={0.8}
+        >
+          <View style={styles.textContent}>
+            <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
+            <Text style={styles.textButtonSignUp}>S'inscrire</Text>
+          </View>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6F8FE',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#F6F8FE",
+    alignItems: "center",
+    justifyContent: "center",
   },
   image: {
     width: 250,
     height: 150,
   },
   title: {
-    width: '80%',
+    width: "80%",
     fontSize: 28,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   input: {
     width: 300,
     height: 40,
     marginTop: 25,
-    borderBottomColor: '#ec6e5b',
+    borderBottomColor: "#ec6e5b",
     borderBottomWidth: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     fontSize: 18,
   },
   buttonConnect: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: 8,
     width: 200,
     height: 50,
     marginTop: 30,
-    backgroundColor: '#EC794C',
+    backgroundColor: "#EC794C",
     borderRadius: 30,
     marginBottom: 80,
   },
-  buttonSignUp:{
-    alignItems: 'center',
+  buttonSignUp: {
+    alignItems: "center",
     paddingTop: 8,
-    width: '80%',
+    width: "80%",
     marginTop: 30,
-    backgroundColor: '#F6F8FE',
+    backgroundColor: "#F6F8FE",
     borderRadius: 10,
     marginBottom: 80,
   },
   textButtonConnect: {
-    color: '#ffffff',
+    color: "#ffffff",
     height: 30,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
   },
-textContent:{
-  flex: 1,
-  flexDirection: 'row',
-},
+  textContent: {
+    flex: 1,
+    flexDirection: "row",
+  },
 
   textButtonSignUp: {
-    color: 'blue',
+    color: "blue",
     height: 30,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
   },
-  textSignUp:{
-    color: 'black',
+  textSignUp: {
+    color: "black",
     height: 30,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
-  }
+  },
 });
-
 
 export default Signin; // Exporte le composant Signin pour qu'il puisse être utilisé ailleurs dans l'application

@@ -1,9 +1,17 @@
-
-import {StyleSheet, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Image, } from 'react-native'
+import {
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../reducers/users";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 function Signup() {
   const navigation = useNavigation();
@@ -20,7 +28,6 @@ function Signup() {
   const [signUpPassword, setSignUpPassword] = useState(""); // État pour gérer le mot de passe dans le formulaire
   const [showPassword, setShowPassword] = useState(false);
 
-
   // Fonction appelée lors de la soumission du formulaire de création de compte
   const SignUpBtn = () => {
     const truc = {
@@ -31,8 +38,7 @@ function Signup() {
       dateofbirth: signUpBirth,
       password: signUpPassword, // Envoie le mot de passe
       firstcoloc: signUpFirstColoc,
-    }
-  
+    };
 
     fetch("http://10.9.1.105:3000/users/signup", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
@@ -41,9 +47,10 @@ function Signup() {
     })
       .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
       .then((data) => {
-        if (data.result) { // Si la réponse contient des données (inscription réussie)
+        if (data.result) {
+          // Si la réponse contient des données (inscription réussie)
           // Envoie l'action login à Redux pour mettre à jour l'état global de l'utilisateur
-          console.log("Réponse du serveur:", data)
+          console.log("Réponse du serveur:", data);
           dispatch(
             login({
               username: signUpUsername, // Nom d'utilisateur
@@ -55,15 +62,13 @@ function Signup() {
           setSignUpUsername("");
           setSignUpPassword("");
           setSignUpEmail(""),
-          setSignUpBirth(""),
-          setSignUpPhone(""),
-          setSignUpFirstColoc(""),
-
-
-          // Redirection vers la page /home après l'inscription
-          navigation.navigate('TabNavigator');
+            setSignUpBirth(""),
+            setSignUpPhone(""),
+            setSignUpFirstColoc(""),
+            // Redirection vers la page /home après l'inscription
+            navigation.navigate("TabNavigator");
           console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
-        }else {
+        } else {
           console.log("Aucune donnée retournée du serveur");
         }
       });
@@ -71,154 +76,164 @@ function Signup() {
 
   // Fonction pour gérer la checkbox de colocation
   const toggleFirstColoc = () => {
-    setSignUpFirstColoc(prev => prev === "Yes" ? "No" : "Yes");
+    setSignUpFirstColoc((prev) => (prev === "Yes" ? "No" : "Yes"));
   };
 
   return (
-    
-        <View style={styles.signinContainer}>
-        <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}>
-        <Image style={styles.image} source={require('../assets/peacelogo.png')} />
-          <Text style={styles.textAccount}>Create your Peace account</Text>
-          <TextInput
-            placeholder="Name" // Texte d'invite pour le champ
-            
-            onChangeText={(value) =>  setSignUpName(value)} // Met à jour l'état signUpName lorsqu'on tape dans le champ
-            value={signUpName} // La valeur du champ est liée à l'état signUpName
-            style={styles.input} // Application du style CSS spécifique à ce champ
-          />
-          <TextInput
-           placeholder="Username" // Texte d'invite pour le champ
-           
-           onChangeText={(value) => setSignUpUsername(value)} // Met à jour l'état signUpUsername lorsqu'on tape dans le champ
-           value={signUpUsername} // La valeur du champ est liée à l'état signUpUsername
-           style={styles.input} // Application du style CSS spécifique à ce champ
-          />
-          <TextInput
-           placeholder="Email" // Texte d'invite pour le champ
-           
-           onChangeText={(value) => setSignUpEmail(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
-           value={signUpEmail} // La valeur du champ est liée à l'état signUpPassword
-           style={styles.input} // Application du style CSS spécifique à ce champ
-          />
-          <TextInput
-           placeholder="Password" // Texte d'invite pour le champ
-           
-           onChangeText={(value) => setSignUpPassword(value)} // Met à jour l'état signUpUsername lorsqu'on tape dans le champ
-           value={signUpPassword} // La valeur du champ est liée à l'état signUpUsername
-           style={styles.input} // Application du style CSS spécifique à ce champ
-           secureTextEntry={!showPassword}
-          />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-        <Text>{showPassword ? 'Hide' : 'Show'} Password</Text>
-      </TouchableOpacity>
-          <TextInput
-        placeholder="PhoneNumber" // Texte d'invite pour le champ
-        
-        onChangeText={(value) => setSignUpPhone(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
-        value={signUpPhone} // La valeur du champ est liée à l'état signUpPassword
-        style={styles.input} // Application du style CSS spécifique à ce champ
-          />
-          <TextInput
-    placeholder="Birthday" // Texte d'invite pour le champ
-    
-    onChangeText={(value) => setSignUpBirth(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
-    value={signUpBirth} // La valeur du champ est liée à l'état signUpPassword
-    style={styles.input} // Application du style CSS spécifique à ce champ
-          />
-          <TouchableOpacity style={styles.checkboxContainer} onPress={toggleFirstColoc}>
-            <Text style={styles.checkboxText}>As tu déjà fait de la colocation ?</Text>
-            <View style={[styles.checkbox, signUpFirstColoc === "Yes" && styles.checked]}>
-              {signUpFirstColoc === "Yes" && <Text style={styles.checkmark}>✔</Text>}
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonSignup} onPress={() => SignUpBtn()}>
-            <Text style={styles.textButtonSignup}>Signup</Text>
-            </TouchableOpacity>
-            </KeyboardAvoidingView>
+    <View style={styles.signinContainer}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <Image
+          style={styles.image}
+          source={require("../assets/peacelogo.png")}
+        />
+        <Text style={styles.textAccount}>Create your Peace account</Text>
+        <TextInput
+          placeholder="Name" // Texte d'invite pour le champ
+          onChangeText={(value) => setSignUpName(value)} // Met à jour l'état signUpName lorsqu'on tape dans le champ
+          value={signUpName} // La valeur du champ est liée à l'état signUpName
+          style={styles.input} // Application du style CSS spécifique à ce champ
+        />
+        <TextInput
+          placeholder="Username" // Texte d'invite pour le champ
+          onChangeText={(value) => setSignUpUsername(value)} // Met à jour l'état signUpUsername lorsqu'on tape dans le champ
+          value={signUpUsername} // La valeur du champ est liée à l'état signUpUsername
+          style={styles.input} // Application du style CSS spécifique à ce champ
+        />
+        <TextInput
+          placeholder="Email" // Texte d'invite pour le champ
+          onChangeText={(value) => setSignUpEmail(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
+          value={signUpEmail} // La valeur du champ est liée à l'état signUpPassword
+          style={styles.input} // Application du style CSS spécifique à ce champ
+        />
+        <TextInput
+          placeholder="Password" // Texte d'invite pour le champ
+          onChangeText={(value) => setSignUpPassword(value)} // Met à jour l'état signUpUsername lorsqu'on tape dans le champ
+          value={signUpPassword} // La valeur du champ est liée à l'état signUpUsername
+          style={styles.input} // Application du style CSS spécifique à ce champ
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Text>{showPassword ? "Hide" : "Show"} Password</Text>
+        </TouchableOpacity>
+        <TextInput
+          placeholder="PhoneNumber" // Texte d'invite pour le champ
+          onChangeText={(value) => setSignUpPhone(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
+          value={signUpPhone} // La valeur du champ est liée à l'état signUpPassword
+          style={styles.input} // Application du style CSS spécifique à ce champ
+        />
+        <TextInput
+          placeholder="Birthday" // Texte d'invite pour le champ
+          onChangeText={(value) => setSignUpBirth(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
+          value={signUpBirth} // La valeur du champ est liée à l'état signUpPassword
+          style={styles.input} // Application du style CSS spécifique à ce champ
+        />
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={toggleFirstColoc}
+        >
+          <Text style={styles.checkboxText}>
+            As tu déjà fait de la colocation ?
+          </Text>
+          <View
+            style={[
+              styles.checkbox,
+              signUpFirstColoc === "Yes" && styles.checked,
+            ]}
+          >
+            {signUpFirstColoc === "Yes" && (
+              <Text style={styles.checkmark}>✔</Text>
+            )}
           </View>
-
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonSignup}
+          onPress={() => SignUpBtn()}
+        >
+          <Text style={styles.textButtonSignup}>Signup</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   signinContainer: {
     flex: 1,
-    backgroundColor: '#F6F8FE',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
+    backgroundColor: "#F6F8FE",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   image: {
-    paddingTop:15,
+    paddingTop: 15,
     paddingLeft: 70,
     width: 250,
     height: 150,
   },
   textAccount: {
     fontSize: 28,
-    fontWeight: '600',
+    fontWeight: "600",
   },
-    input: {
-      width: 300,
-      height: 40,
-      marginTop: 25,
-      marginLeft:10,
-      borderBottomColor: '#ec6e5b',
-      borderBottomWidth: 1,
-      backgroundColor: 'white',
-      fontSize: 18,
+  input: {
+    width: 300,
+    height: 40,
+    marginTop: 25,
+    marginLeft: 10,
+    borderBottomColor: "#ec6e5b",
+    borderBottomWidth: 1,
+    backgroundColor: "white",
+    fontSize: 18,
   },
 
   buttonSignup: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     paddingTop: 8,
     width: 200,
     height: 50,
     marginTop: 30,
-    backgroundColor:'#EC794C',
+    backgroundColor: "#EC794C",
     borderRadius: 30,
     marginBottom: 80,
-    marginLeft:60,
+    marginLeft: 60,
   },
 
   textButtonSignup: {
-    color: '#ffffff',
+    color: "#ffffff",
     height: 30,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
   },
   checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 30,
   },
   checkbox: {
     width: 30,
     height: 30,
     borderWidth: 2,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 10,
     marginLeft: 20,
   },
   checked: {
-    backgroundColor: '#4CAF50',
-    borderColor: '#4CAF50',
+    backgroundColor: "#4CAF50",
+    borderColor: "#4CAF50",
   },
   checkmark: {
     fontSize: 16,
-    color: 'white',
+    color: "white",
   },
   checkboxText: {
     fontSize: 16,
     paddingLeft: 10,
   },
 });
-
 
 export default Signup; // Exporte le composant Signup pour qu'il puisse être utilisé ailleurs dans l'application
