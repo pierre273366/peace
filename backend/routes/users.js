@@ -66,4 +66,27 @@ newColoc.save().then((savedColoc) => {
 });
 });
 
+router.post("/signin", (req, res) => {
+  // Route POST pour la connexion d'un utilisateur existant.
+
+  // On vérifie si les champs "username" et "password" sont présents dans le corps de la requête.
+  if (!checkBody(req.body, ["username", "password"])) {
+    res.json({ result: false, error: "Missing or empty fields" });
+    // Si des champs sont manquants ou vides, on renvoie une erreur avec un message.
+    return;
+  }
+
+  // On cherche un utilisateur avec le nom d'utilisateur fourni dans la requête.
+  User.findOne({ username: req.body.username }).then((data) => {
+    if (data && bcrypt.compareSync(req.body.password, data.password)) {
+      // Si un utilisateur est trouvé et que le mot de passe fourni correspond au mot de passe hashé dans la base de données :
+      res.json({ result: true, token: data.token, name: data.name });
+      // On renvoie un objet JSON avec "result: true", le token et le nom de l'utilisateur.
+    } else {
+      // Si l'utilisateur n'est pas trouvé ou si le mot de passe est incorrect :
+      res.json({ result: false, error: "User not found or wrong password" });
+    }
+  });
+});
+
 module.exports = router;

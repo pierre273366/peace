@@ -18,7 +18,7 @@ function Signin() {
 
   // Fonction qui est appelée lors de la soumission du formulaire de connexion
   const SignInBtn = () => {
-    fetch("http://localhost:3000/users/signin", {
+    fetch("http://192.168.1.20:3000/users/signin", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify({
@@ -28,8 +28,8 @@ function Signin() {
     })
       .then((response) => response.json()) // Résultat de la requête transformé en JSON
       .then((data) => {
+        console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
         if (data.result) { // Si la connexion réussie (data.result est true)
-          console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
           dispatch( // Envoie l'action login à Redux pour mettre à jour l'état global de l'utilisateur
             login({
               username: signInUsername, // Nom d'utilisateur
@@ -43,10 +43,6 @@ function Signin() {
         }
       });
   };
-
-  console.log(user); // Affiche l'état global de l'utilisateur pour déboguer
-
-
 
   const handleSubmit = () => {
     navigation.navigate("Signup");
@@ -63,21 +59,26 @@ function Signin() {
 
       <TextInput
         placeholder="Username"
-        onChange={(e) => setSignInUsername(e.target.value)}
+        onChangeText={(value) => setSignInUsername(value)}
         value={signInUsername}
         style={styles.input}
       />
+      <View style={styles.inputContainer}>
       <TextInput
         placeholder="Password"
-        onChange={(e) => setSignInPassword(e.target.value)}
+        onChangeText={(value) => setSignInPassword(value)}
         value={signInPassword}
         style={styles.input}
         secureTextEntry={!showPassword} // Si showPassword est faux, le texte est masqué
       />
-       <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-        <Text>{showPassword ? 'Hide' : 'Show'} Password</Text>
+       <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.iconContainer}>
+       <FontAwesome
+          name={showPassword ? 'eye-slash' : 'eye'}
+          size={20}
+          color="#5F5F5F"
+        />
       </TouchableOpacity>
-
+      </View>
       <TouchableOpacity
         onPress={() => SignInBtn()}
         style={styles.buttonConnect}
@@ -109,8 +110,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
+    justifyContent:'center',
+    alignItems:'center',
     width: 250,
     height: 150,
+    paddingLeft:55,
   },
   title: {
     width: '80%',
@@ -119,13 +123,25 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 300,
-    height: 40,
+    height: 50,
     marginTop: 25,
+    paddingLeft:20,
     borderBottomColor: '#ec6e5b',
     borderBottomWidth: 1,
     backgroundColor: 'white',
     fontSize: 18,
+    borderRadius: 15,
   },
+inputContainer:{
+  position: 'relative',
+},
+
+iconContainer:{
+  position: 'absolute',
+  right: 10,
+  top: 38,
+  },
+
   buttonConnect: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -136,6 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EC794C',
     borderRadius: 30,
     marginBottom: 80,
+    marginLeft: 50,
   },
   buttonSignUp:{
     alignItems: 'center',
