@@ -5,6 +5,9 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import HomeScreen from "./screens/HomeScreen";
 import SignupScreen from "./screens/SignupScreen";
 import SigninScreen from "./screens/SigninScreen";
+import ChoiceScreen from "./screens/ChoiceScreen"
+import JoinColocScreen from "./screens/JoinColocScreen"
+import CreateColocScreen from "./screens/CreateColoc"
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -62,6 +65,9 @@ export default function App() {
         <Stack.Screen name="DetailTricount" component={DetailTricount} />
         <Tab.Screen name="TricountCrea" component={TricountCreaScreen} />
         <Stack.Screen name="EventAdd" component={EventAddScreen} />
+        <Stack.Screen name="Choice" component={ChoiceScreen} />
+        <Stack.Screen name="JoinColoc" component={JoinColocScreen} />
+        <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

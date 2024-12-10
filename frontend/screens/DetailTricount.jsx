@@ -59,14 +59,11 @@ export default function DetailTricount({ route } ) {
 //BLOC ÉQUILIBRE
 const EquilibreView = () => (
     <View>
-        <View style={styles.containerDepenses}>
-            <View style={styles.depense}>
-                <Text>Mes Dépenses</Text>
-                <Text style={{fontWeight:'bold'}}>XXX€</Text>
-            </View>
-            <View style={styles.depense}>
-                <Text>Total des Dépenses</Text>
-                <Text style={{fontWeight:'bold'}}>XXX€</Text>
+        <View style={styles.containerDue}>
+            <Text>💳</Text>
+            <View>
+                <Text>Vous devez XX€</Text>
+                <Text>à Carla</Text>
             </View>
         </View>
     </View>
@@ -161,7 +158,7 @@ const EquilibreView = () => (
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 5,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#F7F7FF',
         borderRadius: 10,
         width:'75%'
     },
@@ -193,6 +190,10 @@ const EquilibreView = () => (
     depense:{
         justifyContent:'center',
         alignItems:'center'
+    },
+    containerDue:{
+        backgroundColor:'#F7F7FF',
+        width:'75%'
     }
 
 

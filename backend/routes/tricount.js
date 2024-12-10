@@ -22,7 +22,7 @@ router.get('/:userId', async (req, res) => {
 });
 
 
-//ROUTE GET : DES USERS SELON IDCOLOC
+//ROUTE GET : AVOIR TOUS LES USERS DE LA COLOC
 router.get('/coloc/:id/users', async (req, res) => {
     const coloc = await Coloc.findById(req.params.id)
         .populate('users')
