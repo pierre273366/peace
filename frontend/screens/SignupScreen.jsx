@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../reducers/users";
 import { useNavigation } from "@react-navigation/native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 function Signup() {
   const navigation = useNavigation();
@@ -30,7 +31,7 @@ function Signup() {
 
   // Fonction appelée lors de la soumission du formulaire de création de compte
   const SignUpBtn = () => {
-    const truc = {
+    const infos = {
       name: signUpName, // Envoie le nom de l'utilisateur
       username: signUpUsername, // Envoie le nom d'utilisateur
       email: signUpEmail,
@@ -43,7 +44,7 @@ function Signup() {
     fetch("http://10.9.1.105:3000/users/signup", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
-      body: JSON.stringify(truc),
+      body: JSON.stringify(infos),
     })
       .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
       .then((data) => {
@@ -88,7 +89,7 @@ function Signup() {
           style={styles.image}
           source={require("../assets/peacelogo.png")}
         />
-        <Text style={styles.textAccount}>Create your Peace account</Text>
+        <Text style={styles.textAccount}>Inscription</Text>
         <TextInput
           placeholder="Name" // Texte d'invite pour le champ
           onChangeText={(value) => setSignUpName(value)} // Met à jour l'état signUpName lorsqu'on tape dans le champ
@@ -107,16 +108,25 @@ function Signup() {
           value={signUpEmail} // La valeur du champ est liée à l'état signUpPassword
           style={styles.input} // Application du style CSS spécifique à ce champ
         />
-        <TextInput
-          placeholder="Password" // Texte d'invite pour le champ
-          onChangeText={(value) => setSignUpPassword(value)} // Met à jour l'état signUpUsername lorsqu'on tape dans le champ
-          value={signUpPassword} // La valeur du champ est liée à l'état signUpUsername
-          style={styles.input} // Application du style CSS spécifique à ce champ
-          secureTextEntry={!showPassword}
-        />
-        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-          <Text>{showPassword ? "Hide" : "Show"} Password</Text>
-        </TouchableOpacity>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Password" // Texte d'invite pour le champ
+            onChangeText={(value) => setSignUpPassword(value)} // Met à jour l'état signUpUsername lorsqu'on tape dans le champ
+            value={signUpPassword} // La valeur du champ est liée à l'état signUpUsername
+            style={styles.input} // Application du style CSS spécifique à ce champ
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.iconContainer}
+          >
+            <FontAwesome
+              name={showPassword ? "eye-slash" : "eye"}
+              size={20}
+              color="#5F5F5F"
+            />
+          </TouchableOpacity>
+        </View>
         <TextInput
           placeholder="PhoneNumber" // Texte d'invite pour le champ
           onChangeText={(value) => setSignUpPhone(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
@@ -151,7 +161,7 @@ function Signup() {
           style={styles.buttonSignup}
           onPress={() => SignUpBtn()}
         >
-          <Text style={styles.textButtonSignup}>Signup</Text>
+          <Text style={styles.textButtonSignup}>S'inscrire</Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>
     </View>
@@ -173,18 +183,30 @@ const styles = StyleSheet.create({
     height: 150,
   },
   textAccount: {
-    fontSize: 28,
+    fontSize: 25,
     fontWeight: "600",
+    paddingLeft: 20,
   },
   input: {
     width: 300,
     height: 40,
     marginTop: 25,
     marginLeft: 10,
+    paddingLeft: 15,
     borderBottomColor: "#ec6e5b",
     borderBottomWidth: 1,
     backgroundColor: "white",
     fontSize: 18,
+    borderRadius: 15,
+  },
+  inputContainer: {
+    position: "relative",
+  },
+
+  iconContainer: {
+    position: "absolute",
+    right: 20,
+    top: 35,
   },
 
   buttonSignup: {
