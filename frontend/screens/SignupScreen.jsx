@@ -1,10 +1,13 @@
 
-import {StyleSheet, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Image, } from 'react-native'
+import {StyleSheet, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Image  } from 'react-native'
+import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout } from "../reducers/users";
+import { login, logout, updatePhone } from "../reducers/users";
 import { useNavigation } from '@react-navigation/native';
+import { updateEmail } from '../reducers/users';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 
 
 function Signup() {
@@ -16,12 +19,29 @@ function Signup() {
   const [signUpName, setSignUpName] = useState(""); // État pour gérer le nom de l'utilisateur dans le formulaire
   const [signUpUsername, setSignUpUsername] = useState("");
   const [signUpEmail, setSignUpEmail] = useState("");
+  const [date, setDate] = useState(new Date())
   const [signUpBirth, setSignUpBirth] = useState("");
   const [signUpFirstColoc, setSignUpFirstColoc] = useState("");
   const [signUpPhone, setSignUpPhone] = useState(""); // État pour gérer le nom d'utilisateur dans le formulaire
   const [signUpPassword, setSignUpPassword] = useState(""); // État pour gérer le mot de passe dans le formulaire
   const [showPassword, setShowPassword] = useState(false);
+  const [emailInvalid, setEmailInvalid] = useState(false);
+  const [phoneInvalid, setPhoneInvalid] = useState(false);
+  const [show, setShow] = useState(false); // Contrôle l'affichage du picker
 
+
+  const dateSet = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios'); // Ferme le picker sauf sur iOS (iOS nécessite un bouton de validation)
+    setDate(currentDate);
+
+    // Formatage de la date (par exemple, DD/MM/YYYY)
+    const formatted = `${currentDate.getDate()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getFullYear()}`;
+    console.log(formatted)
+    setSignUpBirth(formatted);
+  };
 
   // Fonction appelée lors de la soumission du formulaire de création de compte
   const SignUpBtn = () => {
@@ -34,9 +54,26 @@ function Signup() {
       password: signUpPassword, // Envoie le mot de passe
       firstcoloc: signUpFirstColoc,
     }
+
+    const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+
+        if(regexEmail.test(signUpEmail)){
+            dispatch(updateEmail(signUpEmail));
+            navigation.navigate('Choice');
+        }else{
+            setEmailInvalid(true)
+        }
+
+    const regexPhone = /^0[1-9]\d{7}$/
+        if(regexPhone.test(signUpPhone)){
+          dispatch(updatePhone(signUpPhone));
+          navigation.navigate('Choice');
+        }else{
+          setPhoneInvalid(true)
+        }
   
 
-    fetch("http://192.168.1.20:3000/users/signup", {
+    fetch("http://10.9.1.105:3000/users/signup", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify(infos),
@@ -62,8 +99,8 @@ function Signup() {
           setSignUpFirstColoc(""),
 
 
-          // Redirection vers la page /home après l'inscription
-          navigation.navigate('TabNavigator');
+          // Redirection vers la page /choice après l'inscription
+          navigation.navigate('Choice');
           console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
         }else {
           console.log("Aucune donnée retournée du serveur");
@@ -104,6 +141,7 @@ function Signup() {
            value={signUpEmail} // La valeur du champ est liée à l'état signUpPassword
            style={styles.input} // Application du style CSS spécifique à ce champ
           />
+          { emailInvalid && <Text>Invalid email address</Text>}
         <View style={styles.inputContainer}>
           <TextInput
            placeholder="Password" // Texte d'invite pour le champ
@@ -128,13 +166,16 @@ function Signup() {
         value={signUpPhone} // La valeur du champ est liée à l'état signUpPassword
         style={styles.input} // Application du style CSS spécifique à ce champ
           />
-          <TextInput
-    placeholder="Birthday" // Texte d'invite pour le champ
-    
-    onChangeText={(value) => setSignUpBirth(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
-    value={signUpBirth} // La valeur du champ est liée à l'état signUpPassword
-    style={styles.input} // Application du style CSS spécifique à ce champ
-          />
+          { phoneInvalid && <Text>Invalid phone number</Text>} 
+        <View style={styles.date}>
+        <DateTimePicker
+          value={date} // Date initiale
+          mode="date" // Sélectionne uniquement la date
+          display="default" // Type d'affichage (default, spinner, calendar)
+          onChange={dateSet} // Gestionnaire d'événement
+          maximumDate={new Date()} // Empêche la sélection d'une date future
+        />
+    </View>
           <TouchableOpacity style={styles.checkboxContainer} onPress={toggleFirstColoc}>
             <Text style={styles.checkboxText}>As tu déjà fait de la colocation ?</Text>
             <View style={[styles.checkbox, signUpFirstColoc === "Yes" && styles.checked]}>
@@ -238,6 +279,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 10,
   },
+  date:{
+    width: 80,
+  }
 });
 
 

@@ -14,7 +14,6 @@ const userSchema = mongoose.Schema({
   arrivaldate: Date,
   description: String,
   colocname: String, 
-  coloc_id: { type: mongoose.Schema.Types.ObjectId, ref: 'coloc' },
   badgeearned: String,
 });
 
