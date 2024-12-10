@@ -1,18 +1,13 @@
-import { useState } from "react";
-import {View,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 
-export default function DetailTricount({ navigation }) {
+export default function DetailTricount({ route } ) {
+
+    const [selectedOption, setSelectedOption] = useState('depenses'); // 'depenses' ou 'equilibre'
+
+
 
 //EXEMPLE EN ATTENDANT LA BDD
   const exempleTricount = [
@@ -41,100 +36,170 @@ export default function DetailTricount({ navigation }) {
       "updated_at": "2024-12-09T00:00:00.000Z"
     }
   ];
-  
-// CREATION DES CARD TRICOUNT EN FONCTION DE LA BDD
-  const cardTricount = exempleTricount.map((data, i) => {
-    return (
-      <View key={i} style={styles.card}>
-        
-        <Text style={{fontSize:30}}>💳</Text>
-          <Text style={styles.name}>{data.title}</Text>
-        
-      </View>
-    );
-  });
 
 
 
-  return (
-    <SafeAreaView  style={styles.container}>
-      <View style={styles.containerView}>
-      
-      <View style={styles.containerBtnTitle}>
-
-        <Text style={styles.title}>Tricount</Text>
-
-        <TouchableOpacity style={styles.Add} onPress={()=>  navigation.navigate("TricountCrea")}>
-            <Text style={styles.white}>+</Text>
-        </TouchableOpacity>
-
-      </View>
+  //BLOC DÉPENSE
+  const DepensesView = () => (
+    <View>
+        <View style={styles.containerDepenses}>
+            <View style={styles.depense}>
+                <Text>Mes Dépenses</Text>
+                <Text style={{fontWeight:'bold'}}>XXX€</Text>
+            </View>
+            <View style={styles.depense}>
+                <Text>Total des Dépenses</Text>
+                <Text style={{fontWeight:'bold'}}>XXX€</Text>
+            </View>
+        </View>
     </View>
-      
-      <View style={styles.containerCard}>
-        {cardTricount}
-      </View>
+);
 
-    </SafeAreaView>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
+//BLOC ÉQUILIBRE
+const EquilibreView = () => (
+    <View>
+        <View style={styles.containerDue}>
+            <Text>💳</Text>
+            <View>
+                <Text>Vous devez XX€</Text>
+                <Text>à Carla</Text>
+            </View>
+        </View>
+    </View>
+);
     
-  },
-  containerView:{
-    width:'100%',
-    padding:16,
-  },
-  containerText:{
-    width:'100%',
-    padding:16
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  containerBtnTitle:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center'
+  
+    // Affichage principal : Détails du Tricount
+    return (
+        <SafeAreaView  style={styles.container}>
+        <View style={styles.containerView}>
+        
+        <View style={styles.containerBtnTitle}>
+  
+          <Text style={styles.title}>TITLE</Text>
+  
+          <TouchableOpacity style={styles.Add} onPress={()=>navigation.navigate("TricountCrea")}>
+              <Text style={styles.white}>+</Text>
+          </TouchableOpacity>
+  
+        </View>
+      </View>
+        
+        <View style={styles.containerChoice}>
 
-  },
-  Add:{
-    backgroundColor:'black',
-    borderRadius:50,
-    height:56,
-    width:56,
-    justifyContent:'center',
-    alignItems:'center'
-  },
-  white:{
-    color:'white',
-    fontSize:26
-  },
-  containerCard:{
-    height:'100%',
-    width:'100%',
-    padding:16
-  },
-  card:{
-    backgroundColor:'#F7F7FF',
-    width:'100%',
-    flexDirection:'row',
-    padding:16,
-    height: '10%',
-    alignItems:'center',
-    gap:15
-  },
-  name:{
-    fontSize: 16
+            <TouchableOpacity 
+                style={[styles.choice, 
+                        selectedOption === 'depenses' && styles.activeChoice]}
+                onPress={() => setSelectedOption('depenses')}
+            >
+                <Text style={selectedOption === 'depenses' ? styles.activeText : styles.inactiveText}>
+                    Dépenses
+                </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+            style={[styles.choice, 
+                    selectedOption === 'equilibre' && styles.activeChoice]}
+                    onPress={() => setSelectedOption('equilibre')}
+            >
+                <Text style={selectedOption === 'equilibre' ? styles.activeText : styles.inactiveText}>
+                    Équilibre
+                </Text>
+            </TouchableOpacity>
+
+        </View>
+
+        {selectedOption === 'depenses' ? <DepensesView /> : <EquilibreView />}
+        
+  
+      </SafeAreaView>
+    );
   }
+  
+  const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "white",
+        alignItems: "center",
+        
+      },
+      containerView:{
+        width:'100%',
+        padding:16,
+      },
+      containerText:{
+        width:'100%',
+        padding:16
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: "bold",
+      },
+      containerBtnTitle:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center'
+    
+      },
+      Add:{
+        backgroundColor:'black',
+        borderRadius:50,
+        height:56,
+        width:56,
+        justifyContent:'center',
+        alignItems:'center'
+      },
+      white:{
+        color:'white',
+        fontSize:26
+      },
+      containerChoice: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 5,
+        backgroundColor: '#F7F7FF',
+        borderRadius: 10,
+        width:'75%'
+    },
+    choice: {
+        flex: 1,
+        padding: 5,
+        alignItems: 'center',
+        borderRadius: 8,
+        marginHorizontal: 5,
+    },
+    activeChoice: {
+        backgroundColor: '#5F6095', 
+    },
+    inactiveText: {
+        color: '#666',
+    },
+    activeText: {
+        color: '#FFF',
+        fontWeight: '600',
+    },
+    containerDepenses:{
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        padding: 5,
+        borderRadius: 10,
+        width:'65%',
+        marginTop: 15
+    },
+    depense:{
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    containerDue:{
+        backgroundColor:'#F7F7FF',
+        width:'75%'
+    }
 
 
-  
-  
-});
+    
+    
+      
+      
+    });
+    

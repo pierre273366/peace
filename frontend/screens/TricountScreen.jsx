@@ -41,16 +41,23 @@ export default function TricountScreen({ navigation }) {
       "updated_at": "2024-12-09T00:00:00.000Z"
     }
   ];
+
+
+  const handleNavigateToDetails = () => {
+    navigation.navigate("TricountDetails");
+  };
+
+
   
 // CREATION DES CARD TRICOUNT EN FONCTION DE LA BDD
   const cardTricount = exempleTricount.map((data, i) => {
     return (
-      <View key={i} style={styles.card}>
+      <TouchableOpacity key={i} style={styles.card} onPress={()=>   navigation.navigate("DetailTricount")}>
         
         <Text style={{fontSize:30}}>💳</Text>
           <Text style={styles.name}>{data.title}</Text>
         
-      </View>
+      </TouchableOpacity>
     );
   });
 
