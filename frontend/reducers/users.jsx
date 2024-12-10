@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'; // Importation de la fonction cr
 const initialState = {
   // Définition de l'état initial de l'utilisateur. 
   // L'utilisateur a un token, un nom d'utilisateur (username) et un mail, initialement définis sur null.
-  value: { token: null, username: null},
+  user: {token: null, username: null, email: null, phoneNumber: null},
+  coloc: {name: null, address: null, number: null},
 };
 
 export const userSlice = createSlice({
@@ -14,36 +15,37 @@ export const userSlice = createSlice({
     // Définition des actions de modification de l'état. Chaque action correspond à un cas dans un réducteur.
 
     updateEmail: (state, action) => {
-      state.value.email = action.payload.email;  
+      state.user.email = action.payload.email;  
     },
 
     updatePhone: (state, action) => {
-      state.value.phonenumber = action.payload.phonenumber;  
+      state.user.phoneNumber = action.payload.phonenumber;  
     },
 
     login: (state, action) => {
       // Action de connexion : elle met à jour l'état de l'utilisateur avec les valeurs fournies par l'action.
       // Les informations (token, username) sont récupérées à partir de 'action.payload'.
-      state.value.token = action.payload.token;
-      state.value.username = action.payload.username;
+      state.user.token = action.payload.token;
+      state.user.username = action.payload.username;
       
     },
 
-    logout: (state) => {
+    logout: (state, action) => {
       // Action de déconnexion : elle réinitialise l'état de l'utilisateur (les trois propriétés à null).
-      state.value.token = null;
-      state.value.username = null;
+      state.user.token = null;
+      state.user.username = null;
     },
 
-    coloc: (state) => {
-      state.value.name = action.payload.name;
-      state.value.address = action.payload.address;
-      state.value.peoples = action.payload.peoples
+    coloc: (state, action) => {
+      const {name, address, peoples} = action.payload
+      state.coloc.name = name;
+      state.coloc.address = address;
+      state.coloc.number = peoples;
     }
   },
 });
 
-export const { login, logout, updateEmail, updatePhone } = userSlice.actions;
+export const { login, logout, updateEmail, updatePhone, coloc } = userSlice.actions;
 // Extraction des actions 'login' et 'logout' de l'objet userSlice.actions.
 // Ces actions sont créées automatiquement par createSlice et sont exportées pour pouvoir être utilisées ailleurs dans l'application.
 

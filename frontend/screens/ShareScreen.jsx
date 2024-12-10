@@ -7,49 +7,72 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 
-export default function JoinColoc({ navigation }) {
+export default function ShareScreen({ navigation }) {
+    // Récupération des données utilisateur et du nom de la colocation depuis le reducer
+    const coloc = useSelector((state) => state.users.coloc);
+
+    const colocName = coloc.name; // Récupérer le nom de la colocation
+    const colocAddress = coloc.address;
+    const colocNumber = coloc.number; 
 
     const handleSubmit = () => {
     
       
       };
 return(
-    <View style={styles.container}>
 
-      <Image style={styles.image} source={require('../assets/peacelogo.png')} />
+<View style={styles.container}>
 
-      
-      <TouchableOpacity
-        
-       style={styles.buttonSignUp}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.textSignUp}>Rejoindre </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('CreateColoc')
-        }
-        style={styles.buttonSignUp}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.textSignUp}>Créer </Text>
-      </TouchableOpacity>
+    <Image style={styles.image} source={require('../assets/peacelogo.png')} />
+
+        <Text style={styles.input}>{colocName}</Text>
+        <Text style={styles.input}>{colocAddress}</Text>
+        <Text style={styles.input}>{colocNumber}</Text>
+   
+   <TouchableOpacity style={styles.btnNext}
+    activeOpacity={0.8}>
+    <Text style={styles.btnText}>Suivant </Text>
+</TouchableOpacity>
       </View>
 )
 
 }
 
 const styles = StyleSheet.create({
-  signinContainer: {
-    flex: 1,
-    backgroundColor: '#F6F8FE',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F6F8FE',
+        flexDirection: 'column'
+    },
+    image: {
+        width: 300,
+        height: 200,
+    },
+    input: {
+        width: 300,
+        height: 40,
+        marginTop: 25,
+        marginLeft: 10,
+        borderBottomColor: '#ec6e5b',
+        borderBottomWidth: 1,
+        backgroundColor: 'white',
+        fontSize: 18,
+        borderRadius: 15,
+    },
+    btnNext: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 250,
+        height: 70,
+        marginTop: 30,
+        backgroundColor: '#EC794C',
+        borderRadius: 40,
+    },
+    btnText: {
+        color: "white",
+        fontWeight: 'bold',
+        fontSize: 20,
   },
-  image: {
-    paddingTop:15,
-    paddingLeft: 70,
-    width: 250,
-    height: 150,
-  },});
+});

@@ -4,16 +4,13 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, updatePhone } from "../reducers/users";
-import { useNavigation } from '@react-navigation/native';
 import { updateEmail } from '../reducers/users';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 
 
-function Signup() {
-  const navigation = useNavigation();
+function Signup({navigation}) {
   const dispatch = useDispatch(); // Utilisation du hook useDispatch pour envoyer des actions Redux
-  const user = useSelector((state) => state.users.value); // Utilisation du hook useSelector pour accéder à l'état de l'utilisateur dans Redux
 
   // Déclaration des états locaux pour gérer les valeurs du formulaire
   const [signUpName, setSignUpName] = useState(""); // État pour gérer le nom de l'utilisateur dans le formulaire

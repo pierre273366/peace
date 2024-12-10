@@ -8,6 +8,7 @@ import SigninScreen from "./screens/SigninScreen";
 import ChoiceScreen from "./screens/ChoiceScreen"
 import JoinColocScreen from "./screens/JoinColocScreen"
 import CreateColocScreen from "./screens/CreateColoc"
+import ShareScreen from "./screens/ShareScreen"
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -68,6 +69,7 @@ export default function App() {
         <Stack.Screen name="Choice" component={ChoiceScreen} />
         <Stack.Screen name="JoinColoc" component={JoinColocScreen} />
         <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
+        <Stack.Screen name="ShareColoc" component={ShareScreen} />
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
