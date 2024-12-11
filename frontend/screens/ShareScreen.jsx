@@ -15,7 +15,7 @@ export default function ShareScreen({ navigation }) {
 
     const colocName = coloc.name; // Récupérer le nom de la colocation
     const colocAddress = coloc.address;
-    const colocNumber = coloc.number; 
+    const colocNumber = coloc.peoples; 
     const colocToken = coloc.token;
 
     const handleCopy = async () => {

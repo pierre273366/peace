@@ -4,7 +4,7 @@ const initialState = {
   // Définition de l'état initial de l'utilisateur. 
   // L'utilisateur a un token, un nom d'utilisateur (username) et un mail, initialement définis sur null.
   user: {token: null, username: null, email: null, phoneNumber: null},
-  coloc: {name: null, address: null, number: null, token: null},
+  coloc: {name: null, address: null, peoples: null, token: null},
 };
 
 export const userSlice = createSlice({
