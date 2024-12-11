@@ -80,21 +80,21 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Signin" component={SigninScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-          <Stack.Screen name="DetailTricount" component={DetailTricount} />
-          <Stack.Screen name="TricountCrea" component={TricountCreaScreen} />
-          <Stack.Screen name="EventAdd" component={EventAddScreen} />
-          <Stack.Screen name="Choice" component={ChoiceScreen} />
-          <Stack.Screen name="JoinColoc" component={JoinColocScreen} />
-          <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
-          <Stack.Screen name="ShareColoc" component={ShareScreen} />
-          <Stack.Screen name="ProfilParams" component={ProfilParamScreen} />
-          <Stack.Screen name="TabNavigator" component={TabNavigator} />
-        </Stack.Navigator>
-      </NavigationContainer>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Signin" component={SigninScreen} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
+        <Stack.Screen name="DetailTricount" component={DetailTricount} />
+        <Stack.Screen name="TricountCrea" component={TricountCreaScreen} />
+        <Stack.Screen name="EventAdd" component={EventAddScreen} />
+        <Stack.Screen name="Choice" component={ChoiceScreen} />
+        <Stack.Screen name="JoinColoc" component={JoinColocScreen} />
+        <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
+        <Stack.Screen name="ShareColoc" component={ShareScreen} />
+        <Stack.Screen name="ProfilParams" component={ProfilParamScreen}/>
+        <Stack.Screen name="TabNavigator" component={TabNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
     </Provider>
   );
 }
