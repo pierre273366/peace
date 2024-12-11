@@ -4,36 +4,54 @@ const mongoose = require('mongoose');
 
 const Tricount = require('../models/tricount');
 const Coloc = require('../models/coloc');
+const User = require("../models/users"); 
 
 
 
 
-//ROUTE GET : RECUPERE TOUS LES TRICOUNT LIÉ A USER
-router.get('/:userId', async (req, res) => {
-    const { userId } = req.params;
+//ROUTE GET : RÉCUPERE TOUS LES UTILISATEURS DE LA COLOC
+router.get("/getcolocusers/:token", (req, res) => {
+    // D'abord on trouve l'utilisateur avec son token
+    User.findOne({ token: req.params.token })
+      .then(user => {
+        if (!user) {
+          res.json({ result: false, error: "User not found" });
+          return;
+        }
+        // Ensuite on utilise son colocToken pour trouver tous les users de la coloc
+        User.find({ colocToken: user.colocToken })
+          .select("username")
+          .then((users) => {
+            if (users.length > 0) {
+              res.json({ result: true, users: users });
+            } else {
+              res.json({ result: false, error: "No users found for this coloc" });
+            }
+          });
+      });
+  });
 
-    const tricounts = await Tricount.find({ participants: new mongoose.Types.ObjectId(userId) });
+  
 
-    if (tricounts && tricounts.length > 0) { //Si Resultats >0 alors on affiche 
-        res.json(tricounts);
-    } else {
-        res.json({ message: 'Pas de tricount.' });
-    }
-});
+  //ROUTE POST :  CREATION D'UN TRICOUNT
+  router.post('/createtricount', (req, res) => {
+    const { title, participants, colocId } = req.body;
+  
+    const newTricount = new Tricount({
+      coloc: colocId,
+      title: title,
+      participants: participants,
+      expense: [] // Tableau vide au départ
+    });
+  
+    newTricount.save()
+      .then(newDoc => {
+        res.json({ result: true, tricount: newDoc });
+      });
+  });
 
 
-//ROUTE GET : AVOIR TOUS LES USERS DE LA COLOC
-router.get('/coloc/:id/users', async (req, res) => {
-    const coloc = await Coloc.findById(req.params.id)
-        .populate('users')
-        .select('users');
 
-    if (!coloc) {
-        return res.json({ message: 'Colocation non trouvée' });
-    }
-
-    res.json({ users: coloc.users });
-});
 
 
 module.exports = router;

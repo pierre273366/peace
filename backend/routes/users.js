@@ -89,39 +89,48 @@ router.post("/signin", (req, res) => {
   });
 });
 
+
+
 router.post("/createcoloc", (req, res) => {
-  if (!checkBody(req.body, ["name", "address", "peoples"])) { 
+  if (!checkBody(req.body, ["name", "address", "peoples"])) {
     res.json({ result: false, error: "Missing or empty fields" });
-    // Si des champs sont manquants ou vides, on renvoie une erreur avec un message.
     return;
   }
   
-User.findOne({token: req.body.user})
-.then((user) => {
-  if (user) {
-    Coloc.findOne({ name: req.body.name }).then((data) => {
-      if (data === null) {
-        const newColoc = new Coloc({
-          name: req.body.name || "Default coloc name", // Nom de la colocation
-          address: req.body.address || "Unknown", // Addresse
-          peoples: req.body.peoples || "Nombre de coloc", // Description
-          token: uid2(16),
-          users:[user._id]
-        });
-        // Sauvegarder la coloc dans la base de données
-        newColoc.save().then((newDoc) => {
-          res.json({ result: true, coloc : newDoc});
-        });
-        } else {
-        res.json({ result: false, error: "Coloc already exists" });
-        }
-        });
+  User.findOne({token: req.body.user})
+    .then((user) => {
+      if (user) {
+        Coloc.findOne({ name: req.body.name }).then((data) => {
+          if (data === null) {
+            const colocToken = uid2(16);
+            
+            const newColoc = new Coloc({
+              name: req.body.name || "Default coloc name",
+              address: req.body.address || "Unknown",
+              peoples: req.body.peoples || "Nombre de coloc",
+              token: colocToken,
+              users: [user._id]
+            });
 
-  } else {
-    res.json({error : "user n'existe pas"})
-  }
-})
-
-      });
+            newColoc.save()
+              .then((newDoc) => {
+                return User.updateOne(
+                  { _id: user._id },
+                  { 
+                    colocToken: colocToken
+                  }
+                ).then(() => {
+                  res.json({ result: true, coloc: newDoc });
+                });
+              });
+          } else {
+            res.json({ result: false, error: "Coloc already exists" });
+          }
+        });
+      } else {
+        res.json({ error: "user n'existe pas" });
+      }
+    });
+});
       
 module.exports = router;

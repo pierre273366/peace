@@ -1,5 +1,6 @@
 import Checkbox from "expo-checkbox";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux"; 
 import {View,
   Image,
   KeyboardAvoidingView,
@@ -15,43 +16,69 @@ import {View,
 
 export default function TricountCreaScreen({ navigation, route }) {
 
+  
+  const userToken = useSelector((state) => state.users.user.token);
+
     const [title, setTitle]= useState('')
     const [description, setDescription]= useState('')
-    const [users, setUsers]= useState([])
+    const [users, setUsers]= useState([]) //personnes de la coloc
     const [selectedUsers, setSelectedUsers]= useState([])
 
 
 
-      /*
+      
       //RECHERCHE D'UN ID COLOC 
       useEffect(() => {
-        // Recherche des participants associés à l'idColoc
-        const group = GROUPS.find((group) => group.idColoc === idColoc);
-        setParticipants(group ? group.participants : []);
-      }, [idColoc]);
-    */
+        const getUsers = async () => {
+          if (!userToken) return; // Protection si le token n'est pas encore disponible
+          
+          const usersData = await fetchUsers(userToken);
+          if (usersData) {
+            setUsers(usersData);
+          }
+        };
+        getUsers();
+      }, [userToken])
+    
 
-
-      const toggleSelection = (userId) => {
-        setSelectedUsers((prev) => ({
-          ...prev,
-          [userId]: !prev[userId],
-        }));
-      };
-      
-
-      const handleCreate = () => {
-        const selectedUserIds = Object.keys(selectedUsers).filter((id) => selectedUsers[id]);
-        console.log("Creating Tricount with:", {
-          idColoc,
-          title,
-          description,
-          participants: selectedUserIds,
-        });
-        // Logique pour envoyer ces données à une API ou les stocker localement
+      //fetch de tous les utilisateurs de la colocs 
+      const fetchUsers = async (userToken) => {
+        const response = await fetch(`http://10.9.1.140:3000/tricount/getcolocusers/${userToken}`);
+        const data = await response.json();
+          
+        if (data.result) {
+          console.log(data.users);
+         return data.users
+        }
+        return null;
       };
 
 
+      const userChoice = users.map((user, i) => {
+        return (
+          <View>
+              <View key={i} style={styles.containerCheck}>
+                <Checkbox
+                    style={styles.checkbox}
+                    value={selectedUsers.includes(user.username)}
+                    onValueChange={() => handleCheckboxChange(user.username)}
+                />
+                <Text>{user.username}</Text>
+            </View>
+          </View>
+        );
+      });
+
+
+      const handleCheckboxChange = (username) => {
+        if (selectedUsers.includes(username)) {
+            setSelectedUsers(selectedUsers.filter(user => user !== username));
+        } else {
+            setSelectedUsers([...selectedUsers, username]);
+        }
+    };
+
+    console.log(selectedUsers)
 
   return (
     <SafeAreaView  style={styles.container}>
@@ -93,37 +120,12 @@ export default function TricountCreaScreen({ navigation, route }) {
                     <Text>Participants</Text>
 
                     <View style={styles.containerCheck}>
-                        <Checkbox
-                            style={styles.checkbox}
-                        />
-                        <Text>User 1 (moi)</Text>
-                    </View>
-
-                    <View style={styles.containerCheck}>
-                        <Checkbox
-                            style={styles.checkbox}
-                            
-                        />
-                        <Text>User 2</Text>
-                    </View>
-
-                    <View style={styles.containerCheck}>
-                        <Checkbox
-                            style={styles.checkbox}
-                            
-                        />
-                        <Text>User 3</Text>
-                    </View>
-                    <View style={styles.containerCheck}>
-                        <Checkbox
-                            style={styles.checkbox}
-                        />
-                        <Text>User 4</Text>
-                    </View>
+                    {userChoice}
 
                 </View>
             </View>
 
+        </View>
         </View>
       
       
@@ -176,6 +178,9 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     gap: 15,
     alignItems:'center'
+  },
+  checkbox:{
+    color:'red'
   }
 
   

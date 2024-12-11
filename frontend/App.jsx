@@ -85,7 +85,7 @@ export default function App() {
         <Stack.Screen name="Signin" component={SigninScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="DetailTricount" component={DetailTricount} />
-        <Tab.Screen name="TricountCrea" component={TricountCreaScreen} />
+        <Stack.Screen name="TricountCrea" component={TricountCreaScreen} />
         <Stack.Screen name="EventAdd" component={EventAddScreen} />
         <Stack.Screen name="Choice" component={ChoiceScreen} />
         <Stack.Screen name="JoinColoc" component={JoinColocScreen} />
