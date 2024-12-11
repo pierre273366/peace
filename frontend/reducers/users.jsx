@@ -4,7 +4,7 @@ const initialState = {
   // Définition de l'état initial de l'utilisateur. 
   // L'utilisateur a un token, un nom d'utilisateur (username) et un mail, initialement définis sur null.
   user: {token: null, username: null, email: null, phoneNumber: null},
-  coloc: {name: null, address: null, number: null},
+  coloc: {name: null, address: null, number: null, token: null},
 };
 
 export const userSlice = createSlice({
@@ -37,10 +37,12 @@ export const userSlice = createSlice({
     },
 
     coloc: (state, action) => {
-      const {name, address, peoples} = action.payload
+      const {name, address, peoples, token} = action.payload
       state.coloc.name = name;
       state.coloc.address = address;
       state.coloc.number = peoples;
+      state.coloc.token = token;
+      
     }
   },
 });
