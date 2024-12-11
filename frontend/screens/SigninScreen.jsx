@@ -10,13 +10,14 @@ import {
 } from "react-native";
 import React, { useState } from "react"; // Importation de React et du hook useState pour gérer l'état local
 import { useDispatch, useSelector } from "react-redux"; // Importation des hooks Redux pour interagir avec le store
-import { login, logout } from "../reducers/users"; // Importation des actions login et logout de Redux
+import { login, logout, coloc } from "../reducers/users"; // Importation des actions login et logout de Redux
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 function Signin() {
   const navigation = useNavigation();
   const dispatch = useDispatch(); // Utilisation du hook useDispatch pour envoyer des actions Redux
+  const user = useSelector((state) => state.users.value); // Utilisation du hook useSelector pour accéder à l'état de l'utilisateur dans Redux
 
   // Déclaration des états locaux pour gérer la fenêtre modale et les valeurs du formulaire
   const [signInUsername, setSignInUsername] = useState(""); // État pour gérer le nom d'utilisateur du formulaire
@@ -45,6 +46,15 @@ function Signin() {
               token: data.token, // Token reçu du serveur pour authentifier l'utilisateur
             })
           );
+          dispatch(
+            coloc({
+              name: data.colocInfo.name,
+              address: data.colocInfo.address,
+              peoples: data.colocInfo.peoples,
+              token: data.colocInfo.token,
+            })
+          );
+
           setSignInUsername(""); // Réinitialisation du champ du nom d'utilisateur
           setSignInPassword(""); // Réinitialisation du champ du mot de passe
           navigation.navigate("TabNavigator");

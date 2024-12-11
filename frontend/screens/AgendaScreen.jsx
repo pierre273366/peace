@@ -15,8 +15,8 @@ const MyCalendar = ({ navigation }) => {
   const [events, setEvents] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
   const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
-  const colocToken = useSelector((state) => state.user.coloc.token);
-
+  const colocToken = useSelector((state) => state.users.coloc.token);
+  console.log(colocToken);
   // useEffect pour récupérer les événements depuis le backend lors du premier rendu du composant
   useEffect(() => {
     const fetchEvents = async () => {
