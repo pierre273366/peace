@@ -14,7 +14,7 @@ export default function Profil({ navigation }) {
       <SafeAreaView style={styles.containerProfil}>
         <View style={{ backgroundColor: "orange", height: "30%" }}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("ProfilParam")}
+            onPress={() => navigation.navigate("ProfilParams")}
             style={styles.iconContainer}
           >
             <FontAwesome name={"gear"} size={30} color="#5F5F5F" />
