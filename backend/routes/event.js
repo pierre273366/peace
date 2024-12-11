@@ -5,13 +5,14 @@ const mongoose = require("mongoose");
 const Event = require("../models/event");
 
 // Route pour récupérer les événements
-router.get("/event", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const events = await Event.find(); // Récupérer tous les événements dans la base de données
-    res.status().json(events); // Répondre avec les événements au format JSON
+    console.log("Événements récupérés:", events); // Vérifie ce qui est récupéré
+    res.json({ events }); // Répondre avec les événements au format JSON
   } catch (error) {
     console.error("Erreur lors de la récupération des événements:", error);
-    res.status().json({
+    res.json({
       message: "Erreur lors de la récupération des événements",
       error,
     });
@@ -20,7 +21,7 @@ router.get("/event", async (req, res) => {
 
 // Route pour ajouter un événement
 router.post("/", (req, res) => {
-  const { name, time, place, description, date, coloc_id } = req.body;
+  const { name, time, place, description, date } = req.body;
   if (!name || !time || !place || !description || !date) {
     return res.json({ message: "Tous les champs sont requis" });
   }
