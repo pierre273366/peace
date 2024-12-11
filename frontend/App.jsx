@@ -9,6 +9,14 @@ import ChoiceScreen from "./screens/ChoiceScreen"
 import JoinColocScreen from "./screens/JoinColocScreen"
 import CreateColocScreen from "./screens/CreateColoc"
 import ShareScreen from "./screens/ShareScreen"
+import DetailTricount from "./screens/DetailTricount"
+import TricountCreaScreen from "./screens/TricountCreaScreen"
+import EventAddScreen from "./screens/EventAddScreen"
+import AgendaScreen from "./screens/AgendaScreen"
+import TricountScreen from "./screens/TricountScreen"
+import TodoListScreen from "./screens/TodoListScreen"
+import ProfilScreen from "./screens/ProfilScreen"
+import ProfilParamScreen from "./screens/ProfilParamScreen"
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -83,6 +91,7 @@ export default function App() {
         <Stack.Screen name="JoinColoc" component={JoinColocScreen} />
         <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
         <Stack.Screen name="ShareColoc" component={ShareScreen} />
+        <Stack.Screen name="ProfilParams" component={ProfilParamScreen}/>
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>

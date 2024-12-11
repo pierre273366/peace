@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, updatePhone } from "../reducers/users";
 import { updateEmail } from '../reducers/users';
-import { login, logout } from "../reducers/users";
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
