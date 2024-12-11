@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -14,13 +15,14 @@ const MyCalendar = ({ navigation }) => {
   const [events, setEvents] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
   const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
+  const colocToken = useSelector((state) => state.user.coloc.token);
 
   // useEffect pour récupérer les événements depuis le backend lors du premier rendu du composant
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         // Récupérer les événements depuis l'API
-        const response = await fetch(`${backendUrl}/event`);
+        const response = await fetch(`${backendUrl}/event/${colocToken}`);
         const data = await response.json();
         const formattedEvents = formatEvents(data.events); // Formater les événements avant de les stocker
         setEvents(formattedEvents); // Mettre à jour l'état avec les événements formatés

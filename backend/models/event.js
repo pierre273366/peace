@@ -6,6 +6,7 @@ const eventSchema = mongoose.Schema({
   place: String,
   description: String,
   date: Date,
+  colocToken: String,
 });
 
 const Event = mongoose.model("events", eventSchema);
