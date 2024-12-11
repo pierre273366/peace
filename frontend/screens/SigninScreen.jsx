@@ -22,11 +22,10 @@ function Signin() {
   const [signInUsername, setSignInUsername] = useState(""); // État pour gérer le nom d'utilisateur du formulaire
   const [signInPassword, setSignInPassword] = useState(""); // État pour gérer le mot de passe du formulaire
   const [showPassword, setShowPassword] = useState(false);
-  
 
   // Fonction qui est appelée lors de la soumission du formulaire de connexion
   const SignInBtn = () => {
-    fetch("http://10.9.1.105:3000/users/signin", {
+    fetch("http://10.9.1.137:3000/users/signin", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify({
@@ -55,7 +54,6 @@ function Signin() {
 
   const handleSubmit = () => {
     navigation.navigate("Signup");
-  
   };
 
   return (

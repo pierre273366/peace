@@ -5,18 +5,18 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import HomeScreen from "./screens/HomeScreen";
 import SignupScreen from "./screens/SignupScreen";
 import SigninScreen from "./screens/SigninScreen";
-import ChoiceScreen from "./screens/ChoiceScreen"
-import JoinColocScreen from "./screens/JoinColocScreen"
-import CreateColocScreen from "./screens/CreateColoc"
-import ShareScreen from "./screens/ShareScreen"
-import DetailTricount from "./screens/DetailTricount"
-import TricountCreaScreen from "./screens/TricountCreaScreen"
-import EventAddScreen from "./screens/EventAddScreen"
-import AgendaScreen from "./screens/AgendaScreen"
-import TricountScreen from "./screens/TricountScreen"
-import TodoListScreen from "./screens/TodoListScreen"
-import ProfilScreen from "./screens/ProfilScreen"
-import ProfilParamScreen from "./screens/ProfilParamScreen"
+import ChoiceScreen from "./screens/ChoiceScreen";
+import JoinColocScreen from "./screens/JoinColocScreen";
+import CreateColocScreen from "./screens/CreateColoc";
+import ShareScreen from "./screens/ShareScreen";
+import DetailTricount from "./screens/DetailTricount";
+import TricountCreaScreen from "./screens/TricountCreaScreen";
+import EventAddScreen from "./screens/EventAddScreen";
+import AgendaScreen from "./screens/AgendaScreen";
+import TricountScreen from "./screens/TricountScreen";
+import TodoListScreen from "./screens/TodoListScreen";
+import ProfilScreen from "./screens/ProfilScreen";
+import ProfilParamScreen from "./screens/ProfilParamScreen";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -80,6 +80,7 @@ const TabNavigator = () => {
 export default function App() {
   return (
     <Provider store={store}>
+<<<<<<< HEAD
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Signin" component={SigninScreen} />
@@ -95,6 +96,23 @@ export default function App() {
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
+=======
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Signin" component={SigninScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="DetailTricount" component={DetailTricount} />
+          <Stack.Screen name="TricountCrea" component={TricountCreaScreen} />
+          <Stack.Screen name="EventAdd" component={EventAddScreen} />
+          <Stack.Screen name="Choice" component={ChoiceScreen} />
+          <Stack.Screen name="JoinColoc" component={JoinColocScreen} />
+          <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
+          <Stack.Screen name="ShareColoc" component={ShareScreen} />
+          <Stack.Screen name="ProfilParams" component={ProfilParamScreen} />
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+>>>>>>> 74b3554b94a08d74be52be4fe3c5cdd29d1d5175
     </Provider>
   );
 }
