@@ -31,6 +31,7 @@ function CreateColocScreen({navigation}) {
         })
         const data = await resp.json()
         if (data.result){
+            console.log(data)
            dispatch(coloc({name: data.coloc.name, address: data.coloc.address, peoples: data.coloc.peoples, token: data.coloc.token}));
             // Réinitialisation des champs du formulaire
             setHouseName("");

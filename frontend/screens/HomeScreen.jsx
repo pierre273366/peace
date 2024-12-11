@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux"; 
 import {
   View,
   Text,
@@ -11,6 +12,7 @@ import {
 import Checkbox from "expo-checkbox";
 
 export default function HomeScreen({ navigation }) {
+  const coloc = useSelector((state) => state.users.coloc);
   const [isChecked, setChecked] = useState(false);
   const [result, setResult] = useState(null);
   const [rotation, setRotation] = useState(new Animated.Value(0)); // Animation de la rotation
@@ -47,6 +49,10 @@ export default function HomeScreen({ navigation }) {
     inputRange: [0, 360],
     outputRange: ["0deg", "360deg"],
   });
+
+
+
+  console.log(coloc)
 
   return (
     <SafeAreaView style={styles.container}>
