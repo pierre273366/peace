@@ -1,9 +1,11 @@
-import {StyleSheet, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Image} from 'react-native'
+import {StyleSheet, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Image, Alert} from 'react-native'
 import React, { useState } from "react"; // Importation de React et du hook useState pour gérer l'état local
 import { useDispatch, useSelector } from "react-redux"; // Importation des hooks Redux pour interagir avec le store
 import { login, logout } from "../reducers/users"; // Importation des actions login et logout de Redux
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as Clipboard from 'expo-clipboard';
+
 
 
 
@@ -16,10 +18,12 @@ export default function ShareScreen({ navigation }) {
     const colocNumber = coloc.number; 
     const colocToken = coloc.token;
 
-    const handleSubmit = () => {
-    
-      
+    const handleCopy = async () => {
+        await Clipboard.setString(colocToken);
+        alert('Texte copié dans le presse-papiers!');
       };
+
+
 return(
 
 <View style={styles.container}>
@@ -36,13 +40,22 @@ return(
     <View style={styles.titleContainer}>
 <Text style={styles.textTitle}>Nom de la coloc'</Text>
 </View>
+<View style={styles.inputContainer}>
         <Text  style={styles.input}>{colocName}</Text>
         <Text style={styles.textTitle}>Adresse de la coloc'</Text>
         <Text style={styles.input}>{colocAddress}</Text>
         <Text style={styles.textTitle}>Nombre de colocataires</Text>
         <Text style={styles.input}>{colocNumber}</Text>
         <Text style={styles.textTitle}>Url à partager</Text>
-   <TextInput style={styles.input}>{colocToken}</TextInput>
+   <Text style={styles.input}>{colocToken}</Text>
+   </View>
+   <TouchableOpacity onPress={() => handleCopy()}>
+   <FontAwesome
+              name={'copy'}
+              size={20}
+              color="#5F5F5F"
+            />
+            </TouchableOpacity>
    <TouchableOpacity style={styles.btnNext}
     activeOpacity={0.8}>
     <Text style={styles.btnText}>Suivant </Text>
