@@ -34,13 +34,20 @@ const EventAdd = ({ navigation, route }) => {
       date: selectedDate.toISOString().split("T")[0], // Formatage de la date
     };
 
-    // Envoie de l'événement à la page MyCalendar
-    if (route.params?.addEvent) {
-      route.params.addEvent(newEvent); // Ajouter l'événement via la fonction addEvent
-    }
-
-    // Retour à la page MyCalendar
-    navigation.goBack();
+    fetch("http://10.9.1.137:3000/event", {
+      method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
+      headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+      body: JSON.stringify(newEvent),
+    })
+      .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
+      .then(() => {
+        // Envoie de l'événement à la page MyCalendar
+        if (route.params?.addEvent) {
+          route.params.addEvent(newEvent); // Ajouter l'événement via la fonction addEvent
+        }
+        // Retour à la page MyCalendar
+        navigation.goBack();
+      });
   };
 
   return (

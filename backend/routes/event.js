@@ -5,8 +5,17 @@ const mongoose = require("mongoose");
 const Event = require("../models/event");
 
 // Route pour récupérer les événements
-router.get("/", (req, res) => {
-  res.json({ events }); // Récupère tous les événements
+router.get("/event", async (req, res) => {
+  try {
+    const events = await Event.find(); // Récupérer tous les événements dans la base de données
+    res.status().json(events); // Répondre avec les événements au format JSON
+  } catch (error) {
+    console.error("Erreur lors de la récupération des événements:", error);
+    res.status().json({
+      message: "Erreur lors de la récupération des événements",
+      error,
+    });
+  }
 });
 
 // Route pour ajouter un événement
@@ -21,7 +30,6 @@ router.post("/", (req, res) => {
     place,
     description,
     date,
-    coloc_id,
   });
   newEvent.save().then(() => {
     res.json({ newEvent }); // Retourne l'événement créé

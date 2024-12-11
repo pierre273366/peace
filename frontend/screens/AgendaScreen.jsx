@@ -10,15 +10,75 @@ import { Calendar, Agenda } from "react-native-calendars";
 
 const MyCalendar = ({ navigation, route }) => {
   const [events, setEvents] = useState({});
+  const backendUrl = "http://10.9.1.137:3000"; // Remplace avec l'URL de ton backend
 
-  // Récupérer les événements passés de EventAdd via les params
+  // Récupérer les événements depuis le backend au premier rendu
   useEffect(() => {
-    if (route.params?.events) {
-      setEvents(route.params.events); // Mettre à jour les événements
-    }
-  }, [route.params?.events]);
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`${backendUrl}/event`);
+        const data = await response.json();
+        const formattedEvents = formatEvents(data);
+        setEvents(formattedEvents);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des événements:", error);
+      }
+    };
 
-  // Fonction pour afficher un événement dans le calendrier ou agenda
+    fetchEvents();
+  }, []);
+
+  // Formater les événements pour le calendrier et l'agenda
+  const formatEvents = (eventsData) => {
+    const formatted = {};
+    eventsData.forEach((event) => {
+      const eventDate = event.date; // La date formatée "YYYY-MM-DD"
+      if (!formatted[eventDate]) {
+        formatted[eventDate] = [];
+      }
+      formatted[eventDate].push({
+        name: event.name,
+        time: event.time,
+        place: event.place,
+        description: event.description,
+      });
+    });
+    return formatted;
+  };
+
+  // Fonction pour gérer l'ajout d'un événement
+  const handleAddEvent = (newEvent) => {
+    // Ajout de l'événement à l'état local des événements
+    setEvents((prevEvents) => {
+      const updatedEvents = { ...prevEvents };
+      const eventDate = newEvent.date; // La date sous forme "YYYY-MM-DD"
+
+      // Ajoute le nouvel événement à la date correspondante
+      if (!updatedEvents[eventDate]) {
+        updatedEvents[eventDate] = [];
+      }
+      updatedEvents[eventDate].push({
+        name: newEvent.name,
+        time: newEvent.time,
+        place: newEvent.place,
+        description: newEvent.description,
+      });
+
+      return updatedEvents;
+    });
+  };
+
+  // Marking des dates avec des événements
+  const markedDates = Object.keys(events).reduce((acc, date) => {
+    acc[date] = {
+      selected: false,
+      marked: true,
+      selectedColor: "rgb(253, 112, 60)",
+    };
+    return acc;
+  }, {});
+
+  // Affichage d'un événement dans l'agenda
   const renderItem = (item) => (
     <View style={styles.eventCard}>
       <Text style={styles.eventName}>{item.name}</Text>
@@ -33,16 +93,6 @@ const MyCalendar = ({ navigation, route }) => {
     </View>
   );
 
-  // Générer les dates marquées dans le calendrier à partir des événements
-  const markedDates = Object.keys(events).reduce((acc, date) => {
-    acc[date] = {
-      selected: false,
-      marked: true,
-      selectedColor: "rgb(253, 112, 60)",
-    };
-    return acc;
-  }, {});
-
   return (
     <View
       style={{
@@ -54,7 +104,9 @@ const MyCalendar = ({ navigation, route }) => {
     >
       <View style={styles.containerButton}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("EventAdd", { events, setEvents })} // Naviguer vers EventAdd avec les events
+          onPress={() =>
+            navigation.navigate("EventAdd", { addEvent: handleAddEvent })
+          } // Passer la fonction handleAddEvent à la page EventAdd
           style={styles.button}
         >
           <Text style={styles.buttonAdd}>Ajouter</Text>
@@ -62,14 +114,13 @@ const MyCalendar = ({ navigation, route }) => {
       </View>
 
       <Calendar
-        // Affichage du calendrier sans sélection de dates
-        markedDates={markedDates}
+        markedDates={markedDates} // Afficher les dates marquées avec des événements
         style={{ width: 350, borderRadius: 10, marginBottom: 80 }}
         renderEmptyData={renderEmptyData}
       />
 
       <Agenda
-        items={events}
+        items={events} // Afficher les événements dans l'agenda
         renderItem={renderItem}
         renderEmptyData={renderEmptyData}
       />

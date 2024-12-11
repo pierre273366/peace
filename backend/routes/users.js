@@ -110,13 +110,15 @@ User.findOne({token: req.body.user})
         });
         // Sauvegarder la coloc dans la base de données
         newColoc.save().then((newDoc) => {
-          res.json({ result: true, data : newDoc});
+          res.json({ result: true, coloc : newDoc});
         });
         } else {
         res.json({ result: false, error: "Coloc already exists" });
         }
         });
 
+  } else {
+    res.json({error : "user n'existe pas"})
   }
 })
 

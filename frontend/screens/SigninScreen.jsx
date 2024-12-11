@@ -17,7 +17,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 function Signin() {
   const navigation = useNavigation();
   const dispatch = useDispatch(); // Utilisation du hook useDispatch pour envoyer des actions Redux
-  const user = useSelector((state) => state.users.value); // Utilisation du hook useSelector pour accéder à l'état de l'utilisateur dans Redux
 
   // Déclaration des états locaux pour gérer la fenêtre modale et les valeurs du formulaire
   const [signInUsername, setSignInUsername] = useState(""); // État pour gérer le nom d'utilisateur du formulaire
@@ -56,8 +55,6 @@ function Signin() {
   const handleSubmit = () => {
     navigation.navigate("Signup");
   };
-
-  console.log(user.token);
 
   return (
     <View style={styles.container}>

@@ -21,13 +21,13 @@ export default function ChoiceScreen({ navigation }) {
        };
 return(
     <View style={styles.container}>
-
-          <TouchableOpacity onPress={()=> btnCreate()}>
-              <Text>Créer</Text>
+<Image style={styles.image} source={require('../assets/peacelogo.png')} />
+          <TouchableOpacity style={styles.btnCreate} onPress={()=> btnCreate()}>
+              <Text style={styles.btnText}>Je crée ma coloc'</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity  onPress={()=> btnJoin()}>
-              <Text>Rejoindre</Text>
+          <Text style={styles.separation}>_____________________  ou  _____________________</Text>
+          <TouchableOpacity style={styles.btnJoin} onPress={()=> btnJoin()}>
+              <Text style={styles.btnText}>Je rejoins ma coloc'</Text>
           </TouchableOpacity>
       </View>
 )
@@ -39,16 +39,35 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F6F8FE',
     alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingTop: 150,
   },
   image: {
-    paddingTop:15,
-    paddingLeft: 70,
-    width: 250,
-    height: 150,
+    width: 300,
+    height: 200,
   },
-  buttonSignUp:{
-    marginTop:50
-  }
+  btnCreate:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 250,
+    height: 70,
+    marginTop: 40,
+    marginBottom:30,
+    backgroundColor:'#5F6092',
+    borderRadius: 40,
+  },
+btnJoin:{
+  alignItems: 'center',
+    justifyContent: 'center',
+    width: 250,
+    height: 70,
+    marginTop: 30,
+    backgroundColor:'#EC794C',
+    borderRadius: 40,
+},
+btnText:{
+  color:"white",
+  fontWeight:'bold',
+  fontSize: 20,
+}
 });
