@@ -5,9 +5,9 @@ const mongoose = require("mongoose");
 const Event = require("../models/event");
 
 // Route pour récupérer les événements
-router.get("/", async (req, res) => {
+router.get("/:token", async (req, res) => {
   try {
-    const events = await Event.find(); // Récupérer tous les événements dans la base de données
+    const events = await Event.find({ colocToken: req.params.token }); // Récupérer tous les événements dans la base de données
     console.log("Événements récupérés:", events); // Vérifie ce qui est récupéré
     res.json({ events }); // Répondre avec les événements au format JSON
   } catch (error) {
@@ -21,8 +21,8 @@ router.get("/", async (req, res) => {
 
 // Route pour ajouter un événement
 router.post("/", (req, res) => {
-  const { name, time, place, description, date } = req.body;
-  if (!name || !time || !place || !description || !date) {
+  const { name, time, place, description, date, colocToken } = req.body;
+  if (!name || !time || !place || !description || !date || !colocToken) {
     return res.json({ message: "Tous les champs sont requis" });
   }
   const newEvent = new Event({
@@ -31,6 +31,7 @@ router.post("/", (req, res) => {
     place,
     description,
     date,
+    colocToken,
   });
   newEvent.save().then(() => {
     res.json({ newEvent }); // Retourne l'événement créé
