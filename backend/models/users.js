@@ -13,6 +13,7 @@ const userSchema = mongoose.Schema({
   profilpicture: String,
   arrivaldate: Date,
   description: String,
+  colocToken: String,
   colocname: String, 
   badgeearned: String,
 });

@@ -10,24 +10,27 @@ import JoinColocScreen from "./screens/JoinColocScreen"
 import CreateColocScreen from "./screens/CreateColoc"
 import ShareScreen from "./screens/ShareScreen"
 
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import users from './reducers/users';
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+import users from "./reducers/users";
 
 const store = configureStore({
   reducer: { users },
 });
-import AgendaScreen from "./screens/AgendaScreen";
-import TricountScreen from "./screens/TricountScreen"
-import TricountCreaScreen from "./screens/TricountCreaScreen"
-import DetailTricount from "./screens/DetailTricount";
-
-
-import EventAddScreen from "./screens/EventAddScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// Stack Navigator pour Profil, avec headerHidden: true
+function ProfileStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Profil" component={ProfilScreen} />
+    </Stack.Navigator>
+  );
+}
+
+// Tab Navigator principal
 const TabNavigator = () => {
   return (
     <Tab.Navigator
@@ -39,8 +42,11 @@ const TabNavigator = () => {
             iconName = "home";
           } else if (route.name === "Agenda") {
             iconName = "calendar";
-          } else if (route.name ==="Tricount")
-            iconName ="money"
+          } else if (route.name === "Tricount") {
+            iconName = "money";
+          } else if (route.name === "TodoList") {
+            iconName = "th-list";
+          }
 
           return <FontAwesome name={iconName} size={size} color={color} />;
         },
@@ -52,6 +58,13 @@ const TabNavigator = () => {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Agenda" component={AgendaScreen} />
       <Tab.Screen name="Tricount" component={TricountScreen} />
+      <Tab.Screen name="TodoList" component={TodoListScreen} />
+      {/* Nous excluons Profil de la Tab Bar en le plaçant dans un Stack Navigator */}
+      <Tab.Screen
+        name="Profil"
+        component={ProfileStack} // Nous utilisons le Stack Navigator pour Profil
+        options={{ tabBarButton: () => null }} // Masque l'icône Profil de la Tab Bar
+      />
     </Tab.Navigator>
   );
 };

@@ -3,6 +3,8 @@ var router = express.Router();
 const mongoose = require('mongoose');
 
 const Tricount = require('../models/tricount');
+const Coloc = require('../models/coloc');
+
 
 
 
@@ -20,27 +22,18 @@ router.get('/:userId', async (req, res) => {
 });
 
 
-//ROUTE POST : CREATION D'UN TRICOUNT
-router.post('/', async (req, res) => {
-    // Récupération des données envoyées dans le corps de la requête
-    const { title, participants  } = req.body;
-  
-    // Création du nouveau tricount
-    const newTricount = new Tricount({
-      title: title,
-      participants: participants,  // tableau des ObjectIds des participants
-    //  coloc: coloc,                 // ID de la coloc (si applicable)
-      created_at: new Date(),
-      updated_at: new Date()
-    });
-  
-    // Sauvegarde du tricount dans la base de données
-    const savedTricount = await newTricount.save();
-  
-    // Retourner le tricount créé
-    res.json(savedTricount);
-  });
+//ROUTE GET : AVOIR TOUS LES USERS DE LA COLOC
+router.get('/coloc/:id/users', async (req, res) => {
+    const coloc = await Coloc.findById(req.params.id)
+        .populate('users')
+        .select('users');
 
+    if (!coloc) {
+        return res.json({ message: 'Colocation non trouvée' });
+    }
+
+    res.json({ users: coloc.users });
+});
 
 
 module.exports = router;
