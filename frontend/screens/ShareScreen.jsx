@@ -23,6 +23,9 @@ export default function ShareScreen({ navigation }) {
         alert('Texte copié dans le presse-papiers!');
       };
 
+      const nextBtn = () => {
+      navigation.navigate('TabNavigator')
+      }
 
 return(
 
@@ -47,16 +50,18 @@ return(
         <Text style={styles.textTitle}>Nombre de colocataires</Text>
         <Text style={styles.input}>{colocNumber}</Text>
         <Text style={styles.textTitle}>Url à partager</Text>
-   <Text style={styles.input}>{colocToken}</Text>
+        <View style={styles.urlInputContainer}>
+   <Text style={styles.urlInput}>{colocToken}</Text>
    </View>
-   <TouchableOpacity onPress={() => handleCopy()}>
+   <TouchableOpacity style={styles.iconContainer} onPress={() => handleCopy()}>
    <FontAwesome
               name={'copy'}
               size={20}
-              color="#5F5F5F"
-            />
+              color="#EC794C"
+              />
             </TouchableOpacity>
-   <TouchableOpacity style={styles.btnNext}
+              </View>
+   <TouchableOpacity style={styles.btnNext} onPress={() => nextBtn()}
     activeOpacity={0.8}>
     <Text style={styles.btnText}>Suivant </Text>
 </TouchableOpacity>
@@ -117,12 +122,24 @@ color:'black',
     fontWeight: 'bold',
     paddingBottom: 25,
   },
-  url:{
+
+  urlInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     width: 300,
-        height: 40,
-        marginTop: 25,
-        marginLeft: 10,
-        backgroundColor: 'white',
-        fontSize: 18,
-  }
+    height: 40,
+    backgroundColor: 'white',
+    marginTop: 25,
+},
+urlInput: {
+    flex: 1,
+    paddingLeft: 10,
+    fontSize: 18,
+    color: 'black',
+},
+iconContainer: {
+    position: 'absolute',
+    right: 10,
+    paddingTop: 233,
+},
 });
