@@ -53,31 +53,29 @@ export default function TricountCreaScreen({ navigation, route }) {
         return null;
       };
 
-
       const userChoice = users.map((user, i) => {
         return (
-          <View>
-              <View key={i} style={styles.containerCheck}>
-                <Checkbox
-                    style={styles.checkbox}
-                    value={selectedUsers.includes(user.username)}
-                    onValueChange={() => handleCheckboxChange(user.username)}
-                />
-                <Text>{user.username}</Text>
-            </View>
+          <View key={i} style={styles.containerCheck}>
+            <Checkbox
+              style={styles.checkbox}
+              value={selectedUsers.includes(user._id)}
+              onValueChange={() => handleCheckboxChange(user)}
+              // Ajoutez ces props pour une meilleure visibilité
+              color={selectedUsers.includes(user._id) ? '#FD703C' : undefined}
+            />
+            <Text>{user.username}</Text>
           </View>
         );
       });
 
 
-      const handleCheckboxChange = (username) => {
-        if (selectedUsers.includes(username)) {
-            setSelectedUsers(selectedUsers.filter(user => user !== username));
+      const handleCheckboxChange = (user) => {
+        if (selectedUsers.includes(user._id)) {
+          setSelectedUsers(selectedUsers.filter(id => id !== user._id));
         } else {
-            setSelectedUsers([...selectedUsers, username]);
+          setSelectedUsers([...selectedUsers, user._id]);
         }
-    };
-
+      };
     console.log(selectedUsers)
 
   return (

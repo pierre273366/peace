@@ -40,7 +40,7 @@ export const userSlice = createSlice({
       const {name, address, peoples, token} = action.payload
       state.coloc.name = name;
       state.coloc.address = address;
-      state.coloc.number = peoples;
+      state.coloc.peoples = peoples;
       state.coloc.token = token;
       
     }
