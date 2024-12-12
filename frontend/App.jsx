@@ -17,6 +17,8 @@ import TricountScreen from "./screens/TricountScreen";
 import TodoListScreen from "./screens/TodoListScreen";
 import ProfilScreen from "./screens/ProfilScreen";
 import ProfilParamScreen from "./screens/ProfilParamScreen";
+import TricountAddExpense from "./screens/TricountAddExpense";
+
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -92,6 +94,7 @@ export default function App() {
         <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
         <Stack.Screen name="ShareColoc" component={ShareScreen} />
         <Stack.Screen name="ProfilParams" component={ProfilParamScreen}/>
+        <Stack.Screen name="TricountAddExpense" component={TricountAddExpense}/>
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
