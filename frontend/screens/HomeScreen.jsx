@@ -153,7 +153,7 @@ export default function HomeScreen({ navigation }) {
           </View>
 
           <View style={styles.sondage}>
-            <Text style={styles.h2White}>Sondage</Text>
+            <Text style={styles.h2black}>Sondage</Text>
           </View>
 
           <View style={styles.liste}>
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   containerWidget: {
-    backgroundColor: "red",
+    backgroundColor: "#BEBFF5",
     width: "100%",
     height: "100%",
     flexDirection: "row",
@@ -259,22 +259,34 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   sondage: {
-    backgroundColor: "#5F6095",
-    height: 100,
+    width: 320,
+    height: 190,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
     width: "48%",
-    padding: 16,
   },
   liste: {
-    backgroundColor: "green",
-    height: 100,
+    width: 320,
+    height: 190,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
     width: "48%",
-    padding: 16,
   },
   roue: {
-    backgroundColor: "orange",
-    height: 100,
+    width: 320,
+    height: 190,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
     width: "48%",
-    padding: 16,
   },
   wheelContainer: {
     alignItems: "center",
