@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux"; 
 import {View,
   Image,
   KeyboardAvoidingView,
@@ -10,49 +11,45 @@ import {View,
   TouchableOpacity,
   
 } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
+
 
 
 export default function TricountScreen({ navigation }) {
 
-//EXEMPLE EN ATTENDANT LA BDD
-  const exempleTricount = [
-    {
-      "_id": "64b7a12393f1a4e689456abc",
-      "title": "Voyage à Paris",
-      "participants": [
-        "64b7a13e93f1a4e689456abc",
-        "64b7a12393f1a4e689456def"
-      ],
-      "expense": [
-        {
-          "user_id": "64b7a13e93f1a4e689456abc",
-          "amount": 100,
-          "description": "Hotel",
-          "expense_date": "2024-12-09"
-        },
-        {
-          "user_id": "64b7a12393f1a4e689456def",
-          "amount": 50,
-          "description": "Transport",
-          "expense_date": "2024-12-09"
+  const [tricounts, setTricounts] = useState([])
+  const userToken = useSelector((state) => state.users.user.token);
+
+
+  useFocusEffect( // Permet de rafraichir la page afin de recupérer tous les nouveaux tricounts
+    useCallback(() => {
+      fetchTricounts();
+    }, [])
+  );
+
+  const fetchTricounts = () => {
+    fetch(`http://10.9.1.140:3000/tricount/recuptricounts/${userToken}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          setTricounts(data.tricounts);
         }
-      ],
-      "created_at": "2024-12-09T00:00:00.000Z",
-      "updated_at": "2024-12-09T00:00:00.000Z"
-    }
-  ];
+      });
+  };
 
-
+  
   const handleNavigateToDetails = () => {
-    navigation.navigate("TricountDetails");
+    navigation.navigate("DetailTricount");
   };
 
 
   
 // CREATION DES CARD TRICOUNT EN FONCTION DE LA BDD
-  const cardTricount = exempleTricount.map((data, i) => {
+  const cardTricount = tricounts.map((data, i) => {
     return (
-      <TouchableOpacity key={i} style={styles.card} onPress={()=>   navigation.navigate("DetailTricount")}>
+      <TouchableOpacity key={i} style={styles.card} onPress={()=>handleNavigateToDetails()}>
         
         <Text style={{fontSize:30}}>💳</Text>
           <Text style={styles.name}>{data.title}</Text>

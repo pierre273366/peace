@@ -138,12 +138,6 @@ router.post("/createcoloc", (req, res) => {
   });
 });
 
-
-
-
-
-
-
 /*
 router.post("/joincoloc", (req, res) => {
   if (!checkBody(req.body, ["token", "user"])) {
@@ -233,7 +227,6 @@ router.post("/joincoloc", (req, res) => {
 
 */
 
-
 router.post("/joincoloc", (req, res) => {
   if (!checkBody(req.body, ["token", "user"])) {
     res.json({ result: false, error: "Missing or empty fields" });
@@ -297,7 +290,9 @@ router.post("/joincoloc", (req, res) => {
                     .catch((error) => {
                       res.json({
                         result: false,
-                        error: "Error finding coloc info after update: " + error.message,
+                        error:
+                          "Error finding coloc info after update: " +
+                          error.message,
                       });
                     });
                 })
@@ -330,9 +325,20 @@ router.post("/joincoloc", (req, res) => {
     });
 });
 
-
-
-
-
+// Route pour récupérer les événements
+router.get("/:token", async (req, res) => {
+  try {
+    const userDet = await User.findOne({
+      token: req.params.token,
+    }); // Récupérer tous les événements dans la base de données
+    res.json({ userDet }); // Répondre avec les événements au format JSON
+  } catch (error) {
+    console.error("Erreur lors de la récupération des événements:", error);
+    res.json({
+      message: "Erreur lors de la récupération des événements",
+      error,
+    });
+  }
+});
 
 module.exports = router;

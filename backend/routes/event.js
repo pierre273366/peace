@@ -19,6 +19,23 @@ router.get("/:token", async (req, res) => {
   }
 });
 
+// Route pour récupérer les événements du jour pour le widget
+router.get("/:token/:date", async (req, res) => {
+  try {
+    const eventsOfDay = await Event.find({
+      colocToken: req.params.token,
+      date: req.params.date,
+    });
+    res.json({ eventsOfDay });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des événements:", error);
+    res.json({
+      message: "Erreur lors de la récupération des événements",
+      error,
+    });
+  }
+});
+
 // Route pour ajouter un événement
 router.post("/", (req, res) => {
   const { name, time, place, description, date, colocToken } = req.body;

@@ -16,14 +16,18 @@ import {View,
 
 export default function TricountCreaScreen({ navigation, route }) {
 
-  
+
+  const dispatch = useDispatch();
+  const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
+
+
 
     const [title, setTitle]= useState('')
     const [description, setDescription]= useState('')
     const [users, setUsers]= useState([]) //personnes de la coloc
     const [selectedUsers, setSelectedUsers]= useState([])
-
+    const [colocId, setColocId] = useState(null);
 
 
       
@@ -78,6 +82,32 @@ export default function TricountCreaScreen({ navigation, route }) {
       };
     console.log(selectedUsers)
 
+
+
+
+    const handleSubmit = async () => {
+      const response = await fetch('http://10.9.1.140:3000/tricount/createtricount', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          participants: selectedUsers,
+          colocToken: colocToken,
+        }),
+      });
+      const data = await response.json();
+    
+      if (data.result) {
+        console.log('Tricount créé !');
+        navigation.goBack();
+      }
+    };
+    
+
+
+
   return (
     <SafeAreaView  style={styles.container}>
       
@@ -102,19 +132,6 @@ export default function TricountCreaScreen({ navigation, route }) {
             <View style={styles.input}>
                 <Text>⭐️</Text>
                 <View style={styles.inputContent}>
-                    <Text>Description</Text>
-                    <TextInput 
-                    placeholder="Donnez plus d'informations" 
-                    onChangeText={(value) => setDescription(value)} 
-                    value={description} 
-                    style={styles.inputText}
-                    />
-                </View>
-            </View>
-
-            <View style={styles.input}>
-                <Text>⭐️</Text>
-                <View style={styles.inputContent}>
                     <Text>Participants</Text>
 
                     <View style={styles.containerCheck}>
@@ -127,7 +144,7 @@ export default function TricountCreaScreen({ navigation, route }) {
         </View>
       
       
-        <TouchableOpacity style={styles.partager}>
+        <TouchableOpacity style={styles.partager} onPress={()=> handleSubmit()}>
             <Text style={styles.white}>Créer</Text>
         </TouchableOpacity>
 
