@@ -138,9 +138,104 @@ router.post("/createcoloc", (req, res) => {
   });
 });
 
+
+
+
+
+
+
+/*
 router.post("/joincoloc", (req, res) => {
-  if (!checkBody(req.body, ["token"])) {
+  if (!checkBody(req.body, ["token", "user"])) {
     // Ajouter 'user' dans la validation du body
+    res.json({ result: false, error: "Missing or empty fields" });
+    return;
+  }
+
+  // Trouver la coloc en fonction du token
+  Coloc.findOne({ token: req.body.token })
+    .then((coloc) => {
+      if (!coloc) {
+        return res.json({ result: false, error: "Coloc not found" });
+      }
+
+      // Trouver l'utilisateur en fonction du token
+      User.findOne({ token: req.body.user })
+        .then((user) => {
+          if (!user) {
+            return res.json({ result: false, error: "User not found" });
+          }
+
+          // Vérifier si l'utilisateur est déjà dans la liste des utilisateurs de la coloc
+          const userId = user._id;
+          const userAlreadyInColoc = coloc.users.includes(userId);
+
+          if (userAlreadyInColoc) {
+            return res.json({
+              result: false,
+              error: "User already in the coloc",
+            });
+          }
+
+          // Si l'utilisateur n'est pas encore dans la coloc, on l'ajoute
+          coloc.users.push(userId);
+
+          // Mettre à jour le token de la coloc dans l'utilisateur
+          user.colocToken = coloc.token;
+
+          
+          // Sauvegarder la coloc et l'utilisateur avec les modifications
+          coloc
+          .save()
+          .then(() => {
+            // Sauvegarder l'utilisateur
+            user
+            .save()
+            .then(() => {
+                  Coloc.findOne({token: req.body.token})
+                  .then((colocInfo) => {
+                    if(colocInfo){
+                     const colocInfo = colocInfo
+                    }
+                  }
+                )
+                  // Répondre que l'utilisateur a bien été ajouté
+                  res.json({ result: true, message: "User added to coloc", colocInfo});
+                })
+                .catch((error) => {
+                  res.json({
+                    result: false,
+                    error: "Error saving user: " + error.message,
+                  });
+                });
+            })
+            .catch((error) => {
+              res.json({
+                result: false,
+                error: "Error saving coloc: " + error.message,
+              });
+            });
+        })
+        .catch((error) => {
+          res.json({
+            result: false,
+            error: "Error finding user: " + error.message,
+          });
+        });
+    })
+    .catch((error) => {
+      res.json({
+        result: false,
+        error: "Error finding coloc: " + error.message,
+      });
+    });
+});
+
+*/
+
+
+router.post("/joincoloc", (req, res) => {
+  if (!checkBody(req.body, ["token", "user"])) {
     res.json({ result: false, error: "Missing or empty fields" });
     return;
   }
@@ -180,12 +275,31 @@ router.post("/joincoloc", (req, res) => {
           coloc
             .save()
             .then(() => {
-              // Sauvegarder l'utilisateur
               user
                 .save()
                 .then(() => {
-                  // Répondre que l'utilisateur a bien été ajouté
-                  res.json({ result: true, message: "User added to coloc" });
+                  // Trouver à nouveau la coloc pour renvoyer les informations à jour
+                  Coloc.findOne({ token: req.body.token })
+                    .then((colocInfo) => {
+                      if (colocInfo) {
+                        res.json({
+                          result: true,
+                          message: "User added to coloc",
+                          colocInfo: colocInfo, // Ajout des informations de la coloc dans la réponse
+                        });
+                      } else {
+                        res.json({
+                          result: false,
+                          error: "Coloc not found after update",
+                        });
+                      }
+                    })
+                    .catch((error) => {
+                      res.json({
+                        result: false,
+                        error: "Error finding coloc info after update: " + error.message,
+                      });
+                    });
                 })
                 .catch((error) => {
                   res.json({
@@ -215,5 +329,10 @@ router.post("/joincoloc", (req, res) => {
       });
     });
 });
+
+
+
+
+
 
 module.exports = router;

@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  Image,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -20,6 +21,12 @@ export default function Profil({ navigation }) {
             <FontAwesome name={"gear"} size={30} color="#5F5F5F" />
           </TouchableOpacity>
           <View style={styles.containerDescript}>
+            <View style={{ borderRadius: 100 }}>
+              <Image
+                source={require("../assets/avatar.jpg")}
+                style={styles.avatar}
+              />
+            </View>
             <Text>@USER</Text>
             <Text>🎂{}</Text>
           </View>
@@ -75,5 +82,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 130,
     padding: 20,
+  },
+  avatar: {
+    widht: 90,
+    height: 150,
   },
 });

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
+import { useSelector } from "react-redux";
 const EventAdd = ({ navigation, route }) => {
   // Déclaration des états pour stocker les valeurs des champs
   const [eventName, setEventName] = useState(""); // Nom de l'événement
@@ -17,6 +17,7 @@ const EventAdd = ({ navigation, route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date()); // Date de l'événement, initialisée à la date actuelle
   const [showDatePicker, setShowDatePicker] = useState(false); // Contrôle pour afficher ou non le DatePicker
   const [timeError, setTimeError] = useState(""); // Message d'erreur si l'heure est mal formatée
+  const colocToken = useSelector((state) => state.users.coloc.token);
 
   // Fonction pour gérer la sélection de la date
   const onDateChange = (event, selectedDate) => {
@@ -57,6 +58,7 @@ const EventAdd = ({ navigation, route }) => {
       place: eventPlace,
       description: eventDescription,
       date: selectedDate.toISOString().split("T")[0], // Formater la date au format YYYY-MM-DD
+      colocToken,
     };
 
     // Envoyer l'événement au backend
