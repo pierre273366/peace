@@ -345,4 +345,34 @@ router.get("/:token", async (req, res) => {
   }
 });
 
+router.delete("/:token", async (req, res) => {
+  User.findOne({ token: req.params.token }).then((user) => {
+    if (user) {
+      Coloc.updateOne(
+        { token: user.colocToken },
+        { $pull: { users: user._id } }
+      ).then((info) => {
+        if (info.acknowledged) {
+          user.colocToken = "";
+          user
+            .save()
+            .then(() =>
+              res.json({
+                result: true,
+                message: "Utilisateur supprimé avec succès de la coloc",
+              })
+            );
+        } else {
+          res.json({
+            result: false,
+            error: "Utilisateur non supprimé de coloc",
+          });
+        }
+      });
+    } else {
+      res.json({ result: false, error: "Utilisateur introuvable" });
+    }
+  });
+});
+
 module.exports = router;
