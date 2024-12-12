@@ -1,9 +1,10 @@
 import {StyleSheet, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View, Image, Alert} from 'react-native'
 import React, { useState } from "react"; // Importation de React et du hook useState pour gérer l'état local
 import { useDispatch, useSelector } from "react-redux"; // Importation des hooks Redux pour interagir avec le store
-import { login, logout } from "../reducers/users"; // Importation des actions login et logout de Redux
+import { login, logout, coloc } from "../reducers/users"; // Importation des actions login et logout de Redux
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 
 
 
@@ -24,18 +25,21 @@ const [token, setToken] = useState(null)
     })
     .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
     .then((data) => {
-      console.log(data)
+      if(data.result){
       dispatch(
         coloc({
           name: data.colocInfo.name,
           address: data.colocInfo.address,
           peoples: data.colocInfo.peoples,
           token: data.colocInfo.token
-          
         })
       )
-      navigation.navigate("TabNavigator")
-    })
+        navigation.navigate("TabNavigator");
+
+    }else{
+        console.log('not working')
+    }
+  })
     
   }
     
