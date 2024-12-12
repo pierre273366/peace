@@ -10,32 +10,56 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default function JoinColoc({ navigation }) {
 
-    const handleSubmit = () => {
-    
-      };
-    
+const userToken = useSelector((state) => state.users.user.token);
+const dispatch = useDispatch();
 
-return(
+
+const [token, setToken] = useState(null)
+
+  const handleSubmit = () => {
+    fetch("http://10.9.1.105:3000/users/joincoloc", {
+      method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
+      headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+      body: JSON.stringify({token : token, user : userToken} ),
+    })
+    .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
+    .then((data) => {
+      console.log(data)
+      dispatch(
+        coloc({
+          name: data.colocInfo.name,
+          address: data.colocInfo.address,
+          peoples: data.colocInfo.peoples,
+          token: data.colocInfo.token
+          
+        })
+      )
+      navigation.navigate("TabNavigator")
+    })
+    
+  }
+    
+    return(
     <View style={styles.container}>
 
       <Image style={styles.image} source={require('../assets/peacelogo.png')} />
 
       
-      <TextInput style={styles.urlInput} placeholder='url de ta coloc'>
+      <TextInput style={styles.urlInput}  onChangeText={(value) => setToken(value)} value={token} placeholder='url de ta coloc'>
 
       </TextInput>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Home')
+        onPress={() => handleSubmit()
         }
         style={styles.btnNext}
         activeOpacity={0.8}
-      >
+        >
         <Text style={styles.textBtn}>Suivant </Text>
       </TouchableOpacity>
       </View>
 )
 
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -49,9 +73,9 @@ const styles = StyleSheet.create({
     width: 300,
     height: 200,
   },
-urlInput:{
-  width: 300,
-        height: 40,
+  urlInput:{
+    width: 300,
+    height: 40,
         marginTop: 25,
         marginLeft: 10,
         borderBottomColor: '#ec6e5b',
