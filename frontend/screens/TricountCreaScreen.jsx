@@ -129,6 +129,7 @@ export default function TricountCreaScreen({ navigation, route }) {
                 </View>
             </View>
 
+
             <View style={styles.input}>
                 <Text>⭐️</Text>
                 <View style={styles.inputContent}>
