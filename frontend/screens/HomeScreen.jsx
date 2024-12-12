@@ -152,6 +152,9 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
 
+          <TouchableOpacity style={styles.sondage} onPress={() => navigation.navigate("Sondage")}>
+            <Text style={styles.h2White}>Sondage</Text>
+          </TouchableOpacity>
           <View style={styles.sondage}>
             <Text style={styles.h2black}>Sondage</Text>
           </View>

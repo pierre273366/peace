@@ -19,6 +19,9 @@ import ProfilScreen from "./screens/ProfilScreen";
 import AccueilScreen from "./screens/AccueilScreen";
 import ProfilParamScreen from "./screens/ProfilParamScreen";
 import TricountAddExpense from "./screens/TricountAddExpense";
+import SondageScreen from "./screens/SondageScreen";
+import CreateSondageScreen from "./screens/CreateSondageScreen";
+import DetailSondageScreen from "./screens/DetailSondageScreen";
 
 
 import { Provider } from "react-redux";
@@ -97,6 +100,9 @@ export default function App() {
         <Stack.Screen name="ShareColoc" component={ShareScreen} />
         <Stack.Screen name="ProfilParams" component={ProfilParamScreen}/>
         <Stack.Screen name="TricountAddExpense" component={TricountAddExpense}/>
+        <Stack.Screen name="Sondage" component={SondageScreen}/>
+        <Stack.Screen name="CreateSondage" component={CreateSondageScreen}/>
+        <Stack.Screen name="DetailSondage" component={DetailSondageScreen}/>
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
