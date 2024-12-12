@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 // Share Schema
 const shareSchema = mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
+  amountToPay: { type: Number, required: true } // Ajout du montant à payer
 });
 
 // Expense Schema

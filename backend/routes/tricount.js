@@ -81,6 +81,118 @@ router.get('/recuptricounts/:userToken', (req, res) => {
 
 
 
+//ROUTE GET : RECUP LES UTILISATEUR D'UN TRICOUNT
+router.get('/tricount-participants/:tricountId', (req, res) => {
+  const { tricountId } = req.params;
 
+  if (!tricountId) {
+    return res.json({ result: false, error: 'ID du tricount requis' });
+  }
+
+  Tricount.findById(tricountId)
+    .populate('participants', ['username', '_id']) // On ne récupère que username et _id des participants
+    .then(data => {
+      if (data && data.participants) {
+        res.json({ result: true, participants: data.participants });
+      } else {
+        res.json({ result: false, error: 'Tricount non trouvé' });
+      }
+    });
+});
+
+
+
+//ROUTE POST : AJOUT D'UNE DEPENSe
+router.post('/add-expense', (req, res) => {
+  console.log('Données reçues:', req.body); // Pour débugger
+
+  const { tricountId, expense } = req.body;
+
+  if (!tricountId || !expense) {
+    return res.json({ result: false, error: 'Données manquantes' });
+  }
+
+  Tricount.findByIdAndUpdate(
+    tricountId,
+    { $push: { expense: expense } },
+    { new: true }
+  )
+  .then(updatedTricount => {
+    if (updatedTricount) {
+      res.json({ result: true, tricount: updatedTricount });
+    } else {
+      res.json({ result: false, error: 'Tricount non trouvé' });
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+    res.status(500).json({ result: false, error: error.message });
+  });
+});
+
+
+
+//ROUTE GET: RECUPÈRE TOUTES LES DEPENSES
+router.get('/tricountExpense/:tricountId', (req, res) => {
+  const { tricountId } = req.params;
+
+  if (!tricountId) {
+    return res.json({ result: false, error: 'ID du tricount requis' });
+  }
+
+  Tricount.findById(tricountId)
+    .populate({
+      path: 'expense.user',    // Pour avoir les infos de l'utilisateur qui a payé
+      select: 'username'       // On ne récupère que le username
+    })
+    .populate({
+      path: 'expense.share.user', // Pour avoir les infos des utilisateurs dans les shares
+      select: 'username'
+    })
+    .then(tricount => {
+      if (tricount) {
+        // On peut directement renvoyer le tricount avec toutes ses dépenses
+        res.json({
+          result: true,
+          tricount: {
+            _id: tricount._id,
+            title: tricount.title,
+            expense: tricount.expense.map(exp => ({
+              description: exp.description,
+              amount: exp.amount,
+              expense_date: exp.expense_date,
+              user: exp.user,
+              share: exp.share
+            }))
+          }
+        });
+      } else {
+        res.json({ result: false, error: 'Tricount non trouvé' });
+      }
+    });
+});
+
+
+
+
+//ROUTE GET : AVOIR ID PAR TOKEN
+router.get('/user/:token', (req, res) => {
+  const { token } = req.params;
+
+  // Vérification de la présence du token
+  if (!token) {
+    return res.json({ result: false, error: 'Token manquant' });
+  }
+
+  // Recherche de l'utilisateur par son token
+  User.findOne({ token: token })
+    .then(data => {
+      if (data) {
+        res.json({ result: true, userId: data._id });
+      } else {
+        res.json({ result: false, error: 'Utilisateur non trouvé' });
+      }
+    });
+});
 
 module.exports = router;

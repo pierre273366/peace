@@ -40,16 +40,19 @@ export default function TricountScreen({ navigation }) {
   };
 
   
-  const handleNavigateToDetails = () => {
-    navigation.navigate("DetailTricount");
-  };
+  const handleNavigateToDetails = (_id, title) => {
+    navigation.navigate("DetailTricount", {
+    tricountId: _id,
+    tricountTitle: title
+  });
+}
 
 
   
 // CREATION DES CARD TRICOUNT EN FONCTION DE LA BDD
   const cardTricount = tricounts.map((data, i) => {
     return (
-      <TouchableOpacity key={i} style={styles.card} onPress={()=>handleNavigateToDetails()}>
+      <TouchableOpacity key={i} style={styles.card} onPress={()=>handleNavigateToDetails(data._id, data.title)}>
         
         <Text style={{fontSize:30}}>💳</Text>
           <Text style={styles.name}>{data.title}</Text>
