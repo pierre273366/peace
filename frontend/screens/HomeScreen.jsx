@@ -152,9 +152,9 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
 
-          <View style={styles.sondage}>
+          <TouchableOpacity style={styles.sondage} onPress={() => navigation.navigate("Sondage")}>
             <Text style={styles.h2White}>Sondage</Text>
-          </View>
+          </TouchableOpacity>
 
           <View style={styles.liste}>
             <Text style={styles.h2}>Liste de course</Text>

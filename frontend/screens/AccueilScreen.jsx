@@ -8,20 +8,21 @@ export default function Accueil({ navigation }) {
  const GoBtn = () => {
     navigation.navigate("Signin");}
     
-    
-    
-    
-    
-    
-    
     return (
      <View style={styles.container}>
         <Image
           style={styles.imageLogo}
           source={require("../assets/peacelogo.png")}
           />
+      <View style={styles.textContainer}>  
+          <Text style={styles.text}>Bienvenue sur Peace!{'\n'}{'\n'}Gérer votre colocation n'a jamais été aussi facile. Organisez vos dépenses, événements et plus encore, en quelques clics </Text>
+    </View>  
         <TouchableOpacity style={styles.btnGo} onPress={() => GoBtn()}>
-            <Text>GO !</Text> 
+            <FontAwesome style={styles.iconGo}
+            name='arrow-circle-right'
+            size={80}
+            color="#FDB165">
+            </FontAwesome>
             </TouchableOpacity>
         <Image
           style={styles.image}
@@ -39,29 +40,44 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
+
   imageLogo: {
+    paddingTop:10,
       justifyContent: "center",
       alignItems: "center",
-      width: 250,
-      height: 150,
-      paddingLeft: 55,
+      width: 300,
+      height: 200,
   },
+
   image:{
     justifyContent: "center",
       alignItems: "center",
       width: 400 ,
-      height: 300,
+      height: 400,
+      marginTop:10,
+      paddingLeft:20,
+      paddingRight:20,
   },
-  btnGo:{
-    justifyContent:'center',
-    alignItems:'center',
-height:70,
-width:70,
-backgroundColor:'pink',
-borderRadius:100,
-borderWidth: 2,
-  borderColor: 'blue',
 
+
+  btnText:{
+    fontSize:20,
+    fontWeight:'bold',
+  },
+
+    textContainer:{
+    padding:20,
+    
+  },
+
+  text:{
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign:'center',
+    
+  },
+  iconGo:{
+    color:'#FD703C',
   },
 });
 
