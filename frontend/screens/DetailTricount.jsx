@@ -3,40 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
-export default function DetailTricount({ route } ) {
+export default function DetailTricount({ navigation } ) {
 
     const [selectedOption, setSelectedOption] = useState('depenses'); // 'depenses' ou 'equilibre'
-
-
-
-//EXEMPLE EN ATTENDANT LA BDD
-  const exempleTricount = [
-    {
-      "_id": "64b7a12393f1a4e689456abc",
-      "title": "Voyage à Paris",
-      "participants": [
-        "64b7a13e93f1a4e689456abc",
-        "64b7a12393f1a4e689456def"
-      ],
-      "expense": [
-        {
-          "user_id": "64b7a13e93f1a4e689456abc",
-          "amount": 100,
-          "description": "Hotel",
-          "expense_date": "2024-12-09"
-        },
-        {
-          "user_id": "64b7a12393f1a4e689456def",
-          "amount": 50,
-          "description": "Transport",
-          "expense_date": "2024-12-09"
-        }
-      ],
-      "created_at": "2024-12-09T00:00:00.000Z",
-      "updated_at": "2024-12-09T00:00:00.000Z"
-    }
-  ];
-
 
 
   //BLOC DÉPENSE
@@ -79,7 +48,7 @@ const EquilibreView = () => (
   
           <Text style={styles.title}>TITLE</Text>
   
-          <TouchableOpacity style={styles.Add} onPress={()=>navigation.navigate("TricountCrea")}>
+          <TouchableOpacity style={styles.Add} onPress={()=>navigation.navigate("TricountAddExpense")}>
               <Text style={styles.white}>+</Text>
           </TouchableOpacity>
   

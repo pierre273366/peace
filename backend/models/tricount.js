@@ -16,7 +16,7 @@ const expenseSchema = mongoose.Schema({
 
 // Tricount Schema
 const tricountSchema = mongoose.Schema({
-  coloc: { type: mongoose.Schema.Types.ObjectId, ref: 'coloc' },
+  colocToken: String,
   title: { type: String, required: true },
   participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
   expense: [expenseSchema], // Tableau si plusieurs dépenses sont associées au même tricount
