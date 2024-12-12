@@ -6,6 +6,14 @@ export default function CreateSondage({ navigation }) {
 
     const [title, setTitle] = useState('');
     const [responses, setResponses] = useState(['']);
+    
+    const addInput = () => {
+        setResponses([...responses, '']);
+      };
+
+
+
+        
 
     return(
         <View style={styles.container}>
@@ -18,7 +26,8 @@ export default function CreateSondage({ navigation }) {
             <TextInput placeholder='Sondage Title'> </TextInput>
             <TextInput placeholder='Réponse 1'> </TextInput>
             <TextInput placeholder='Réponse 2'> </TextInput>
-            <TouchableOpacity style={styles.AddBtn}></TouchableOpacity>
+            {input}
+            <TouchableOpacity style={styles.AddBtn} onPress={() => addInput()}></TouchableOpacity>
         </View>
     </View>
     </View>

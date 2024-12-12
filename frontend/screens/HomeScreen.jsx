@@ -81,7 +81,7 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate("Profil")}
           style={styles.user}
         >
-          <Text>Profil User</Text>
+          <Text style={{ color: "white", fontWeight: "bold" }}>Mon Profil</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.containerView}>
@@ -155,6 +155,9 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity style={styles.sondage} onPress={() => navigation.navigate("Sondage")}>
             <Text style={styles.h2White}>Sondage</Text>
           </TouchableOpacity>
+          <View style={styles.sondage}>
+            <Text style={styles.h2black}>Sondage</Text>
+          </View>
 
           <View style={styles.liste}>
             <Text style={styles.h2}>Liste de course</Text>
@@ -187,9 +190,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   user: {
-    backgroundColor: "orange",
-    width: 80,
+    backgroundColor: "rgb(253, 112, 60)",
+    width: 90,
     height: 50,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 20,
   },
   title: {
     fontSize: 24,
@@ -215,7 +222,7 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   containerWidget: {
-    backgroundColor: "red",
+    backgroundColor: "#BEBFF5",
     width: "100%",
     height: "100%",
     flexDirection: "row",
@@ -255,22 +262,34 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   sondage: {
-    backgroundColor: "#5F6095",
-    height: 100,
+    width: 320,
+    height: 190,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
     width: "48%",
-    padding: 16,
   },
   liste: {
-    backgroundColor: "green",
-    height: 100,
+    width: 320,
+    height: 190,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
     width: "48%",
-    padding: 16,
   },
   roue: {
-    backgroundColor: "orange",
-    height: 100,
+    width: 320,
+    height: 190,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
     width: "48%",
-    padding: 16,
   },
   wheelContainer: {
     alignItems: "center",

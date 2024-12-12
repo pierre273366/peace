@@ -1,25 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit'; // Importation de la fonction createSlice de Redux Toolkit pour créer un réducteur de manière simplifiée.
+import { createSlice } from "@reduxjs/toolkit"; // Importation de la fonction createSlice de Redux Toolkit pour créer un réducteur de manière simplifiée.
 
 const initialState = {
-  // Définition de l'état initial de l'utilisateur. 
+  // Définition de l'état initial de l'utilisateur.
   // L'utilisateur a un token, un nom d'utilisateur (username) et un mail, initialement définis sur null.
-  user: {token: null, username: null, email: null, phoneNumber: null},
-  coloc: {name: null, address: null, peoples: null, token: null},
+  user: { token: null, username: null, email: null, phoneNumber: null },
+  coloc: { name: null, address: null, peoples: null, token: null },
 };
 
 export const userSlice = createSlice({
   // Création du "slice" (partie de l'état) appelé 'user' avec les valeurs et les reducers.
-  name: 'user', // Nom du slice, ici 'user', utilisé pour identifier cette partie de l'état.
+  name: "user", // Nom du slice, ici 'user', utilisé pour identifier cette partie de l'état.
   initialState, // L'état initial que nous avons défini ci-dessus.
   reducers: {
     // Définition des actions de modification de l'état. Chaque action correspond à un cas dans un réducteur.
 
     updateEmail: (state, action) => {
-      state.user.email = action.payload.email;  
+      state.user.email = action.payload.email;
     },
 
     updatePhone: (state, action) => {
-      state.user.phoneNumber = action.payload.phonenumber;  
+      state.user.phoneNumber = action.payload.phonenumber;
     },
 
     login: (state, action) => {
@@ -27,7 +27,6 @@ export const userSlice = createSlice({
       // Les informations (token, username) sont récupérées à partir de 'action.payload'.
       state.user.token = action.payload.token;
       state.user.username = action.payload.username;
-      
     },
 
     logout: (state, action) => {
@@ -37,17 +36,23 @@ export const userSlice = createSlice({
     },
 
     coloc: (state, action) => {
-      const {name, address, peoples, token} = action.payload
+      const { name, address, peoples, token } = action.payload;
       state.coloc.name = name;
       state.coloc.address = address;
       state.coloc.peoples = peoples;
       state.coloc.token = token;
-      
-    }
+    },
+    supColoc: (state, action) => {
+      state.coloc.name = null;
+      state.coloc.address = null;
+      state.coloc.peoples = null;
+      state.coloc.token = null;
+    },
   },
 });
 
-export const { login, logout, updateEmail, updatePhone, coloc } = userSlice.actions;
+export const { login, logout, updateEmail, updatePhone, coloc, supColoc } =
+  userSlice.actions;
 // Extraction des actions 'login' et 'logout' de l'objet userSlice.actions.
 // Ces actions sont créées automatiquement par createSlice et sont exportées pour pouvoir être utilisées ailleurs dans l'application.
 
