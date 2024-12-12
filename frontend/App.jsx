@@ -16,6 +16,7 @@ import AgendaScreen from "./screens/AgendaScreen";
 import TricountScreen from "./screens/TricountScreen";
 import TodoListScreen from "./screens/TodoListScreen";
 import ProfilScreen from "./screens/ProfilScreen";
+import AccueilScreen from "./screens/AccueilScreen";
 import ProfilParamScreen from "./screens/ProfilParamScreen";
 
 import { Provider } from "react-redux";
@@ -82,6 +83,7 @@ export default function App() {
     <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Accueil" component={AccueilScreen}/>
         <Stack.Screen name="Signin" component={SigninScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="DetailTricount" component={DetailTricount} />
