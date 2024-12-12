@@ -1,15 +1,53 @@
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   SafeAreaView,
   Image,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useSelector } from "react-redux";
 
 export default function Profil({ navigation }) {
+  const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
+  const coloc = useSelector((state) => state.users.coloc);
+  const [userDetails, setUserDetails] = useState("");
+
+  const backendUrl = "http://10.9.1.137:3000";
+  const userToken = user.token;
+
+  // Fonction pour formater les dates
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+
+  // Utilisation de useEffect pour récupérer les informations de l'utilisateur avec son token
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        // Effectuer le fetch avec le token de l'utilisateur pour récupérer ses détails
+        const response = await fetch(`${backendUrl}/users/${userToken}`);
+        const data = await response.json();
+
+        // Si la réponse contient les informations nécessaires, mettre à jour l'état
+        if (data.userDet) {
+          setUserDetails(data.userDet);
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des informations utilisateur:",
+          error
+        );
+      }
+    };
+
+    fetchUserDetails();
+  }, []); // Déclenche l'effet uniquement si le token de l'utilisateur change
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.containerProfil}>
@@ -21,14 +59,33 @@ export default function Profil({ navigation }) {
             <FontAwesome name={"gear"} size={30} color="#5F5F5F" />
           </TouchableOpacity>
           <View style={styles.containerDescript}>
-            <View style={{ borderRadius: 100 }}>
+            <View style={styles.avatarContainer}>
               <Image
-                source={require("../assets/avatar.jpg")}
+                source={require("../assets/utilisateur.png")}
                 style={styles.avatar}
               />
             </View>
-            <Text>@USER</Text>
-            <Text>🎂{}</Text>
+            <View style={styles.presentation}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 22,
+                  fontWeight: "bold",
+                  paddingTop: 5,
+                }}
+              >
+                @{user.username}
+              </Text>
+              <Text style={{ textAlign: "center", lineHeight: 30 }}>
+                Ma coloc: {coloc.name}
+              </Text>
+              <Text style={{ textAlign: "center", lineHeight: 30 }}>
+                Adresse de la coloc: {coloc.address}
+              </Text>
+              <Text style={{ textAlign: "center", lineHeight: 30 }}>
+                🎂{userDetails.dateofbirth.split("T")[0]}
+              </Text>
+            </View>
           </View>
         </View>
       </SafeAreaView>
@@ -36,10 +93,11 @@ export default function Profil({ navigation }) {
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Informations</Text>
         <View style={styles.infoUser}>
           <Text>Réseaux Sociaux</Text>
-          <Text>Tél</Text>
-          <Text>Date d'entrée dans la coloc</Text>
+          <Text>Tél:{userDetails.phonenumber}</Text>
+          <Text>Date d'entrée dans la coloc: {userDetails.arrivaldate}</Text>
         </View>
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Badges</Text>
+        <Text>{userDetails.badgeearned}</Text>
       </View>
     </View>
   );
@@ -83,8 +141,17 @@ const styles = StyleSheet.create({
     height: 130,
     padding: 20,
   },
-  avatar: {
-    widht: 90,
+  avatarContainer: {
+    width: 150,
     height: 150,
+    borderRadius: 150,
+  },
+  avatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 50,
+  },
+  presentation: {
+    paddingBottom: 130,
   },
 });

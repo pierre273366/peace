@@ -14,6 +14,7 @@ import Checkbox from "expo-checkbox";
 
 export default function HomeScreen({ navigation }) {
   const coloc = useSelector((state) => state.users.coloc);
+  const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
   const [isChecked, setChecked] = useState(false);
   const [events, setEvents] = useState([]); // Liste des événements
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // Date du jour
@@ -86,7 +87,7 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.containerView}>
         <View style={styles.containerText}>
           <Text style={styles.title}>Bienvenue</Text>
-          <Text style={styles.title}>dans ta coloc Pierre !</Text>
+          <Text style={styles.title}>dans ta coloc {user.username} !</Text>
         </View>
 
         <View style={styles.containerTodo}>
