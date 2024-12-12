@@ -81,7 +81,7 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate("Profil")}
           style={styles.user}
         >
-          <Text>Profil User</Text>
+          <Text style={{ color: "white", fontWeight: "bold" }}>Mon Profil</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.containerView}>
@@ -187,9 +187,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   user: {
-    backgroundColor: "orange",
-    width: 80,
+    backgroundColor: "rgb(253, 112, 60)",
+    width: 90,
     height: 50,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 20,
   },
   title: {
     fontSize: 24,
