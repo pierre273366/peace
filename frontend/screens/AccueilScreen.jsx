@@ -6,7 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default function Accueil({ navigation }) {
  const GoBtn = () => {
-    navigation.navigate("Choice");}
+    navigation.navigate("Signin");}
     
     
     
@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
       height: 300,
   },
   btnGo:{
+    justifyContent:'center',
+    alignItems:'center',
 height:70,
 width:70,
 backgroundColor:'pink',
