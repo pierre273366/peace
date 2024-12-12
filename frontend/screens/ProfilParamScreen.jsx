@@ -24,10 +24,10 @@ export default function Profil({ navigation }) {
             />
           </TouchableOpacity>
         </View>
+        <View>
+          <TouchableOpacity>Quitter la coloc</TouchableOpacity>
+        </View>
       </SafeAreaView>
-      <View style={styles.containerInfo}>
-        <View style={styles.infoUser}></View>
-      </View>
     </View>
   );
 }
@@ -43,15 +43,5 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginLeft: 20,
-  },
-  containerInfo: {
-    marginTop: 190,
-    marginLeft: 20,
-  },
-  infoUser: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-    height: 130,
-    padding: 20,
   },
 });

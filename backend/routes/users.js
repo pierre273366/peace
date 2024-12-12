@@ -331,7 +331,11 @@ router.get("/:token", async (req, res) => {
     const userDet = await User.findOne({
       token: req.params.token,
     }); // Récupérer tous les événements dans la base de données
-    res.json({ userDet }); // Répondre avec les événements au format JSON
+    if (userDet) {
+      res.json({ userDet }); // Répondre avec les événements au format JSON
+    } else {
+      res.json({ error: "Utilisateur non trouvé" });
+    }
   } catch (error) {
     console.error("Erreur lors de la récupération des événements:", error);
     res.json({
