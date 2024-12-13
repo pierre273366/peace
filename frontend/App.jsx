@@ -22,7 +22,8 @@ import TricountAddExpense from "./screens/TricountAddExpense";
 import SondageScreen from "./screens/SondageScreen";
 import CreateSondageScreen from "./screens/CreateSondageScreen";
 import DetailSondageScreen from "./screens/DetailSondageScreen";
-
+import GroceryListScreen from "./screens/GroceryListScreen";
+import AjoutProductScreen from "./screens/AjoutProductScreen";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -103,7 +104,10 @@ export default function App() {
         <Stack.Screen name="Sondage" component={SondageScreen}/>
         <Stack.Screen name="CreateSondage" component={CreateSondageScreen}/>
         <Stack.Screen name="DetailSondage" component={DetailSondageScreen}/>
+        <Stack.Screen name="GroceryList" component={GroceryListScreen}/>
+        <Stack.Screen name="AjoutProduct" component={AjoutProductScreen} />
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        
       </Stack.Navigator>
     </NavigationContainer>
     </Provider>
