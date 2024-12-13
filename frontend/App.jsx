@@ -26,6 +26,7 @@ import DetailSondageScreen from "./screens/DetailSondageScreen";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import users from "./reducers/users";
+import TodoListCreaScreen from "./screens/TodoListCreaScreen";
 
 const store = configureStore({
   reducer: { users },
@@ -98,6 +99,7 @@ export default function App() {
           <Stack.Screen name="CreateColoc" component={CreateColocScreen} />
           <Stack.Screen name="ShareColoc" component={ShareScreen} />
           <Stack.Screen name="ProfilParams" component={ProfilParamScreen} />
+          <Stack.Screen name="TodoCrea" component={TodoListCreaScreen} />
           <Stack.Screen
             name="TricountAddExpense"
             component={TricountAddExpense}
