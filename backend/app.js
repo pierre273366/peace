@@ -7,6 +7,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var tricountRouter = require("./routes/tricount");
 var eventRouter = require("./routes/event");
+var productRouter = require("./routes/product");
 var todoRouter = require("./routes/todo");
 
 var app = express();
@@ -24,5 +25,6 @@ app.use("/users", usersRouter);
 app.use("/tricount", tricountRouter);
 app.use("/event", eventRouter);
 app.use("/todo", todoRouter);
+app.use("/product", productRouter);
 
 module.exports = app;
