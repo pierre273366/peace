@@ -3,11 +3,11 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var tricountRouter = require("./routes/tricount");
 var eventRouter = require("./routes/event");
+var todoRouter = require("./routes/todo");
 
 var app = express();
 const cors = require("cors");
@@ -23,5 +23,6 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/tricount", tricountRouter);
 app.use("/event", eventRouter);
+app.use("/todo", todoRouter);
 
 module.exports = app;
