@@ -6,6 +6,7 @@ const colocSchema = mongoose.Schema({
   address: String,
   users: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   token: String,
+  sondages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sondage' }]
 });
 
 const Coloc = mongoose.model("colocs", colocSchema);

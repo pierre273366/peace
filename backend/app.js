@@ -8,6 +8,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var tricountRouter = require("./routes/tricount");
 var eventRouter = require("./routes/event");
+var sondageRouter = require("./routes/sondage");
 
 var app = express();
 const cors = require("cors");
@@ -23,5 +24,6 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/tricount", tricountRouter);
 app.use("/event", eventRouter);
+app.use("/sondage", sondageRouter);
 
 module.exports = app;
