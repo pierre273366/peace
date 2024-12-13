@@ -195,4 +195,60 @@ router.get('/user/:token', (req, res) => {
     });
 });
 
+
+
+//ROUTE GET : AVOIR UN TOTAL PAR UTILISATEUR
+router.get('/balances/:id', async (req, res) => {
+  const tricountId = req.params.id;
+
+  try {
+    const tricount = await Tricount.findById(tricountId)
+      .populate({
+        path: 'expense',
+        populate: [
+          { path: 'user', select: 'username' },
+          { path: 'share.user', select: 'username' }
+        ]
+      });
+
+    const balances = {};
+
+    // Pour chaque dépense
+    tricount.expense.forEach(expense => {
+      // Ajoute le montant payé pour le payeur
+      if (!balances[expense.user._id]) {
+        balances[expense.user._id] = {
+          userId: expense.user._id,
+          username: expense.user.username,
+          balance: 0
+        };
+      }
+      balances[expense.user._id].balance += expense.amount;
+
+      // Soustrait les montants à payer pour chaque participant
+      expense.share.forEach(share => {
+        if (!balances[share.user._id]) {
+          balances[share.user._id] = {
+            userId: share.user._id,
+            username: share.user.username,
+            balance: 0
+          };
+        }
+        balances[share.user._id].balance -= share.amountToPay;
+      });
+    });
+
+    // Convertit l'objet en tableau
+    const balancesArray = Object.values(balances);
+    
+    res.json({ 
+      result: true, 
+      balances: balancesArray 
+    });
+
+  } catch (error) {
+    res.json({ result: false, error: error.message });
+  }
+});
+
 module.exports = router;
