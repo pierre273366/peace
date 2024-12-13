@@ -78,7 +78,7 @@ function Signup({ navigation }) {
       return;
     }
 
-    fetch("http://10.9.1.105:3000/users/signup", {
+    fetch("http://10.9.1.137:3000/users/signup", {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify(infos),

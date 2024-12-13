@@ -11,10 +11,13 @@ const userSchema = mongoose.Schema({
   dateofbirth: Date,
   firstcoloc: String,
   profilpicture: String,
-  arrivaldate: Date,
+  arrivaldate: {
+    type: Date,
+    default: new Date().toISOString(),
+  },
   description: String,
   colocToken: String,
-  colocname: String, 
+  colocname: String,
   badgeearned: String,
 });
 
