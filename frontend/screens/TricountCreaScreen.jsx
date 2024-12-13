@@ -47,7 +47,7 @@ export default function TricountCreaScreen({ navigation, route }) {
 
       //fetch de tous les utilisateurs de la colocs 
       const fetchUsers = async (userToken) => {
-        const response = await fetch(`http://10.9.1.140:3000/tricount/getcolocusers/${userToken}`);
+        const response = await fetch(`http://10.9.1.137:3000/tricount/getcolocusers/${userToken}`);
         const data = await response.json();
           
         if (data.result) {
@@ -86,7 +86,7 @@ export default function TricountCreaScreen({ navigation, route }) {
 
 
     const handleSubmit = async () => {
-      const response = await fetch('http://10.9.1.140:3000/tricount/createtricount', {
+      const response = await fetch('http://10.9.1.137:3000/tricount/createtricount', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

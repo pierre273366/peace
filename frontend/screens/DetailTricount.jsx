@@ -21,7 +21,7 @@ useEffect(() => {
   }, []);
 
   const fetchTricountData = () => {
-    fetch(`http://10.9.1.140:3000/tricount/tricountExpense/${tricountId}`)
+    fetch(`http://10.9.1.137:3000/tricount/tricountExpense/${tricountId}`)
       .then(response => response.json())
       .then(data => {
         if (data.result) {
@@ -35,7 +35,7 @@ useEffect(() => {
 
   //RECUPÉRATION USER id
   const fetchUserId = async (token) => {
-    const response = await fetch(`http://10.9.1.140:3000/tricount/user/${token}`);
+    const response = await fetch(`http://10.9.1.137:3000/tricount/user/${token}`);
     const data = await response.json();
     setUserId (data.userId);
   };
@@ -99,18 +99,56 @@ const ExpenseCards = () => {
     );
   };
 
+
+
+
+
+  
 //BLOC ÉQUILIBRE
-const EquilibreView = () => (
-    <View>
-        <View style={styles.containerDue}>
-            <Text>💳</Text>
-            <View>
-                <Text>Vous devez XX€</Text>
-                <Text>à Carla</Text>
-            </View>
+const EquilibreView = () => {
+  const [balances, setBalances] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBalances();
+  }, []);
+
+  const fetchBalances = () => {
+    fetch(`http://10.9.1.137:3000/tricount/balances/${tricountId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.result) {
+          console.log(data)
+          setBalances(data.balances);
+        }
+      })
+      .finally(() => setIsLoading(false));
+  };
+
+  if (isLoading) {
+    return <Text>Chargement...</Text>;
+  }
+
+
+  return (
+    <View style={styles.equilibreContainer}>
+      {balances.map((user, index) => (
+        <View key={index} style={styles.balanceCard}>
+          <View style={styles.userInfo}>
+            <Text style={styles.username}>{user.username}</Text>
+            {user.userId === userId && <Text style={styles.subtitleText}>Moi</Text>}
+          </View>
+          <Text style={[
+            styles.amount,
+            user.balance >= 0 ? styles.positive : styles.negative
+          ]}>
+            {user.balance >= 0 ? '+' : ''}{user.balance.toFixed(2)} €
+          </Text>
         </View>
+      ))}
     </View>
-);
+  );
+};
     
   
     // Affichage principal : Détails du Tricount
@@ -260,7 +298,44 @@ const EquilibreView = () => (
       },
       name:{
         fontSize:50
-      }
+      },
+      equilibreContainer: {
+        width: '100%',
+        padding: 16,
+        gap: 8,
+      },
+      balanceCard: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: '#2A2A2A',
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 8,
+      },
+      userInfo: {
+        flexDirection: 'column',
+        gap: 4,
+      },
+      username: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '500',
+      },
+      subtitleText: {
+        color: '#808080',
+        fontSize: 12,
+      },
+      amount: {
+        fontSize: 16,
+        fontWeight: '600',
+      },
+      positive: {
+        color: '#4CD964',
+      },
+      negative: {
+        color: '#FF3B30',
+      },
     
 
 

@@ -33,7 +33,7 @@ export default function TricountAddExpense({ navigation, route }) {
 
   useEffect(() => {
     if (tricountId) {
-      fetch(`http://10.9.1.140:3000/tricount/tricount-participants/${tricountId}`)
+      fetch(`http://10.9.1.137:3000/tricount/tricount-participants/${tricountId}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
@@ -48,7 +48,7 @@ export default function TricountAddExpense({ navigation, route }) {
 
 //RECUPÉRATION USER id
   const fetchUserId = async (token) => {
-    const response = await fetch(`http://10.9.1.140:3000/tricount/user/${token}`);
+    const response = await fetch(`http://10.9.1.137:3000/tricount/user/${token}`);
     const data = await response.json();
     setUserId (data.userId);
     setPaidBy(data.userId)
@@ -114,7 +114,7 @@ export default function TricountAddExpense({ navigation, route }) {
     console.log('Données envoyées:', expenseData); // Pour débugger
   
     // Envoi au backend
-    fetch('http://10.9.1.140:3000/tricount/add-expense', {
+    fetch('http://10.9.1.137:3000/tricount/add-expense', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
