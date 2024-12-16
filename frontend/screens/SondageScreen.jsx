@@ -1,18 +1,18 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView,  } from 'react-native';
-import { useState, useEffect } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
+import { useState, useEffect } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
 export default function SondageScreen({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
   const [sondages, setSondages] = useState([]);
 
-  useFocusEffect( useCallback(() => {
-    // Permet de rafraichir la page afin de récupérer tous les nouveaux sondages
-    fetchSondages();
-
-  },[]) );
+  useFocusEffect(
+    useCallback(() => {
+      fetchSondages();
+    }, [])
+  );
 
   const fetchSondages = async () => {
     try {
@@ -32,76 +32,90 @@ export default function SondageScreen({ navigation }) {
   const fetchVote = async (_id, vote) => {
     try {
       const votes = {
-        _id ,
-        vote ,
-        userToken: user.token
+        _id,
+        vote,
+        userToken: user.token,
+      };
+
+      const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(votes),
+      });
+      const data = await response.json();
+
+      if (data.result) {
+        fetchSondages();
       }
-const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
-  method: "PUT", // Utilisation de la méthode POST pour envoyer les données au serveur
-  headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
-  body: JSON.stringify(votes),
-})
-const data = await response.json()
-if(data.result){
-  fetchSondages();
-}
     } catch (error) {
       console.error("Erreur de fetch:", error.message);
     }
-  }
+  };
 
   const fetchDeleteVote = async (_id, vote) => {
     try {
       const votes = {
-        _id ,
-        vote ,
-        userToken: user.token
+        _id,
+        vote,
+        userToken: user.token,
+      };
+
+      const response = await fetch("http://10.9.1.105:3000/sondage/deleteVote", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(votes),
+      });
+      const data = await response.json();
+
+      if (data.result) {
+        fetchSondages();
       }
-const response = await fetch("http://10.9.1.105:3000/sondage/deleteVote", {
-  method: "PUT", // Utilisation de la méthode POST pour envoyer les données au serveur
-  headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
-  body: JSON.stringify(votes),
-})
-const data = await response.json()
-if(data.result){
-  fetchSondages();
-}
     } catch (error) {
       console.error("Erreur de fetch:", error.message);
     }
-  }
+  };
 
   const calculatePercentages = (totalVotes, totalVotesForOneResponse) => {
     if (totalVotes === 0) return 0; // Évite la division par 0
-    const result = (totalVotesForOneResponse * 100 ) / totalVotes
-    return result.toFixed(0)
+    const result = (totalVotesForOneResponse * 100) / totalVotes;
+    return result.toFixed(0);
   };
 
   const allResponses = (sondage) => {
-        // Calcul du total des votes
     const totalVotes = Object.values(sondage.votes).reduce(
       (acc, votesArray) => acc + votesArray.length,
       0
     );
 
-    const result =  sondage.responses.map((response, i) => {
-      
+    return sondage.responses.map((response, i) => {
+      const isSelected = sondage.votes[response]?.includes(user.token);
+      const percentage = totalVotes
+        ? (sondage.votes[response].length / totalVotes) * 100
+        : 0;
+
       return (
-   <TouchableOpacity
-       key={i}
-       style={[
-       sondage.votes[response]?.includes(user.token)  && styles.selectedResponse, // Mise en surbrillance de la réponse sélectionnée
-       ]}
-       onPress={() => sondage.votes[response]?.includes(user.token) ? fetchDeleteVote(sondage._id, response ) : fetchVote(sondage._id, response )} // Gère le clic sur une réponse
-     >
-       <Text>{response}</Text>
-       <Text style={styles.percentageText}>
-         {calculatePercentages(totalVotes, sondage.votes[response].length)}% {/* Affiche le pourcentage */}
-       </Text>
-     </TouchableOpacity> 
-  )}) 
-   return result
-  }
+        <TouchableOpacity
+          key={i}
+          style={[styles.responseContainer, isSelected && styles.selectedResponse]}
+          onPress={() =>
+            isSelected
+              ? fetchDeleteVote(sondage._id, response)
+              : fetchVote(sondage._id, response)
+          }
+        >
+          <View style={styles.responseRow}>
+            <Text style={[styles.responseText, isSelected && styles.selectedResponseText]}>
+              {response}
+            </Text>
+            <Text style={styles.percentageText}>{percentage.toFixed(0)}%</Text>
+          </View>
+          <View style={styles.progressBarContainer}>
+            <View style={[styles.progressBar, { width: `${percentage}%` }]} />
+          </View>
+        </TouchableOpacity>
+      );
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -113,16 +127,17 @@ if(data.result){
           sondages.map((sondage) => (
             <View key={sondage._id} style={styles.sondageCard}>
               <Text style={styles.title}>{sondage.title}</Text>
-              <View style={styles.responses}>
-              {allResponses(sondage)}
-              </View>
+              {sondage.createdBy && (
+                <Text style={styles.createdByText}>Sondage créé par: {sondage.createdBy}</Text>
+              )}
+              <View style={styles.responses}>{allResponses(sondage)}</View>
             </View>
           ))
         )}
       </ScrollView>
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('CreateSondage')} 
+        onPress={() => navigation.navigate("CreateSondage")}
       >
         <Text style={styles.addButtonText}>+</Text>
       </TouchableOpacity>
@@ -133,23 +148,30 @@ if(data.result){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6F8FE",
-    justifyContent: 'center',
-    alignItems:'center',
+    backgroundColor: "#F9F9FF",
+    alignItems: "center",
   },
   scrollView: {
     flex: 1,
+    width: "100%",
   },
   contentContainer: {
+    paddingBottom: 100,
     alignItems: "center",
-    paddingBottom: 80, 
   },
   sondageCard: {
-    backgroundColor: "#E6E6FC",
+    backgroundColor: "#F7F7FF",
     marginBottom: 20,
     padding: 15,
-    borderRadius: 10,
-    width: 300,
+    borderRadius: 12,
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+  },
+  responses: {
+    marginTop: 10,
   },
   title: {
     fontSize: 18,
@@ -157,16 +179,49 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   title1: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#333",
-    paddingBottom: 20,
-    paddingTop:20,
-    
+    marginVertical: 20,
   },
-  response: {
+  responseContainer: {
+    marginVertical: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    backgroundColor: "white",
+    borderRadius: 10,
+  },
+  selectedResponse: {
+    borderColor: "#FD703C",
+    borderWidth: 2,
+  },
+  responseRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
+  responseText: {
     fontSize: 16,
-    color: "#555",
+    color: "#333",
+  },
+  selectedResponseText: {
+    fontWeight: "bold",
+    color: "#5A5A8F",
+  },
+  progressBarContainer: {
+    height: 8,
+    backgroundColor: "#EDEDF7",
+    borderRadius: 10,
+  },
+  progressBar: {
+    height: "100%",
+    backgroundColor: "#FD703C",
+    borderRadius:5,
+  },
+  percentageText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "black",
   },
   noSondageText: {
     fontSize: 16,
@@ -180,36 +235,14 @@ const styles = StyleSheet.create({
     right: 20,
     width: 60,
     height: 60,
-    backgroundColor: "black",
+    backgroundColor: "#333",
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 5,
   },
   addButtonText: {
-    color: "#fff",
-    fontSize: 24,
+    color: "#FFF",
+    fontSize: 28,
     fontWeight: "bold",
-  },
-  responseContainer: {
-    marginVertical: 5, 
-    padding: 10,
-    backgroundColor: "#F6F8FE",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  selectedResponse: {
-    backgroundColor: "#EC794C", 
-  },
-  percentageText: {
-    marginTop: 5,
-    fontSize: 14,
-    color: "#555", 
   },
 });
