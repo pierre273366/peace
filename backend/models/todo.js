@@ -6,9 +6,10 @@ const todoSchema = mongoose.Schema({
   tâche: String,
   date: Date,
   récurrence: String,
+  nextOccurrence: { type: Date },
+  completed: Boolean,
 });
 
-// Modèle
 const Todo = mongoose.model("todos", todoSchema);
 
 module.exports = Todo;
