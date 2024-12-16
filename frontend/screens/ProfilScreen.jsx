@@ -83,7 +83,7 @@ export default function Profil({ navigation }) {
                 Adresse de la coloc: {coloc.address}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 30 }}>
-                🎂{userDetails && userDetails.dateofbirth.split("T")[0]}
+                🎂{userDetails.dateofbirth && userDetails.dateofbirth.split("T")[0]}
               </Text>
             </View>
           </View>
@@ -96,7 +96,7 @@ export default function Profil({ navigation }) {
           <Text>Tél:{userDetails.phonenumber}</Text>
           <Text>
             Date d'entrée dans la coloc:{" "}
-            {userDetails && userDetails.arrivaldate.split("T")[0]}
+            {userDetails.arrivaldate && userDetails.arrivaldate.split("T")[0]}
           </Text>
         </View>
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Badges</Text>
