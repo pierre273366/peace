@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView,  } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSelector } from "react-redux";
@@ -7,27 +7,20 @@ import { useCallback } from 'react';
 export default function SondageScreen({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
   const [sondages, setSondages] = useState([]);
-  const [votes, setVotes] = useState([]); 
-  const [selectedResponses, setSelectedResponses] = useState([]); // Indique la réponse sélectionnée pour chaque sondage
 
-  useFocusEffect( // Permet de rafraichir la page afin de récupérer tous les nouveaux sondages
-    useCallback(() => {
-      fetchSondages();
-    }, [])
-  );
+  useFocusEffect( useCallback(() => {
+    // Permet de rafraichir la page afin de récupérer tous les nouveaux sondages
+    fetchSondages();
+
+  },[]) );
 
   const fetchSondages = async () => {
     try {
-      const response = await fetch('http://10.9.1.105:3000/sondage/getSondages');
-      if (!response.ok) {
-        console.error(`Erreur HTTP: ${response.status}`);
-        return;
-      }
+      const response = await fetch("http://10.9.1.105:3000/sondage/getSondages");
       const data = await response.json();
+
       if (data.result) {
         setSondages(data.sondages);
-        setVotes(data.sondages.map((s) => Array(s.responses.length).fill(0))); // Initialise les votes pour chaque sondage
-        setSelectedResponses(data.sondages.map(() => null)); // Initialise les réponses sélectionnées pour chaque sondage
       } else {
         console.error("Erreur lors de la récupération des sondages");
       }
@@ -36,26 +29,79 @@ export default function SondageScreen({ navigation }) {
     }
   };
 
-  const handleVote = (sondageIndex, responseIndex) => {
-    // Ne permet pas de revoter pour un sondage si une réponse a déjà été sélectionnée
-    if (selectedResponses[sondageIndex] !== null) return;
+  const fetchVote = async (_id, vote) => {
+    try {
+      const votes = {
+        _id ,
+        vote ,
+        userToken: user.token
+      }
+const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
+  method: "PUT", // Utilisation de la méthode POST pour envoyer les données au serveur
+  headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+  body: JSON.stringify(votes),
+})
+const data = await response.json()
+if(data.result){
+  fetchSondages();
+}
+    } catch (error) {
+      console.error("Erreur de fetch:", error.message);
+    }
+  }
 
-    // Enregistre la réponse sélectionnée pour ce sondage
-    const newSelectedResponses = [...selectedResponses];
-    newSelectedResponses[sondageIndex] = responseIndex;
-    setSelectedResponses(newSelectedResponses);
+  const fetchDeleteVote = async (_id, vote) => {
+    try {
+      const votes = {
+        _id ,
+        vote ,
+        userToken: user.token
+      }
+const response = await fetch("http://10.9.1.105:3000/sondage/deleteVote", {
+  method: "PUT", // Utilisation de la méthode POST pour envoyer les données au serveur
+  headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+  body: JSON.stringify(votes),
+})
+const data = await response.json()
+if(data.result){
+  fetchSondages();
+}
+    } catch (error) {
+      console.error("Erreur de fetch:", error.message);
+    }
+  }
 
-    // Met à jour les votes pour ce sondage
-    const updatedVotes = [...votes];
-    updatedVotes[sondageIndex][responseIndex] = (updatedVotes[sondageIndex][responseIndex] || 0) + 1;
-    setVotes(updatedVotes);
+  const calculatePercentages = (totalVotes, totalVotesForOneResponse) => {
+    if (totalVotes === 0) return 0; // Évite la division par 0
+    const result = (totalVotesForOneResponse * 100 ) / totalVotes
+    return result.toFixed(0)
   };
 
-  const calculatePercentages = (sondageIndex) => {
-    const totalVotes = votes[sondageIndex].reduce((sum, count) => sum + count, 0);
-    if (totalVotes === 0) return votes[sondageIndex].map(() => 0); // Evite la division par zéro
-    return votes[sondageIndex].map((count) => Math.round((count / totalVotes) * 100));
-  };
+  const allResponses = (sondage) => {
+        // Calcul du total des votes
+    const totalVotes = Object.values(sondage.votes).reduce(
+      (acc, votesArray) => acc + votesArray.length,
+      0
+    );
+
+    const result =  sondage.responses.map((response, i) => {
+      
+      return (
+   <TouchableOpacity
+       key={i}
+       style={[
+       sondage.votes[response]?.includes(user.token)  && styles.selectedResponse, // Mise en surbrillance de la réponse sélectionnée
+       ]}
+       onPress={() => sondage.votes[response]?.includes(user.token) ? fetchDeleteVote(sondage._id, response ) : fetchVote(sondage._id, response )} // Gère le clic sur une réponse
+     >
+       <Text>{response}</Text>
+       <Text style={styles.percentageText}>
+         {calculatePercentages(totalVotes, sondage.votes[response].length)}% {/* Affiche le pourcentage */}
+       </Text>
+     </TouchableOpacity> 
+  )}) 
+   return result
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -64,26 +110,11 @@ export default function SondageScreen({ navigation }) {
         {sondages.length === 0 ? (
           <Text style={styles.noSondageText}>Aucun sondage disponible.</Text>
         ) : (
-          sondages.map((item, sondageIndex) => (
-            <View key={item._id} style={styles.sondageCard}>
-              <Text style={styles.title}>{item.title}</Text>
+          sondages.map((sondage) => (
+            <View key={sondage._id} style={styles.sondageCard}>
+              <Text style={styles.title}>{sondage.title}</Text>
               <View style={styles.responses}>
-                {item.responses.map((response, responseIndex) => (
-                  <TouchableOpacity
-                    key={responseIndex}
-                    style={[
-                      styles.responseContainer,
-                      selectedResponses[sondageIndex] === responseIndex && styles.selectedResponse, // Mise en surbrillance de la réponse sélectionnée
-                    ]}
-                    onPress={() => handleVote(sondageIndex, responseIndex)} // Gère le clic sur une réponse
-                    disabled={selectedResponses[sondageIndex] !== null} // Désactive les réponses après un vote
-                  >
-                    <Text>{response}</Text>
-                    <Text style={styles.percentageText}>
-                      {calculatePercentages(sondageIndex)[responseIndex]}% {/* Affiche le pourcentage */}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+              {allResponses(sondage)}
               </View>
             </View>
           ))
