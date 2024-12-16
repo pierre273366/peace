@@ -159,9 +159,13 @@ export default function HomeScreen({ navigation }) {
             <Text style={styles.h2Wblack}>Sondage</Text>
           </TouchableOpacity>
 
-          <View style={styles.liste}>
+          <TouchableOpacity
+            style={styles.liste}
+            onPress={() => navigation.navigate("GroceryList")}
+          >
             <Text style={styles.h2}>Liste de course</Text>
-          </View>
+          </TouchableOpacity>
+
 
           <View style={styles.roue}>
             <Text style={styles.h2}>Roue</Text>

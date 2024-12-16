@@ -94,7 +94,10 @@ export default function Profil({ navigation }) {
         <View style={styles.infoUser}>
           <Text>Réseaux Sociaux</Text>
           <Text>Tél:{userDetails.phonenumber}</Text>
-          <Text>Date d'entrée dans la coloc: {userDetails.arrivaldate}</Text>
+          <Text>
+            Date d'entrée dans la coloc:{" "}
+            {userDetails && userDetails.arrivaldate.split("T")[0]}
+          </Text>
         </View>
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Badges</Text>
         <Text>{userDetails.badgeearned}</Text>

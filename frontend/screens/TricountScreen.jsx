@@ -34,6 +34,7 @@ export default function TricountScreen({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+
           setTricounts(data.tricounts);
         }
       });
