@@ -251,4 +251,53 @@ router.get('/balances/:id', async (req, res) => {
   }
 });
 
+
+
+
+
+//ROUTE DELETE : RETIRE L'UTILISATEUR DU TRICOUNT (LE SUPPRIME SI C'EST LE DERNIER)
+router.delete('/delete/:tricountId', (req, res) => {
+ 
+  
+  if (!req.body.token) {
+    return res.json({ result: false, error: 'Token manquant' });
+  }
+
+  User.findOne({ token: req.body.token })
+    .then(user => {
+      if (!user) {
+        return res.json({ result: false, error: 'Utilisateur non autorisé' });
+      }
+
+      Tricount.findById(req.params.tricountId)
+        .then(tricount => {
+          if (!tricount) {
+            return res.json({ result: false, error: 'Tricount non trouvé' });
+          }
+
+          // Retire l'utilisateur des participants
+          const updatedParticipants = tricount.participants.filter(
+            participant => participant.toString() !== user._id.toString()
+          );
+
+          // Si c'était le dernier participant, supprime le tricount
+          if (updatedParticipants.length === 0) {
+            Tricount.deleteOne({ _id: req.params.tricountId })
+              .then(() => {
+                res.json({ result: true, message: 'Tricount supprimé car plus aucun participant' });
+              });
+          } else {
+            // Sinon, met à jour la liste des participants
+            Tricount.updateOne(
+              { _id: req.params.tricountId },
+              { $set: { participants: updatedParticipants } }
+            )
+              .then(() => {
+                res.json({ result: true, message: 'Vous avez quitté le tricount' });
+              });
+          }
+        });
+    });
+});
+
 module.exports = router;

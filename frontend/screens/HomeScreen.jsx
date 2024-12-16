@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import React, {  useRef } from 'react';
 import {
   View,
   Text,
@@ -21,7 +22,25 @@ export default function HomeScreen({ navigation }) {
   const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [products, setProducts] = useState([]);
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
+
+//USE EFFECT : ROUE 
+useEffect(() => {
+  const startRotation = () => {
+    Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 8000, // Duration plus longue pour une rotation plus fluide
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
+  };
+  
+  startRotation();
+}, []);
+  
 
   // Fonction pour formater les événements récupérés afin de les rendre compatibles avec le calendrier et l'agenda.
   const formatEvents = (eventsData) => {
@@ -201,11 +220,47 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
 
 
-          <View style={styles.roue}>
-            <Text style={styles.h2}>Roue</Text>
+          <TouchableOpacity style={styles.roue} onPress={() => navigation.navigate("WheelScreen")}>
+              <Text style={styles.h2}>Roue</Text>
+              <View style={styles.decorativeWheelContainer}>
+                <Animated.View
+                  style={[
+                    styles.decorativeWheel,
+                    {
+                      transform: [{
+                        rotate: rotateAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: ['0deg', '360deg']
+                        })
+                      }]
+                    }
+                  ]}
+                >
+                  {[...Array(6)].map((_, i) => (
+                    <View
+                      key={i}
+                      style={[
+                        styles.wheelSegment,
+                        {
+                          transform: [
+                            { rotate: `${i * 60}deg` }
+                          ]
+                        }
+                      ]}
+                    />
+                  ))}
+                </Animated.View>
+              </View>
+          </TouchableOpacity>
+
+
+
+
+
+
+
+              </View>
           </View>
-        </View>
-      </View>
     </SafeAreaView>
   );
 }
@@ -379,6 +434,27 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
+  },
+  decorativeWheelContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  decorativeWheel: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#BEBFF5',
+    position: 'relative',
+  },
+  wheelSegment: {
+    position: 'absolute',
+    width: '100%',
+    height: 2,
+    backgroundColor: '#ffffff',
+    top: '50%',
+    left: 0,
+    transformOrigin: 'center',
   },
 });
 
