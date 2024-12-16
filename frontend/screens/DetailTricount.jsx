@@ -35,7 +35,7 @@ useEffect(() => {
 
   //RECUPÉRATION USER id
   const fetchUserId = async (token) => {
-    const response = await fetch(`http://10.9.1.140:3000/tricount/user/${token}`);
+    const response = await fetch(`http://10.9.1.105:3000/tricount/user/${token}`);
     const data = await response.json();
     setUserId (data.userId);
   };

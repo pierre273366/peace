@@ -5,6 +5,7 @@ const sondageSchema = mongoose.Schema({
   responses: [String],
   user: String,
   colocToken: String,
+  createdBy: String,
 });
 
 const Sondage = mongoose.model("sondages", sondageSchema);

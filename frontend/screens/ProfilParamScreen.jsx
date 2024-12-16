@@ -19,7 +19,7 @@ export default function ProfilParam({ navigation }) {
     console.log(user);
     try {
       const response = await fetch(
-        `http://10.9.1.137:3000/users/${userToken}`,
+        `http://10.9.1.105:3000/users/${userToken}`,
         {
           method: "DELETE",
         }

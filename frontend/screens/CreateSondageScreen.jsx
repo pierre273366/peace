@@ -10,8 +10,9 @@ export default function CreateSondageScreen ({ navigation }) {
 
     const colocToken = useSelector((state) => state.users.coloc.token);
     const userToken = useSelector((state) => state.users.user.token);
+    const userName = useSelector((state) => state.users.user.username)
     const [title, setTitle] = useState('');
-    const [responses, setResponses] = useState(['', '']); // Deux réponses initiales
+    const [responses, setResponses] = useState(['']); // Deux réponses initiales
 
     // Ajouter un nouveau champ de réponse
     const addInput = () => {
@@ -35,6 +36,7 @@ export default function CreateSondageScreen ({ navigation }) {
             responses,
             userToken,
             colocToken,
+            userName,
         };
     
         const response = await fetch("http://10.9.1.105:3000/sondage/createSondage", {
@@ -76,7 +78,6 @@ export default function CreateSondageScreen ({ navigation }) {
                         value={title}
                     />
             </View>
-     
             <View style={styles.blocResponse}>
                     {responses.map((response, index) => (
                         <View key={index} style={styles.responseRow}>
@@ -101,8 +102,8 @@ export default function CreateSondageScreen ({ navigation }) {
             <TouchableOpacity style={styles.addBtn} onPress={() => addInput()}>
                 <Text style={styles.btnText}>Ajouter une réponse</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.addSondage} >
-                <Text style={styles.btnTextAdd} onPress={() => submitSondage()} >Ajouter</Text>
+            <TouchableOpacity style={styles.addSondage} onPress={() => submitSondage()} >
+                <Text style={styles.btnTextAdd}  >Ajouter</Text>
             </TouchableOpacity>
     </View>
     </View>

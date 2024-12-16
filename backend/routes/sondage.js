@@ -12,7 +12,7 @@ const { checkBody } = require("../modules/checkBody");
 
 router.post("/createSondage", (req, res) => {
 
-    const { userToken, colocToken, title, responses } = req.body;
+    const { userToken, colocToken, title, responses, username } = req.body;
 
     // On vérifie si les champs "username" et "password" sont présents dans le corps de la requête.
     if (!checkBody(req.body, ["title", "responses"])) {
@@ -42,6 +42,7 @@ Sondage.findOne({ title: req.body.title }).then((sondage) => {
         responses: responses,
         user: userToken, 
         colocToken: colocToken,
+        createdBy: username,
       });
 
       // Enregistre le sondage dans la base de données

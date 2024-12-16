@@ -30,7 +30,7 @@ export default function TricountScreen({ navigation }) {
   );
 
   const fetchTricounts = () => {
-    fetch(`http://10.9.1.140:3000/tricount/recuptricounts/${userToken}`)
+    fetch(`http://10.9.1.105:3000/tricount/recuptricounts/${userToken}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {

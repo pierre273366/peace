@@ -15,7 +15,7 @@ export default function Profil({ navigation }) {
   const coloc = useSelector((state) => state.users.coloc);
   const [userDetails, setUserDetails] = useState("");
 
-  const backendUrl = "http://10.9.1.137:3000";
+  const backendUrl = "http://10.9.1.105:3000";
   const userToken = user.token;
 
   // Fonction pour formater les dates
