@@ -20,6 +20,8 @@ export default function HomeScreen({ navigation }) {
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // Date du jour
   const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
+  const [products, setProducts] = useState([]);
+
 
   // Fonction pour formater les événements récupérés afin de les rendre compatibles avec le calendrier et l'agenda.
   const formatEvents = (eventsData) => {
@@ -63,6 +65,7 @@ export default function HomeScreen({ navigation }) {
       }
     };
     fetchEvents();
+    fetchProducts();
   }, []);
 
   // Fonction pour formater l'heure au format "00h00"
@@ -72,6 +75,23 @@ export default function HomeScreen({ navigation }) {
     return `${hours.toString().padStart(2, "0")}h${minutes
       .toString()
       .padStart(2, "0")}`; // Format HHhMM (ex: 14h30)
+  };
+
+
+
+//FETCH LISTE DE COURSE
+  const fetchProducts = async () => {
+    if (!colocToken) {
+      return;
+    }
+  
+    try {
+      const response = await fetch(`http://10.9.1.140:3000/product/getproducts/${colocToken}`);
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des produits:", error);
+    }
   };
 
   return (
@@ -160,10 +180,24 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.liste}
-            onPress={() => navigation.navigate("GroceryList")}
-          >
-            <Text style={styles.h2}>Liste de course</Text>
+              style={styles.liste}
+              onPress={() => navigation.navigate("GroceryList")}
+            >
+              <Text style={styles.h2}>Liste de course</Text>
+              <ScrollView style={styles.miniList}>
+                {products.slice(0, 3).map((product, index) => (
+                  <View key={product._id} style={styles.miniListItem}>
+                    <Text style={styles.miniListText} numberOfLines={1}>
+                      • {product.name}
+                    </Text>
+                  </View>
+                ))}
+                {products.length > 3 && (
+                  <Text style={styles.miniListMore}>
+                    +{products.length - 3} autres produits
+                  </Text>
+                )}
+              </ScrollView>
           </TouchableOpacity>
 
 

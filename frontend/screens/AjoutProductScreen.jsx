@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from 'react-redux';
 import {
   View,
   StyleSheet,
@@ -13,6 +14,8 @@ import Checkbox from "expo-checkbox";
 export default function AjoutProductScreen({ navigation }) {
   const [productName, setProductName] = useState('');
   const [isUrgent, setIsUrgent] = useState(false);
+  const colocToken = useSelector((state) => state.users.coloc.token);
+
 
   const handleSubmit = async () => {
     if (!productName.trim()) {
@@ -20,7 +23,7 @@ export default function AjoutProductScreen({ navigation }) {
       return;
     }
 
-    const response = await fetch('http://10.9.1.140:3000/product', { // Remplacez X par votre adresse IP locale
+    const response = await fetch('http://10.9.1.140:3000/product', { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,6 +31,8 @@ export default function AjoutProductScreen({ navigation }) {
       body: JSON.stringify({
         productName,
         isUrgent,
+        colocToken
+
       }),
     });
 

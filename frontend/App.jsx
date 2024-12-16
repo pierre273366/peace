@@ -23,10 +23,17 @@ import SondageScreen from "./screens/SondageScreen";
 import CreateSondageScreen from "./screens/CreateSondageScreen";
 import DetailSondageScreen from "./screens/DetailSondageScreen";
 
+
+
+
+
+
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import users from "./reducers/users";
 import TodoListCreaScreen from "./screens/TodoListCreaScreen";
+import GroceryListScreen from "./screens/GroceryListScreen";
+import AjoutProductScreen from "./screens/AjoutProductScreen";
 
 const store = configureStore({
   reducer: { users },
@@ -100,13 +107,12 @@ export default function App() {
           <Stack.Screen name="ShareColoc" component={ShareScreen} />
           <Stack.Screen name="ProfilParams" component={ProfilParamScreen} />
           <Stack.Screen name="TodoCrea" component={TodoListCreaScreen} />
-          <Stack.Screen
-            name="TricountAddExpense"
-            component={TricountAddExpense}
-          />
+          <Stack.Screen name="TricountAddExpense" component={TricountAddExpense}/>
           <Stack.Screen name="Sondage" component={SondageScreen} />
           <Stack.Screen name="CreateSondage" component={CreateSondageScreen} />
           <Stack.Screen name="DetailSondage" component={DetailSondageScreen} />
+          <Stack.Screen name="GroceryList" component={GroceryListScreen} />
+          <Stack.Screen name="AjoutProduct" component={AjoutProductScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
