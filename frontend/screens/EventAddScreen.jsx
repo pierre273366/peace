@@ -62,7 +62,7 @@ const EventAdd = ({ navigation, route }) => {
     };
 
     // Envoyer l'événement au backend
-    fetch("http://10.9.1.137:3000/event", {
+    fetch("http://10.9.1.105:3000/event", {
       method: "POST", // Méthode HTTP pour envoyer des données
       headers: { "Content-Type": "application/json" }, // Indiquer que le corps de la requête est du JSON
       body: JSON.stringify(newEvent), // Convertir l'objet en JSON
