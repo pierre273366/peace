@@ -6,7 +6,7 @@ const Todo = require("../models/todo");
 const Coloc = require("../models/coloc");
 const User = require("../models/users");
 
-//ROUTE GET : RECUP TOUT LES TODO DE L'UTILISATEUR
+// ROUTE GET : Récupérer tous les todos d'un utilisateur avec `completed`
 router.get("/recuptodo/:userToken", (req, res) => {
   const userToken = req.params.userToken;
 
@@ -24,12 +24,30 @@ router.get("/recuptodo/:userToken", (req, res) => {
     Todo.find({ participants: user._id })
       .populate("participants")
       .then((todos) => {
-        res.json({ result: true, todos });
+        // On retourne les todos avec leur état 'completed'
+        res.json({
+          result: true,
+          todos: todos.map((todo) => ({
+            _id: todo._id,
+            tâche: todo.tâche,
+            date: todo.date,
+            récurrence: todo.récurrence,
+            participants: todo.participants,
+            completed: todo.completed,
+            nextOccurrence: todo.nextOccurrence,
+          })),
+        });
+      })
+      .catch((error) => {
+        res.json({
+          result: false,
+          error: "Erreur lors de la récupération des todos",
+        });
       });
   });
 });
 
-// route Post pour créer une tache :
+// ROUTE POST : Créer une nouvelle tâche avec `completed` initialisé à `false`
 router.post("/createtodo", (req, res) => {
   console.log("route");
   const { participants, colocToken, tâche, date, récurrence } = req.body;
@@ -56,13 +74,14 @@ router.post("/createtodo", (req, res) => {
     nextOccurrence = null;
   }
 
-  // Créer un nouvel objet Todo
+  // Créer un nouvel objet Todo avec `completed` à false par défaut
   const newTodo = new Todo({
     participants,
     colocToken,
     date: initialDate,
     récurrence,
     tâche,
+    completed: false, // Initialisation du champ completed à false
     nextOccurrence,
   });
 
@@ -80,10 +99,10 @@ router.post("/createtodo", (req, res) => {
     });
 });
 
-//route Post pour update la todo
+// ROUTE POST : Mettre à jour une tâche (incluant le champ `completed`)
 router.post("/update/:todoId", async (req, res) => {
   const todoId = req.params.todoId;
-  const nextOccurrence = req.body.nextOccurrence; // La prochaine date d'occurrence
+  const { completed, nextOccurrence } = req.body; // Le champ completed et nextOccurrence
 
   try {
     // Trouver la tâche par son ID
@@ -93,8 +112,13 @@ router.post("/update/:todoId", async (req, res) => {
       return;
     }
 
+    // Mettre à jour l'état 'completed' de la tâche
+    if (completed !== undefined) {
+      todo.completed = completed;
+    }
+
     // Calculer la prochaine occurrence pour la tâche récurrente
-    if (todo.récurrence) {
+    if (todo.récurrence && nextOccurrence) {
       // Convertir la chaîne de caractère en objet Date
       const nextOccurrenceDate = new Date(nextOccurrence);
 
@@ -108,20 +132,16 @@ router.post("/update/:todoId", async (req, res) => {
 
       // Mettre à jour la tâche avec la nouvelle prochaine occurrence
       todo.nextOccurrence = nextOccurrenceDate; // Enregistrez la nouvelle date d'occurrence
-
-      await todo.save();
-
-      return res.json({
-        result: true,
-        message: "Tâche mise à jour avec la prochaine occurrence",
-        todo,
-      });
-    } else {
-      return res.json({
-        result: false,
-        error: "Cette tâche n'est pas récurrente",
-      });
     }
+
+    // Sauvegarder les changements
+    await todo.save();
+
+    res.json({
+      result: true,
+      message: "Tâche mise à jour avec succès",
+      todo,
+    });
   } catch (error) {
     console.error(error);
     return res.json({

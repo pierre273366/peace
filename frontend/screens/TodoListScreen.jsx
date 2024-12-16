@@ -7,26 +7,24 @@ import {
   ScrollView,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import Checkbox from "expo-checkbox";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function TodoList({ navigation }) {
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
-  const [completedTodos, setCompletedTodos] = useState({}); // Pour suivre l'état des tâches (faites ou non)
   const backendUrl = "http://10.9.1.137:3000";
   const userToken = useSelector((state) => state.users.user.token);
 
-  // Fonction pour formater la date au format "yyyy-mm-dd"
   const formatDateForComparison = (time) => {
     const dateObj = new Date(time);
     const year = dateObj.getFullYear();
     const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
     const day = dateObj.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`; // Format aaaa-mm-jj pour comparaison
+    return `${year}-${month}-${day}`;
   };
 
-  // Fonction pour formater la date au format "dd/mm/yyyy"
   const formatDate = (time) => {
     const dateObj = new Date(time);
     const day = dateObj.getDate().toString().padStart(2, "0");
@@ -35,51 +33,48 @@ export default function TodoList({ navigation }) {
     return `${day}/${month}/${year}`;
   };
 
-  // useEffect pour récupérer les todos depuis le backend
-  useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const response = await fetch(
-          `${backendUrl}/todo/recuptodo/${userToken}`
-        );
-        const data = await response.json();
-        if (data.result) {
-          const today = formatDateForComparison(new Date()); // Obtenir la date actuelle formatée
-          const tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          const tomorrowFormatted = formatDateForComparison(tomorrow);
+  const fetchTodos = useCallback(async () => {
+    try {
+      const response = await fetch(`${backendUrl}/todo/recuptodo/${userToken}`);
+      const data = await response.json();
+      if (data.result) {
+        const today = formatDateForComparison(new Date());
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowFormatted = formatDateForComparison(tomorrow);
 
-          // Initialiser les todos et leur état de complétion
-          const updatedTodos = data.todos.map((todo) => {
-            const nextOccurrenceFormatted = todo.nextOccurrence
-              ? formatDateForComparison(todo.nextOccurrence)
-              : null;
+        const updatedTodos = data.todos.map((todo) => {
+          const nextOccurrenceFormatted = todo.nextOccurrence
+            ? formatDateForComparison(todo.nextOccurrence)
+            : null;
 
-            // Si la tâche est à la récurrence du jour suivant, décocher la tâche
-            let isCompleted = completedTodos[todo._id];
-            if (nextOccurrenceFormatted === today) {
-              isCompleted = todo.completed; // Garder l'état de complétion comme "complété"
-            }
-            return { ...todo, isCompleted };
-          });
+          let isCompleted = todo.completed;
+          if (nextOccurrenceFormatted === today) {
+            isCompleted = true;
+          }
 
-          // Mettre à jour l'état local
-          setTodos(updatedTodos);
-        } else {
-          console.error(
-            "Erreur lors de la récupération des todos:",
-            data.error
-          );
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération des todos:", error);
+          if (nextOccurrenceFormatted === tomorrowFormatted) {
+            isCompleted = false;
+          }
+
+          return { ...todo, isCompleted };
+        });
+
+        setTodos(updatedTodos);
+      } else {
+        console.error("Erreur lors de la récupération des todos:", data.error);
       }
-    };
+    } catch (error) {
+      console.error("Erreur lors de la récupération des todos:", error);
+    }
+  }, [userToken]);
 
-    fetchTodos(); // Lancer la récupération des todos
-  }, [userToken, completedTodos]); // Déclencher le useEffect quand completedTodos change
+  useFocusEffect(
+    useCallback(() => {
+      fetchTodos(); // Rafraîchir les todos chaque fois que la page est au premier plan
+    }, [fetchTodos])
+  );
 
-  // Fonction pour calculer la prochaine occurrence en fonction de la récurrence
   const getNextOccurrence = (date, récurrence, nextOccurrence) => {
     let newDate = nextOccurrence ? new Date(nextOccurrence) : new Date(date);
 
@@ -106,12 +101,12 @@ export default function TodoList({ navigation }) {
     return newDate;
   };
 
-  // Fonction pour marquer une tâche comme terminée
   const toggleTodoCompletion = async (
     _id,
     récurrence,
     date,
-    nextOccurrence
+    nextOccurrence,
+    isCompleted
   ) => {
     const nextOccurrenceDate = getNextOccurrence(
       date,
@@ -124,22 +119,28 @@ export default function TodoList({ navigation }) {
       return;
     }
 
-    // Mettre à jour la tâche dans le backend pour ajouter la prochaine occurrence
     try {
       const response = await fetch(`${backendUrl}/todo/update/${_id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          completed: !isCompleted,
           nextOccurrence: nextOccurrenceDate,
         }),
       });
 
       const data = await response.json();
       if (data.result) {
-        setCompletedTodos((prev) => ({
-          ...prev,
-          [_id]: !prev[_id], // Inverser l'état de la tâche
-        }));
+        setTodos((prevTodos) =>
+          prevTodos.map((todo) =>
+            todo._id === _id
+              ? {
+                  ...todo,
+                  isCompleted: !isCompleted,
+                }
+              : todo
+          )
+        );
       } else {
         console.error("Erreur lors de la mise à jour de la tâche:", data.error);
       }
@@ -183,7 +184,6 @@ export default function TodoList({ navigation }) {
       </SafeAreaView>
       <View style={styles.todo}>
         <ScrollView>
-          {/* Afficher tous les todos récupérés */}
           {todos.length > 0 ? (
             todos.map((todo, index) => (
               <View key={index} style={styles.todoItem}>
@@ -201,13 +201,14 @@ export default function TodoList({ navigation }) {
                   </Text>
                   <Checkbox
                     style={{ marginRight: 20 }}
-                    value={todo.isCompleted || false} // Utiliser isCompleted pour l'état
+                    value={todo.isCompleted || false}
                     onValueChange={() =>
                       toggleTodoCompletion(
                         todo._id,
                         todo.récurrence,
                         todo.date,
-                        todo.nextOccurrence
+                        todo.nextOccurrence,
+                        todo.isCompleted
                       )
                     }
                     color={

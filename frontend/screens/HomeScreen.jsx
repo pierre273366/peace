@@ -21,7 +21,8 @@ export default function HomeScreen({ navigation }) {
   const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [products, setProducts] = useState([]);
-
+  const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
+  const userToken = useSelector((state) => state.users.user.token);
 
   // Fonction pour formater les événements récupérés afin de les rendre compatibles avec le calendrier et l'agenda.
   const formatEvents = (eventsData) => {
@@ -66,6 +67,7 @@ export default function HomeScreen({ navigation }) {
     };
     fetchEvents();
     fetchProducts();
+    fetchTodos();
   }, []);
 
   // Fonction pour formater l'heure au format "00h00"
@@ -77,20 +79,146 @@ export default function HomeScreen({ navigation }) {
       .padStart(2, "0")}`; // Format HHhMM (ex: 14h30)
   };
 
-
-
-//FETCH LISTE DE COURSE
+  //FETCH LISTE DE COURSE
   const fetchProducts = async () => {
     if (!colocToken) {
       return;
     }
-  
+
     try {
-      const response = await fetch(`http://10.9.1.140:3000/product/getproducts/${colocToken}`);
+      const response = await fetch(
+        `http://10.9.1.140:3000/product/getproducts/${colocToken}`
+      );
       const data = await response.json();
       setProducts(data);
     } catch (error) {
       console.error("Erreur lors de la récupération des produits:", error);
+    }
+  };
+
+  //FETCH TODO LIST
+  const formatDateForComparison = (time) => {
+    const dateObj = new Date(time);
+    const year = dateObj.getFullYear();
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
+    const day = dateObj.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const formatDate = (time) => {
+    const dateObj = new Date(time);
+    const day = dateObj.getDate().toString().padStart(2, "0");
+    const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
+    const year = dateObj.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+  const fetchTodos = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/todo/recuptodo/${userToken}`);
+      const data = await response.json();
+      if (data.result) {
+        const today = formatDateForComparison(new Date());
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowFormatted = formatDateForComparison(tomorrow);
+
+        const updatedTodos = data.todos.map((todo) => {
+          const nextOccurrenceFormatted = todo.nextOccurrence
+            ? formatDateForComparison(todo.nextOccurrence)
+            : null;
+
+          let isCompleted = todo.completed;
+          if (nextOccurrenceFormatted === today) {
+            isCompleted = true;
+          }
+
+          if (nextOccurrenceFormatted === tomorrowFormatted) {
+            isCompleted = false;
+          }
+
+          return { ...todo, isCompleted };
+        });
+
+        setTodos(updatedTodos);
+      } else {
+        console.error("Erreur lors de la récupération des todos:", data.error);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des todos:", error);
+    }
+  };
+
+  const getNextOccurrence = (date, récurrence, nextOccurrence) => {
+    let newDate = nextOccurrence ? new Date(nextOccurrence) : new Date(date);
+
+    if (isNaN(newDate)) {
+      console.error("Date invalide pour le calcul de la prochaine occurrence");
+      return null;
+    }
+
+    switch (récurrence.toLowerCase()) {
+      case "quotidienne":
+        newDate.setDate(newDate.getDate() + 1);
+        break;
+      case "hebdomadaire":
+        newDate.setDate(newDate.getDate() + 7);
+        break;
+      case "mensuelle":
+        newDate.setMonth(newDate.getMonth() + 1);
+        break;
+      default:
+        console.error("Récurrence inconnue:", récurrence);
+        return null;
+    }
+
+    return newDate;
+  };
+
+  const toggleTodoCompletion = async (
+    _id,
+    récurrence,
+    date,
+    nextOccurrence,
+    isCompleted
+  ) => {
+    const nextOccurrenceDate = getNextOccurrence(
+      date,
+      récurrence,
+      nextOccurrence
+    );
+
+    if (!nextOccurrenceDate) {
+      console.error("Prochaine occurrence invalide");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${backendUrl}/todo/update/${_id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          completed: !isCompleted,
+          nextOccurrence: nextOccurrenceDate,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.result) {
+        setTodos((prevTodos) =>
+          prevTodos.map((todo) =>
+            todo._id === _id
+              ? {
+                  ...todo,
+                  isCompleted: !isCompleted,
+                }
+              : todo
+          )
+        );
+      } else {
+        console.error("Erreur lors de la mise à jour de la tâche:", data.error);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la tâche:", error);
     }
   };
 
@@ -111,26 +239,53 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <View style={styles.containerTodo}>
-          <Text style={styles.h2}>ToDo du jour</Text>
-
           <View style={styles.todo}>
-            <Checkbox
-              style={styles.checkbox}
-              value={isChecked}
-              onValueChange={setChecked}
-              color={isChecked ? "#FD703C" : undefined}
-            />
-            <Text style={styles.h2}>Faire qqc</Text>
-          </View>
-
-          <View style={styles.todo}>
-            <Checkbox
-              style={styles.checkbox}
-              value={isChecked}
-              onValueChange={setChecked}
-              color={isChecked ? "#FD703C" : undefined}
-            />
-            <Text style={styles.h2}>Faire qqc</Text>
+            <ScrollView>
+              {todos.length > 0 ? (
+                todos.map((todo, index) => (
+                  <View key={index} style={styles.todoItem}>
+                    <View style={styles.todoHeader}>
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 18,
+                          marginTop: 10,
+                        }}
+                      >
+                        {todo.participants.map((user, idx) => (
+                          <Text key={idx} style={styles.participantText}>
+                            {user.username}
+                            {idx < todo.participants.length - 1 && ", "}
+                          </Text>
+                        ))}{" "}
+                        le {formatDate(todo.date)} {todo.tâche}
+                      </Text>
+                      <Checkbox
+                        style={{ marginRight: 20 }}
+                        value={todo.isCompleted || false}
+                        onValueChange={() =>
+                          toggleTodoCompletion(
+                            todo._id,
+                            todo.récurrence,
+                            todo.date,
+                            todo.nextOccurrence,
+                            todo.isCompleted
+                          )
+                        }
+                        color={
+                          todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                        }
+                      />
+                    </View>
+                    <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={{ textAlign: "center" }}>
+                  Aucun todo disponible
+                </Text>
+              )}
+            </ScrollView>
           </View>
         </View>
 
@@ -180,26 +335,25 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
 
           <TouchableOpacity
-              style={styles.liste}
-              onPress={() => navigation.navigate("GroceryList")}
-            >
-              <Text style={styles.h2}>Liste de course</Text>
-              <ScrollView style={styles.miniList}>
-                {products.slice(0, 3).map((product, index) => (
-                  <View key={product._id} style={styles.miniListItem}>
-                    <Text style={styles.miniListText} numberOfLines={1}>
-                      • {product.name}
-                    </Text>
-                  </View>
-                ))}
-                {products.length > 3 && (
-                  <Text style={styles.miniListMore}>
-                    +{products.length - 3} autres produits
+            style={styles.liste}
+            onPress={() => navigation.navigate("GroceryList")}
+          >
+            <Text style={styles.h2}>Liste de course</Text>
+            <ScrollView style={styles.miniList}>
+              {products.slice(0, 3).map((product, index) => (
+                <View key={product._id} style={styles.miniListItem}>
+                  <Text style={styles.miniListText} numberOfLines={1}>
+                    • {product.name}
                   </Text>
-                )}
-              </ScrollView>
+                </View>
+              ))}
+              {products.length > 3 && (
+                <Text style={styles.miniListMore}>
+                  +{products.length - 3} autres produits
+                </Text>
+              )}
+            </ScrollView>
           </TouchableOpacity>
-
 
           <View style={styles.roue}>
             <Text style={styles.h2}>Roue</Text>
@@ -250,9 +404,14 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   containerTodo: {
-    backgroundColor: "white",
+    width: 320,
+    height: 150,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
     width: "100%",
-    padding: 16,
   },
   todo: {
     marginTop: 15,
