@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useState, useEffect, useCallback } from "react";
@@ -149,6 +150,36 @@ export default function TodoList({ navigation }) {
     }
   };
 
+  const handleDeleteTodo = (todoId) => {
+    console.log("Tentative de suppression de la tache:", todoId);
+
+    fetch(`${backendUrl}/todo/delete/${todoId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: userToken }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Données reçues:", data);
+        if (data.result) {
+          Alert.alert("Succès", data.message || "Tache supprimée avec succès");
+
+          // Supprimer la tâche de l'état local
+          setTodos((prevTodos) =>
+            prevTodos.filter((todo) => todo._id !== todoId)
+          );
+        } else {
+          Alert.alert("Erreur", data.error || "Erreur lors de la suppression");
+        }
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la suppression:", error);
+        Alert.alert("Erreur", "Une erreur est survenue lors de la suppression");
+      });
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.containerProfil}>
@@ -185,39 +216,66 @@ export default function TodoList({ navigation }) {
       <View style={styles.todo}>
         <ScrollView>
           {todos.length > 0 ? (
-            todos.map((todo, index) => (
-              <View key={index} style={styles.todoItem}>
-                <View style={styles.todoHeader}>
-                  <Text
-                    style={{ fontWeight: "bold", fontSize: 18, marginTop: 10 }}
-                  >
-                    {todo.participants.map((user, idx) => (
-                      <Text key={idx} style={styles.participantText}>
-                        {user.username}
-                        {idx < todo.participants.length - 1 && ", "}
-                      </Text>
-                    ))}{" "}
-                    le {formatDate(todo.date)} {todo.tâche}
-                  </Text>
-                  <Checkbox
-                    style={{ marginRight: 20 }}
-                    value={todo.isCompleted || false}
-                    onValueChange={() =>
-                      toggleTodoCompletion(
-                        todo._id,
-                        todo.récurrence,
-                        todo.date,
-                        todo.nextOccurrence,
-                        todo.isCompleted
-                      )
-                    }
-                    color={
-                      todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
-                    }
-                  />
+            todos.map((todo) => (
+              <TouchableOpacity
+                onPress={() => handleNavigateToDetails(todo._id, todo.tâche)}
+                onLongPress={() => {
+                  Alert.alert(
+                    "Supprimer la tache",
+                    `Êtes-vous sûr de vouloir supprimer "${todo.tâche}" ?`,
+                    [
+                      {
+                        text: "Annuler",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Supprimer",
+                        onPress: () => handleDeleteTodo(todo._id),
+                        style: "destructive",
+                      },
+                    ]
+                  );
+                }}
+                delayLongPress={500}
+                key={todo._id}
+              >
+                <View style={styles.todoItem}>
+                  <View style={styles.todoHeader}>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 18,
+                        marginTop: 10,
+                      }}
+                    >
+                      {todo.participants.map((user, idx) => (
+                        <Text key={idx} style={styles.participantText}>
+                          {user.username}
+                          {idx < todo.participants.length - 1 && ", "}
+                        </Text>
+                      ))}{" "}
+                      {todo.tâche}
+                    </Text>
+                    <Checkbox
+                      style={{ marginRight: 20 }}
+                      value={todo.isCompleted || false}
+                      onValueChange={() =>
+                        toggleTodoCompletion(
+                          todo._id,
+                          todo.récurrence,
+                          todo.date,
+                          todo.nextOccurrence,
+                          todo.isCompleted
+                        )
+                      }
+                      color={
+                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                      }
+                    />
+                  </View>
+                  <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
                 </View>
-                <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
-              </View>
+              </TouchableOpacity>
             ))
           ) : (
             <Text style={{ textAlign: "center" }}>Aucun todo disponible</Text>

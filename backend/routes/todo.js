@@ -151,4 +151,26 @@ router.post("/update/:todoId", async (req, res) => {
   }
 });
 
+//ROUTE POUR DELETE UNE TACHE
+router.delete("/delete/:todoId", async (req, res) => {
+  if (!req.body.token) {
+    return res.json({ result: false, error: "Token manquant" });
+  }
+
+  User.findOne({ token: req.body.token }).then((user) => {
+    if (!user) {
+      return res.json({ result: false, error: "Utilisateur non autorisé" });
+    }
+
+    Todo.findById(req.params.todoId).then((todo) => {
+      if (!todo) {
+        return res.json({ result: false, error: "Todo non trouvé" });
+      }
+      Todo.deleteOne({ _id: req.params.todoId }).then(() => {
+        res.json({ result: true, message: "Tâche supprimée" });
+      });
+    });
+  });
+});
+
 module.exports = router;
