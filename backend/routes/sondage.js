@@ -59,8 +59,8 @@ responses.forEach(element => {
 );
 
 
-router.get("/getSondages", (req, res) => {
-    Sondage.find() // Récupérer tous les sondages
+router.get("/getSondages/:colocToken", (req, res) => {
+    Sondage.find({colocToken : req.params.colocToken}) // Récupérer tous les sondages
       .then((sondages) => {
         res.json({ result: true, sondages });
       });
@@ -119,6 +119,18 @@ router.delete("/deleteSondage", (req, res) => {
 })
 
 
-
+router.get("/getLastSondage/:colocToken", async (req, res) => {
+  try {
+    const lastSondage = await Sondage.findOne({colocToken : req.params.colocToken}).sort({ createdAt: -1 }); // Trie par date décroissante
+    if (lastSondage) {
+      res.json({ result: true, sondage: lastSondage });
+    } else {
+      res.json({ result: false, message: "Aucun sondage trouvé." });
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération du dernier sondage :", error.message);
+    res.status(500).json({ result: false, error: error.message });
+  }
+});
 
 module.exports = router;

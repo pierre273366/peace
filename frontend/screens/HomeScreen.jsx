@@ -25,6 +25,7 @@ export default function HomeScreen({ navigation }) {
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const userToken = useSelector((state) => state.users.user.token);
+  const [sondage, setSondage] = useState({});
 
   // Fonction pour formater les événements récupérés afin de les rendre compatibles avec le calendrier et l'agenda.
   const formatEvents = (eventsData) => {
@@ -70,6 +71,7 @@ export default function HomeScreen({ navigation }) {
     fetchEvents();
     fetchProducts();
     fetchTodos();
+    fetchLastSondage();
   }, []);
 
   // Fonction pour formater l'heure au format "00h00"
@@ -223,6 +225,103 @@ export default function HomeScreen({ navigation }) {
       console.error("Erreur lors de la mise à jour de la tâche:", error);
     }
   };
+  
+const fetchLastSondage = async () => {
+  try {
+    const response = await fetch(`http://10.9.1.105:3000/sondage/getLastSondage/${colocToken}`)
+    const data = await response.json();
+    if(data.result){
+      setSondage(data.sondage)
+    }
+  } catch (error) {
+    console.error("Erreur lors du fetch du dernier sondage:", error);
+  }
+} 
+
+const fetchVote = async (_id, vote) => {
+  try {
+    const votes = {
+      _id,
+      vote,
+      userToken: user.token,
+    };
+
+    const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(votes),
+    });
+    const data = await response.json();
+
+    if (data.result) {
+      fetchLastSondage();
+    }
+  } catch (error) {
+    console.error("Erreur de fetch:", error.message);
+  }
+};
+
+const fetchDeleteVote = async (_id, vote) => {
+  try {
+    const votes = {
+      _id,
+      vote,
+      userToken: user.token,
+    };
+
+
+    const response = await fetch("http://10.9.1.105:3000/sondage/deleteVote", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(votes),
+    });
+    const data = await response.json();
+
+    if (data.result) {
+      fetchLastSondage();
+    }
+  } catch (error) {
+    console.error("Erreur de fetch:", error.message);
+  }
+};
+
+
+const allResponses = (sondage) => {
+    const totalVotes = Object.values(sondage.votes).reduce(
+      (acc, votesArray) => acc + votesArray.length,
+      0
+    );
+
+    return sondage.responses.map((response, i) => {
+      const isSelected = sondage.votes[response]?.includes(user.token);
+      const percentage = totalVotes
+        ? (sondage.votes[response].length / totalVotes) * 100
+        : 0;
+
+      return (
+        <TouchableOpacity
+          key={i}
+          style={[styles.responseContainer, isSelected && styles.selectedResponse]}
+          onPress={() =>
+            isSelected
+              ? fetchDeleteVote(sondage._id, response)
+              : fetchVote(sondage._id, response)
+          }
+        >
+          <View style={styles.responseRow}>
+            <Text style={[styles.responseText, isSelected && styles.selectedResponseText]}>
+              {response}
+            </Text>
+            <Text style={styles.percentageText}>{percentage.toFixed(0)}%</Text>
+          </View>
+          <View style={styles.progressBarContainer}>
+            <View style={[styles.progressBar, { width: `${percentage}%` }]} />
+          </View>
+        </TouchableOpacity>
+      );
+    });
+  };
+ 
 
   return (
     <SafeAreaView style={styles.container}>
@@ -335,7 +434,23 @@ export default function HomeScreen({ navigation }) {
             style={styles.sondage}
             onPress={() => navigation.navigate("Sondage")}
           >
-            <Text style={styles.h2Wblack}>Sondage</Text>
+            <Text style={styles.textEvent}>Dernier Sondage</Text>
+            {sondage.title &&  (
+              <View style={styles.sondageCard}>
+              
+              <Text style={styles.title}>{sondage.title}</Text>
+              
+              {sondage.createdBy && (
+                <Text style={styles.createdByText}>
+                  Sondage créé par: {sondage.createdBy}
+                </Text>
+              )}
+              <View style={styles.scrollSondage}>
+                 <ScrollView>
+                   <View style={styles.responses}>{allResponses(sondage)}</View>
+                   </ScrollView>
+                 </View>
+            </View>)}
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -496,7 +611,6 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   sondage: {
-    width: 320,
     height: 190,
     backgroundColor: "#ffffff",
     borderRadius: 10,
@@ -504,6 +618,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
     width: "48%",
+  },
+  scrollSondage:{
+    width:'100%',
+    height:115,
   },
   liste: {
     width: 320,
@@ -597,4 +715,109 @@ const styles = StyleSheet.create({
     left: 0,
     transformOrigin: "center",
   },
+  container: {
+    flex: 1,
+    backgroundColor: "#F9F9FF",
+    alignItems: "center",
+  },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
+  contentContainer: {
+    paddingBottom: 100,
+    alignItems: "center",
+  },
+  sondageCard: {
+    padding: 5,
+    borderRadius: 12,
+    width: "95%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+  },
+  responses: {
+    width:'100%',
+    marginTop: 5,
+
+  },
+  title: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  responseContainer: {
+    marginVertical: 2,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
+    minHeight:35,
+  },
+  selectedResponse: {
+    borderColor: "#FD703C",
+    borderWidth: 2,
+  },
+  responseRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
+  responseText: {
+    fontSize: 10,
+    paddingBottom: 10,
+    color: "#333",
+  },
+  selectedResponseText: {
+    fontWeight: "bold",
+    color: "#5A5A8F",
+  },
+  progressBarContainer: {
+    height: 8,
+    backgroundColor: "#EDEDF7",
+    borderRadius: 10,
+  },
+  progressBar: {
+    height: "90%",
+    backgroundColor: "#FD703C",
+    borderRadius:5,
+  },
+  percentageText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "black",
+  },
+  noSondageText: {
+    fontSize: 16,
+    color: "#999",
+    marginTop: 20,
+    textAlign: "center",
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    width: 60,
+    height: 60,
+    backgroundColor: "#333",
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addButtonText: {
+    color: "#FFF",
+    fontSize: 28,
+    fontWeight: "bold",
+  },
+  icon:{
+    position:'relative',
+  },
+  titleIcon:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+  }, 
+  createdByText:{
+    fontSize:10,
+  }
 });
