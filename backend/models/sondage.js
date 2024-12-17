@@ -8,7 +8,7 @@ const sondageSchema = mongoose.Schema({
   colocToken: String,
   createdBy: String,
   votes: {},
-});
+}, { timestamps: true });
 
 const Sondage = mongoose.model("sondages", sondageSchema);
 

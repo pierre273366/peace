@@ -8,6 +8,8 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function SondageScreen({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
+   const userToken = useSelector((state) => state.users.user.token);
+   const colocToken = useSelector((state) => state.users.coloc.token);
   const [sondages, setSondages] = useState([]);
 
   useFocusEffect(
@@ -18,7 +20,7 @@ export default function SondageScreen({ navigation }) {
 
   const fetchSondages = async () => {
     try {
-      const response = await fetch("http://10.9.1.105:3000/sondage/getSondages");
+      const response = await fetch(`http://10.9.1.105:3000/sondage/getSondages/${colocToken}`);
       const data = await response.json();
 
       if (data.result) {
@@ -73,7 +75,7 @@ export default function SondageScreen({ navigation }) {
       console.error("Erreur de suppression:", error.message);
     }
   };
-  
+
   const fetchDeleteVote = async (_id, vote) => {
     try {
       const votes = {
@@ -91,7 +93,7 @@ export default function SondageScreen({ navigation }) {
       const data = await response.json();
 
       if (data.result) {
-        fetchSondages();
+        fetchSondages(colocToken);
       }
     } catch (error) {
       console.error("Erreur de fetch:", error.message);
@@ -151,7 +153,7 @@ export default function SondageScreen({ navigation }) {
               <FontAwesome style={styles.icon}
                             name="remove"
                             size={20}
-                            color="#5F5F5F"
+                            color="#FD703C"
                           />
                 </TouchableOpacity>)}
               </View>
