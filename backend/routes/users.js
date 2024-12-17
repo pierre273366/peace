@@ -83,12 +83,12 @@ router.post("/signin", (req, res) => {
 
     // Si l'utilisateur n'a pas de token de colocation
     if (!data.colocToken) {
-      res.json({ 
-        result: true, 
+      res.json({
+        result: true,
         token: data.token,
         name: data.name,
         hasColoc: false,
-        redirect: "Choice"
+        redirect: "Choice",
       });
       return;
     }
@@ -102,31 +102,26 @@ router.post("/signin", (req, res) => {
           name: data.name,
           hasColoc: true,
           colocInfo,
-          redirect: "TabNavigator"
+          redirect: "TabNavigator",
         });
       } else {
         // Le token de colocation existe mais la colocation n'est pas trouvée
         // On met à jour l'utilisateur pour retirer le token de colocation invalide
-        User.updateOne(
-          { _id: data._id },
-          { $unset: { colocToken: 1 } }
-        ).then(() => {
-          res.json({
-            result: true,
-            token: data.token,
-            name: data.name,
-            hasColoc: false,
-            redirect: "Choice"
-          });
-        });
+        User.updateOne({ _id: data._id }, { $unset: { colocToken: 1 } }).then(
+          () => {
+            res.json({
+              result: true,
+              token: data.token,
+              name: data.name,
+              hasColoc: false,
+              redirect: "Choice",
+            });
+          }
+        );
       }
     });
   });
 });
-
-
-
-
 
 router.post("/createcoloc", (req, res) => {
   if (!checkBody(req.body, ["name", "address", "peoples"])) {
@@ -384,14 +379,12 @@ router.delete("/:token", async (req, res) => {
       ).then((info) => {
         if (info.acknowledged) {
           user.colocToken = "";
-          user
-            .save()
-            .then(() =>
-              res.json({
-                result: true,
-                message: "Utilisateur supprimé avec succès de la coloc",
-              })
-            );
+          user.save().then(() =>
+            res.json({
+              result: true,
+              message: "Utilisateur supprimé avec succès de la coloc",
+            })
+          );
         } else {
           res.json({
             result: false,
@@ -403,6 +396,29 @@ router.delete("/:token", async (req, res) => {
       res.json({ result: false, error: "Utilisateur introuvable" });
     }
   });
+});
+
+//ROUTE PROFIL DESCRIPTION
+router.put("/updateProfile", async (req, res) => {
+  const user = await User.findOne({ token: req.body.token });
+  if (!user) {
+    return res.json({ result: false, error: "Utilisateur non trouvé" });
+  }
+
+  try {
+    // Mise à jour de la description, des liens sociaux
+    user.description = req.body.description || user.description; // Si la description est présente, on la met à jour
+    user.facebook = req.body.facebook || user.facebook; // Mise à jour du lien Facebook, s'il est présent
+    user.instagram = req.body.instagram || user.instagram; // Mise à jour du lien Instagram, s'il est présent
+
+    // Sauvegarde des modifications
+    await user.save();
+
+    return res.json({ result: true });
+  } catch (error) {
+    console.error(error);
+    return res.json({ result: false, error: "Erreur serveur" });
+  }
 });
 
 module.exports = router;
