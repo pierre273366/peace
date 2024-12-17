@@ -107,6 +107,17 @@ router.put("/deleteVote", (req, res) => {
   })
 })
 
+router.delete("/deleteSondage", (req, res) => {
+  Sondage.deleteOne({_id: req.body._id})
+  .then((deletedSondage) => {
+    if(deletedSondage.deletedCount > 0){
+      res.json({result: true})
+    }else{
+      res.json({result: false})
+    }
+  })
+})
+
 
 
 

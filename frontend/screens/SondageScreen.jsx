@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 export default function SondageScreen({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
@@ -52,6 +54,26 @@ export default function SondageScreen({ navigation }) {
     }
   };
 
+  const fetchDeleteSondage = async (_id) => {
+    try {
+      const response = await fetch("http://10.9.1.105:3000/sondage/deleteSondage", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ _id }),
+      });
+      const data = await response.json();
+  
+      if (data.result) {
+        // Recharge les sondages après suppression
+        fetchSondages();
+      } else {
+        console.error("Erreur: Sondage non supprimé.");
+      }
+    } catch (error) {
+      console.error("Erreur de suppression:", error.message);
+    }
+  };
+  
   const fetchDeleteVote = async (_id, vote) => {
     try {
       const votes = {
@@ -59,6 +81,7 @@ export default function SondageScreen({ navigation }) {
         vote,
         userToken: user.token,
       };
+
 
       const response = await fetch("http://10.9.1.105:3000/sondage/deleteVote", {
         method: "PUT",
@@ -75,11 +98,6 @@ export default function SondageScreen({ navigation }) {
     }
   };
 
-  const calculatePercentages = (totalVotes, totalVotesForOneResponse) => {
-    if (totalVotes === 0) return 0; // Évite la division par 0
-    const result = (totalVotesForOneResponse * 100) / totalVotes;
-    return result.toFixed(0);
-  };
 
   const allResponses = (sondage) => {
     const totalVotes = Object.values(sondage.votes).reduce(
@@ -126,7 +144,17 @@ export default function SondageScreen({ navigation }) {
         ) : (
           sondages.map((sondage) => (
             <View key={sondage._id} style={styles.sondageCard}>
+              <View style={styles.titleIcon}>
               <Text style={styles.title}>{sondage.title}</Text>
+              {sondage.user === user.token && (
+                <TouchableOpacity onPress={() => fetchDeleteSondage(sondage._id)}>
+              <FontAwesome style={styles.icon}
+                            name="remove"
+                            size={20}
+                            color="#5F5F5F"
+                          />
+                </TouchableOpacity>)}
+              </View>
               {sondage.createdBy && (
                 <Text style={styles.createdByText}>Sondage créé par: {sondage.createdBy}</Text>
               )}
@@ -245,4 +273,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
   },
+  icon:{
+    position:'relative',
+  },
+  titleIcon:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+  }
 });
