@@ -156,7 +156,7 @@ export default function Profil({ navigation }) {
           <View style={styles.infoUser}>
             <Text>Réseaux Sociaux</Text>
             <View style={styles.socialContainer}>
-              {userDetails?.facebook && (
+              {userDetails.facebook && (
                 <TouchableOpacity
                   onPress={() => openLink(userDetails.facebook)}
                 >
@@ -168,7 +168,7 @@ export default function Profil({ navigation }) {
                   />
                 </TouchableOpacity>
               )}
-              {userDetails?.instagram && (
+              {userDetails.instagram && (
                 <TouchableOpacity
                   onPress={() => openLink(userDetails.instagram)}
                 >
