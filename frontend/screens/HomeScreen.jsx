@@ -12,6 +12,8 @@ import {
   ScrollView,
 } from "react-native";
 import Checkbox from "expo-checkbox";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 export default function HomeScreen({ navigation }) {
   const coloc = useSelector((state) => state.users.coloc);
@@ -396,6 +398,8 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
+
+      
     </SafeAreaView>
   );
 }
@@ -597,4 +601,7 @@ const styles = StyleSheet.create({
     left: 0,
     transformOrigin: "center",
   },
+ 
+  
+
 });
