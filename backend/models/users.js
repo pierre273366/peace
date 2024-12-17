@@ -19,6 +19,8 @@ const userSchema = mongoose.Schema({
   colocToken: String,
   colocname: String,
   badgeearned: String,
+  instagram: String,
+  facebook: String,
 });
 
 const User = mongoose.model("users", userSchema);

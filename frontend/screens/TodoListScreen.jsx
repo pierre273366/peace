@@ -218,7 +218,6 @@ export default function TodoList({ navigation }) {
           {todos.length > 0 ? (
             todos.map((todo) => (
               <TouchableOpacity
-                onPress={() => handleNavigateToDetails(todo._id, todo.tâche)}
                 onLongPress={() => {
                   Alert.alert(
                     "Supprimer la tache",
@@ -236,7 +235,7 @@ export default function TodoList({ navigation }) {
                     ]
                   );
                 }}
-                delayLongPress={500}
+                delayLongPress={300}
                 key={todo._id}
               >
                 <View style={styles.todoItem}>
