@@ -8,56 +8,57 @@ import {
   View,
   Image,
 } from "react-native";
-import React, { useState } from "react"; // Importation de React et du hook useState pour gérer l'état local
-import { useDispatch, useSelector } from "react-redux"; // Importation des hooks Redux pour interagir avec le store
-import { login, logout, coloc } from "../reducers/users"; // Importation des actions login et logout de Redux
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout, coloc } from "../reducers/users";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 function Signin() {
   const navigation = useNavigation();
-  const dispatch = useDispatch(); // Utilisation du hook useDispatch pour envoyer des actions Redux
-  const user = useSelector((state) => state.users.value); // Utilisation du hook useSelector pour accéder à l'état de l'utilisateur dans Redux
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.users.value);
 
-  // Déclaration des états locaux pour gérer la fenêtre modale et les valeurs du formulaire
-  const [signInUsername, setSignInUsername] = useState(""); // État pour gérer le nom d'utilisateur du formulaire
-  const [signInPassword, setSignInPassword] = useState(""); // État pour gérer le mot de passe du formulaire
+  const [signInUsername, setSignInUsername] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  // Fonction qui est appelée lors de la soumission du formulaire de connexion
-  const SignInBtn = () => {
-    fetch("http://10.9.1.105:3000/users/signin", {
-      method: "POST", // Utilisation de la méthode POST pour envoyer les données
-      headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+  // Correction de la fonction handleSignIn
+  const handleSignIn = () => {
+    fetch("http://10.9.1.140:3000/users/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: signInUsername, // Envoie du nom d'utilisateur
-        password: signInPassword, // Envoie du mot de passe
+        username: signInUsername,
+        password: signInPassword,
       }),
     })
-      .then((response) => response.json()) // Résultat de la requête transformé en JSON
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data); // Affiche la réponse du serveur dans la console (utile pour déboguer)
         if (data.result) {
-          // Si la connexion réussie (data.result est true)
           dispatch(
-            // Envoie l'action login à Redux pour mettre à jour l'état global de l'utilisateur
             login({
-              username: signInUsername, // Nom d'utilisateur
-              token: data.token, // Token reçu du serveur pour authentifier l'utilisateur
-            })
-          );
-          dispatch(
-            coloc({
-              name: data.colocInfo.name,
-              address: data.colocInfo.address,
-              peoples: data.colocInfo.peoples,
-              token: data.colocInfo.token,
+              username: signInUsername,
+              token: data.token,
+              name: data.name,
             })
           );
 
-          setSignInUsername(""); // Réinitialisation du champ du nom d'utilisateur
-          setSignInPassword(""); // Réinitialisation du champ du mot de passe
-          navigation.navigate("TabNavigator");
+          if (data.hasColoc && data.colocInfo) {
+            dispatch(
+              coloc({
+                name: data.colocInfo.name,
+                address: data.colocInfo.address,
+                peoples: data.colocInfo.peoples,
+                token: data.colocInfo.token,
+              })
+            );
+          }
+
+          setSignInUsername("");
+          setSignInPassword("");
+          
+          navigation.navigate(data.redirect);
         }
       });
   };
@@ -89,7 +90,7 @@ function Signin() {
             onChangeText={(value) => setSignInPassword(value)}
             value={signInPassword}
             style={styles.input}
-            secureTextEntry={!showPassword} // Si showPassword est faux, le texte est masqué
+            secureTextEntry={!showPassword}
           />
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
@@ -103,14 +104,14 @@ function Signin() {
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          onPress={() => SignInBtn()}
+          onPress={handleSignIn}
           style={styles.buttonConnect}
           activeOpacity={0.8}
         >
           <Text style={styles.textButtonConnect}>Se connecter</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => handleSubmit()}
+          onPress={handleSubmit}
           style={styles.buttonSignUp}
           activeOpacity={0.8}
         >

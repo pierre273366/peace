@@ -67,36 +67,66 @@ router.post("/signup", (req, res) => {
 router.post("/signin", (req, res) => {
   // Route POST pour la connexion d'un utilisateur existant.
 
-  // On vérifie si les champs "username" et "password" sont présents dans le corps de la requête.
+  // Vérification des champs requis
   if (!checkBody(req.body, ["username", "password"])) {
     res.json({ result: false, error: "Missing or empty fields" });
-    // Si des champs sont manquants ou vides, on renvoie une erreur avec un message.
     return;
   }
 
-  // On cherche un utilisateur avec le nom d'utilisateur fourni dans la requête.
+  // Recherche de l'utilisateur
   User.findOne({ username: req.body.username }).then((data) => {
-    if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      Coloc.findOne({ token: data.colocToken }).then((colocInfo) => {
-        if (colocInfo) {
+    // Vérification de l'existence de l'utilisateur et du mot de passe
+    if (!data || !bcrypt.compareSync(req.body.password, data.password)) {
+      res.json({ result: false, error: "User not found or wrong password" });
+      return;
+    }
+
+    // Si l'utilisateur n'a pas de token de colocation
+    if (!data.colocToken) {
+      res.json({ 
+        result: true, 
+        token: data.token,
+        name: data.name,
+        hasColoc: false,
+        redirect: "Choice"
+      });
+      return;
+    }
+
+    // Recherche de la colocation associée
+    Coloc.findOne({ token: data.colocToken }).then((colocInfo) => {
+      if (colocInfo) {
+        res.json({
+          result: true,
+          token: data.token,
+          name: data.name,
+          hasColoc: true,
+          colocInfo,
+          redirect: "TabNavigator"
+        });
+      } else {
+        // Le token de colocation existe mais la colocation n'est pas trouvée
+        // On met à jour l'utilisateur pour retirer le token de colocation invalide
+        User.updateOne(
+          { _id: data._id },
+          { $unset: { colocToken: 1 } }
+        ).then(() => {
           res.json({
             result: true,
             token: data.token,
             name: data.name,
-            colocInfo,
+            hasColoc: false,
+            redirect: "Choice"
           });
-        } else {
-          res.json({ result: false, error: "Coloc not found" });
-        }
-      });
-      // Si un utilisateur est trouvé et que le mot de passe fourni correspond au mot de passe hashé dans la base de données :
-      // On renvoie un objet JSON avec "result: true", le token et le nom de l'utilisateur.
-    } else {
-      // Si l'utilisateur n'est pas trouvé ou si le mot de passe est incorrect :
-      res.json({ result: false, error: "User not found or wrong password" });
-    }
+        });
+      }
+    });
   });
 });
+
+
+
+
 
 router.post("/createcoloc", (req, res) => {
   if (!checkBody(req.body, ["name", "address", "peoples"])) {
