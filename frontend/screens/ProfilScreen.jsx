@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,16 +6,17 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Image,
+  Linking,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Profil({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
   const coloc = useSelector((state) => state.users.coloc);
-  const [userDetails, setUserDetails] = useState("");
-
-  const backendUrl = "http://10.9.1.105:3000";
+  const [userDetails, setUserDetails] = useState(null);
+  const backendUrl = "http://10.9.1.137:3000";
   const userToken = user.token;
 
   // Fonction pour formater les dates
@@ -25,28 +26,48 @@ export default function Profil({ navigation }) {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
-  // Utilisation de useEffect pour récupérer les informations de l'utilisateur avec son token
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        // Effectuer le fetch avec le token de l'utilisateur pour récupérer ses détails
-        const response = await fetch(`${backendUrl}/users/${userToken}`);
-        const data = await response.json();
+  // Utilisation de React.useCallback pour la logique de récupération des détails utilisateur
+  const fetchUserDetails = React.useCallback(async () => {
+    try {
+      const response = await fetch(`${backendUrl}/users/${userToken}`);
+      const data = await response.json();
 
-        // Si la réponse contient les informations nécessaires, mettre à jour l'état
-        if (data.userDet) {
-          setUserDetails(data.userDet);
-        }
-      } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des informations utilisateur:",
-          error
-        );
+      if (data.userDet) {
+        console.log(data.userDet); // Debugging
+        setUserDetails(data.userDet);
       }
-    };
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des informations utilisateur:",
+        error
+      );
+    }
+  }, [userToken]);
 
-    fetchUserDetails();
-  }, []); // Déclenche l'effet uniquement si le token de l'utilisateur change
+  // Utilisation de useFocusEffect avec React.useCallback pour mémoriser la fonction de récupération
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserDetails(); // Appel de la fonction pour récupérer les détails utilisateur
+    }, [fetchUserDetails]) // Dépendance à la fonction fetchUserDetails
+  );
+
+  // Fonction pour ouvrir un lien
+  const openLink = React.useCallback((url) => {
+    if (url) {
+      Linking.openURL(url).catch((err) =>
+        console.error("Erreur d'ouverture de lien", err)
+      );
+    }
+  }, []);
+
+  if (!userDetails) {
+    // Si userDetails n'est pas encore disponible, afficher un message de chargement
+    return (
+      <View style={styles.loaderContainer}>
+        <Text>Chargement...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -83,21 +104,58 @@ export default function Profil({ navigation }) {
                 Adresse de la coloc: {coloc.address}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 30 }}>
-                🎂{userDetails.dateofbirth && userDetails.dateofbirth.split("T")[0]}
+                🎂
+                {userDetails.dateofbirth &&
+                  new Date(userDetails.dateofbirth).toISOString().split("T")[0]}
+              </Text>
+              {/* Affichage de la description */}
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontStyle: "italic",
+                  marginTop: 10,
+                }}
+              >
+                {userDetails?.description || "Pas de description disponible"}
               </Text>
             </View>
           </View>
         </View>
       </SafeAreaView>
+
+      {/* Section Réseaux Sociaux */}
       <View style={styles.containerInfo}>
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Informations</Text>
         <View style={styles.infoUser}>
           <Text>Réseaux Sociaux</Text>
-          <Text>Tél:{userDetails.phonenumber}</Text>
+          <View style={styles.socialContainer}>
+            {userDetails.facebook && (
+              <TouchableOpacity onPress={() => openLink(userDetails.facebook)}>
+                <FontAwesome
+                  name="facebook"
+                  size={30}
+                  color="#3b5998"
+                  style={styles.socialIcon}
+                />
+              </TouchableOpacity>
+            )}
+            {userDetails.instagram && (
+              <TouchableOpacity onPress={() => openLink(userDetails.instagram)}>
+                <FontAwesome
+                  name="instagram"
+                  size={30}
+                  color="#C13584"
+                  style={styles.socialIcon}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+          <Text>Tél: {userDetails.phonenumber}</Text>
           <Text>
             Date d'entrée dans la coloc:{" "}
             {userDetails.arrivaldate && userDetails.arrivaldate.split("T")[0]}
           </Text>
+          <Text>Token de ma coloc :{coloc.token}</Text>
         </View>
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Badges</Text>
         <Text>{userDetails.badgeearned}</Text>
@@ -113,7 +171,7 @@ const styles = StyleSheet.create({
   },
   containerProfil: {
     width: "100%",
-    heigth: 600,
+    height: 300,
     backgroundColor: "orange",
   },
   iconContainer: {
@@ -135,13 +193,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerInfo: {
-    marginTop: 190,
+    marginTop: 20,
     marginLeft: 20,
+    paddingTop: 150,
   },
   infoUser: {
     flexDirection: "column",
     justifyContent: "space-between",
-    height: 130,
+    height: 230,
     padding: 20,
   },
   avatarContainer: {
@@ -156,5 +215,11 @@ const styles = StyleSheet.create({
   },
   presentation: {
     paddingBottom: 130,
+  },
+  socialContainer: {
+    flexDirection: "row",
+  },
+  socialIcon: {
+    padding: 10,
   },
 });
