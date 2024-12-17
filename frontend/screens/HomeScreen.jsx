@@ -239,59 +239,61 @@ export default function HomeScreen({ navigation }) {
           <Text style={styles.title}>Bienvenue</Text>
           <Text style={styles.title}>dans ta coloc {user.username} !</Text>
         </View>
-
-        <View style={styles.containerTodo}>
-          <View style={styles.todo}>
-            <ScrollView>
-              {todos.length > 0 ? (
-                todos.map((todo, index) => (
-                  <View key={index} style={styles.todoItem}>
-                    <View style={styles.todoHeader}>
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 18,
-                          marginTop: 10,
-                        }}
-                      >
-                        {todo.participants.map((user, idx) => (
-                          <Text key={idx} style={styles.participantText}>
-                            {user.username}
-                            {idx < todo.participants.length - 1 && ", "}
-                          </Text>
-                        ))}{" "}
-                        le {formatDate(todo.date)} {todo.tâche}
-                      </Text>
-                      <Checkbox
-                        style={{ marginRight: 20 }}
-                        value={todo.isCompleted || false}
-                        onValueChange={() =>
-                          toggleTodoCompletion(
-                            todo._id,
-                            todo.récurrence,
-                            todo.date,
-                            todo.nextOccurrence,
-                            todo.isCompleted
-                          )
-                        }
-                        color={
-                          todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
-                        }
-                      />
-                    </View>
-                    <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
-                  </View>
-                ))
-              ) : (
-                <Text style={{ textAlign: "center" }}>
-                  Aucun todo disponible
-                </Text>
-              )}
-            </ScrollView>
-          </View>
-        </View>
-
         <View style={styles.containerWidget}>
+          <View style={styles.containerTodo}>
+            <Text style={styles.textEvent}>Todo List</Text>
+            <View style={styles.todo}>
+              <ScrollView>
+                {todos.length > 0 ? (
+                  todos.map((todo, index) => (
+                    <View key={index} style={styles.todoItem}>
+                      <View style={styles.todoHeader}>
+                        <Text
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: 18,
+                            marginTop: 10,
+                          }}
+                        >
+                          {todo.participants.map((user, idx) => (
+                            <Text key={idx} style={styles.participantText}>
+                              {user.username}
+                              {idx < todo.participants.length - 1 && ", "}
+                            </Text>
+                          ))}{" "}
+                          {todo.tâche}
+                        </Text>
+                        <Checkbox
+                          style={{ marginRight: 20 }}
+                          value={todo.isCompleted || false}
+                          onValueChange={() =>
+                            toggleTodoCompletion(
+                              todo._id,
+                              todo.récurrence,
+                              todo.date,
+                              todo.nextOccurrence,
+                              todo.isCompleted
+                            )
+                          }
+                          color={
+                            todo.isCompleted
+                              ? "rgb(255, 139, 228)"
+                              : "lightgray"
+                          }
+                        />
+                      </View>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                    </View>
+                  ))
+                ) : (
+                  <Text style={{ textAlign: "center" }}>
+                    Aucun todo disponible
+                  </Text>
+                )}
+              </ScrollView>
+            </View>
+          </View>
+
           <View style={styles.containerEvent}>
             <Text style={styles.textEvent}>Événements</Text>
             <View style={styles.descriptionEvent}>
@@ -418,7 +420,7 @@ const styles = StyleSheet.create({
   user: {
     backgroundColor: "rgb(253, 112, 60)",
     width: 90,
-    height: 50,
+    height: 20,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
@@ -439,13 +441,14 @@ const styles = StyleSheet.create({
   },
   containerTodo: {
     width: 320,
-    height: 150,
+    height: 190,
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
     marginBottom: 10,
     marginTop: 10,
-    width: "100%",
+    width: "48%",
+    overflow: "hidden",
   },
   todo: {
     marginTop: 15,
@@ -595,70 +598,3 @@ const styles = StyleSheet.create({
     transformOrigin: "center",
   },
 });
-
-/* const [result, setResult] = useState(null);
-  const [rotation, setRotation] = useState(new Animated.Value(0)); // Animation de la rotation
-  const [isSpinning, setIsSpinning] = useState(false); // Flag pour empêcher les multiples clics avant la fin de l'animation
-
-  // Liste des récompenses
-  const rewards = ["Prix 1", "Prix 2", "Prix 3", "Prix 4", "Prix 5"];
-  const colors = ["#ff6347", "#fd703c", "#9b59b6", "#2ecc71", "#3498db"]; // Couleurs différentes pour chaque section
-
-  // Fonction pour faire tourner la roue
-  const spinWheel = () => {
-    if (isSpinning) return; // Empêche de tourner plusieurs fois à la suite avant la fin de l'animation
-
-    setIsSpinning(true); // Démarre l'animation
-
-    const randomDegree = Math.floor(Math.random() * 360); // Angle aléatoire
-    const rewardIndex = Math.floor(randomDegree / (360 / rewards.length)); // Calcul de l'index
-
-    // Animation de la roue
-    Animated.timing(rotation, {
-      toValue: randomDegree + 360 * 8, // Ajouter plusieurs tours pour un effet fluide
-      duration: 5000,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start(() => {
-      // Une fois l'animation terminée, mettre à jour le résultat
-      setIsSpinning(false); // Réinitialiser le flag d'animation
-      setResult(rewards[rewardIndex]);
-    });
-  };
-
-  // Calcul de la rotation de la roue
-  const spin = rotation.interpolate({
-    inputRange: [0, 360],
-    outputRange: ["0deg", "360deg"],
-  });*/
-/*<View style={styles.wheelContainer}>
-            <Animated.View
-              style={[styles.wheel, { transform: [{ rotate: spin }] }]}
-            >
-              {rewards.map((reward, index) => {
-                const angle = (360 / rewards.length) * index; // Angle pour chaque section
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.section,
-                      {
-                        transform: [{ rotate: `${angle}deg` }], // Appliquer la rotation pour chaque section
-                        backgroundColor: colors[index], // Couleur différente pour chaque section
-                      },
-                    ]}
-                  >
-                    <Text style={styles.sectionText}>{reward}</Text>
-                  </View>
-                );
-              })}
-            </Animated.View>
-
-            <TouchableOpacity style={styles.spinButton} onPress={spinWheel}>
-              <Text style={styles.spinButtonText}>Tourner la roue</Text>
-            </TouchableOpacity>
-
-            {result && (
-              <Text style={styles.resultText}>Résultat: {result}</Text>
-            )}
-          </View>*/
