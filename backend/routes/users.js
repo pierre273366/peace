@@ -13,6 +13,9 @@ const uid2 = require("uid2");
 // On importe le module `uid2` pour générer des tokens uniques pour les utilisateurs.
 const bcrypt = require("bcrypt");
 // On importe bcrypt pour hasher et vérifier les mots de passe des utilisateurs.
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
+const uniqid = require("uniqid");
 
 // Route POST pour l'inscription d'un nouvel utilisateur.
 router.post("/signup", (req, res) => {
@@ -162,95 +165,6 @@ router.post("/createcoloc", (req, res) => {
     }
   });
 });
-
-/*
-router.post("/joincoloc", (req, res) => {
-  if (!checkBody(req.body, ["token", "user"])) {
-    // Ajouter 'user' dans la validation du body
-    res.json({ result: false, error: "Missing or empty fields" });
-    return;
-  }
-
-  // Trouver la coloc en fonction du token
-  Coloc.findOne({ token: req.body.token })
-    .then((coloc) => {
-      if (!coloc) {
-        return res.json({ result: false, error: "Coloc not found" });
-      }
-
-      // Trouver l'utilisateur en fonction du token
-      User.findOne({ token: req.body.user })
-        .then((user) => {
-          if (!user) {
-            return res.json({ result: false, error: "User not found" });
-          }
-
-          // Vérifier si l'utilisateur est déjà dans la liste des utilisateurs de la coloc
-          const userId = user._id;
-          const userAlreadyInColoc = coloc.users.includes(userId);
-
-          if (userAlreadyInColoc) {
-            return res.json({
-              result: false,
-              error: "User already in the coloc",
-            });
-          }
-
-          // Si l'utilisateur n'est pas encore dans la coloc, on l'ajoute
-          coloc.users.push(userId);
-
-          // Mettre à jour le token de la coloc dans l'utilisateur
-          user.colocToken = coloc.token;
-
-          
-          // Sauvegarder la coloc et l'utilisateur avec les modifications
-          coloc
-          .save()
-          .then(() => {
-            // Sauvegarder l'utilisateur
-            user
-            .save()
-            .then(() => {
-                  Coloc.findOne({token: req.body.token})
-                  .then((colocInfo) => {
-                    if(colocInfo){
-                     const colocInfo = colocInfo
-                    }
-                  }
-                )
-                  // Répondre que l'utilisateur a bien été ajouté
-                  res.json({ result: true, message: "User added to coloc", colocInfo});
-                })
-                .catch((error) => {
-                  res.json({
-                    result: false,
-                    error: "Error saving user: " + error.message,
-                  });
-                });
-            })
-            .catch((error) => {
-              res.json({
-                result: false,
-                error: "Error saving coloc: " + error.message,
-              });
-            });
-        })
-        .catch((error) => {
-          res.json({
-            result: false,
-            error: "Error finding user: " + error.message,
-          });
-        });
-    })
-    .catch((error) => {
-      res.json({
-        result: false,
-        error: "Error finding coloc: " + error.message,
-      });
-    });
-});
-
-*/
 
 router.post("/joincoloc", (req, res) => {
   if (!checkBody(req.body, ["token", "user"])) {
@@ -418,6 +332,49 @@ router.put("/updateProfile", async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.json({ result: false, error: "Erreur serveur" });
+  }
+});
+
+//ROUTE Post pour photo
+router.post("/uploadpicture", async (req, res) => {
+  try {
+    // Crée un chemin temporaire pour sauvegarder l'image avant de la télécharger sur Cloudinary
+    const photoPath = `./tmp/${uniqid()}.jpg`;
+
+    // Déplace le fichier reçu depuis le frontend vers le chemin temporaire
+    const resultMove = await req.files.photoFromFront.mv(photoPath);
+
+    if (!resultMove) {
+      // Si le fichier est déplacé avec succès, upload sur Cloudinary
+      const resultCloudinary = await cloudinary.uploader.upload(photoPath);
+
+      // Supprime le fichier temporaire
+      fs.unlinkSync(photoPath);
+
+      // Recherche l'utilisateur dans la base de données
+      const user = await User.findOne({ token: req.body.token });
+
+      if (!user) {
+        return res.json({ result: false, error: "User not found" });
+      }
+
+      // Mets à jour le champ profilPicture de l'utilisateur avec l'URL retournée par Cloudinary
+      user.profilPicture = resultCloudinary.secure_url;
+
+      // Sauvegarde l'utilisateur avec la nouvelle photo de profil
+      await user.save();
+
+      // Envoie la réponse avec l'URL de l'image Cloudinary
+      res.json({
+        result: true,
+        url: resultCloudinary.secure_url,
+      });
+    } else {
+      res.json({ result: false, error: resultMove });
+    }
+  } catch (error) {
+    console.error("Erreur lors de l'upload", error);
+    res.json({ result: false, error: "Internal Server Error" });
   }
 });
 

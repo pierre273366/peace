@@ -8,6 +8,8 @@ var usersRouter = require("./routes/users");
 var tricountRouter = require("./routes/tricount");
 var eventRouter = require("./routes/event");
 var sondageRouter = require("./routes/sondage");
+const fileUpload = require("express-fileupload");
+
 var productRouter = require("./routes/product");
 var todoRouter = require("./routes/todo");
 
@@ -20,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(fileUpload());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

@@ -14,6 +14,7 @@ import {
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
+import ProfilPicture from "../components/profilPicture";
 
 export default function Profil({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
@@ -51,7 +52,7 @@ export default function Profil({ navigation }) {
   // Fetch de tous les utilisateurs de la coloc
   const fetchColocataires = async (userToken) => {
     const response = await fetch(
-      `http://10.9.1.137:3000/tricount/getcolocusers/${userToken}`
+      `${backendUrl}/tricount/getcolocusers/${userToken}`
     );
     const data = await response.json();
 
@@ -107,10 +108,7 @@ export default function Profil({ navigation }) {
             </TouchableOpacity>
             <View style={styles.containerDescript}>
               <View style={styles.avatarContainer}>
-                <Image
-                  source={require("../assets/utilisateur.png")}
-                  style={styles.avatar}
-                />
+                <ProfilPicture />
               </View>
               <View style={styles.presentation}>
                 <Text

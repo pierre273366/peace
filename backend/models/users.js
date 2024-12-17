@@ -10,7 +10,10 @@ const userSchema = mongoose.Schema({
   phonenumber: Number,
   dateofbirth: String,
   firstcoloc: String,
-  profilpicture: String,
+  profilpicture: {
+    type: String,
+    default: "default-image-url",
+  },
   arrivaldate: {
     type: Date,
     default: new Date().toISOString(),
