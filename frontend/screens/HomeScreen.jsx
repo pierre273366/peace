@@ -348,7 +348,6 @@ const allResponses = (sondage) => {
           <Text style={styles.title}>Bienvenue</Text>
           <Text style={styles.title}>dans ta coloc {user.username} !</Text>
         </View>
-        <View style={styles.containerWidget}>
           <View style={styles.containerTodo}>
             <Text style={styles.textEvent}>Todo List</Text>
             <View style={styles.todo}>
@@ -402,6 +401,7 @@ const allResponses = (sondage) => {
               </ScrollView>
             </View>
           </View>
+        <View style={styles.containerWidget}>
 
           <View style={styles.containerEvent}>
             <Text style={styles.textEvent}>Événements</Text>
@@ -567,20 +567,17 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   containerTodo: {
-    width: 320,
-    height: 190,
+    width: '100%',
+    height: 200, 
     backgroundColor: "#ffffff",
     borderRadius: 10,
-    alignItems: "center",
     marginBottom: 10,
     marginTop: 10,
-    width: "48%",
-    overflow: "hidden",
+    padding: 10,
   },
   todo: {
-    marginTop: 15,
-    flexDirection: "row",
-    gap: 15,
+    flex: 1,
+    width: '100%',
   },
   containerWidget: {
     backgroundColor: "#BEBFF5",
