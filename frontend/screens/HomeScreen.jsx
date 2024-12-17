@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
 
 export default function HomeScreen({ navigation }) {
@@ -28,6 +30,12 @@ export default function HomeScreen({ navigation }) {
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const userToken = useSelector((state) => state.users.user.token);
   const [sondage, setSondage] = useState({});
+
+  useFocusEffect(
+      useCallback(() => {
+        fetchLastSondage();
+      }, [])
+    );
 
   // Fonction pour formater les événements récupérés afin de les rendre compatibles avec le calendrier et l'agenda.
   const formatEvents = (eventsData) => {
@@ -582,6 +590,8 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     marginTop: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   eventCard: {
     backgroundColor: "#fff",
@@ -823,5 +833,6 @@ const styles = StyleSheet.create({
   }, 
   createdByText:{
     fontSize:10,
+    color:"#FD703C",
   }
 });
