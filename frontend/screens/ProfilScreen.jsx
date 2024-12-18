@@ -201,7 +201,11 @@ export default function Profil({ navigation }) {
                     style={styles.colocataireContainer}
                   >
                     <Image
-                      source={require("../assets/utilisateur.png")} // Remplace par l'image du colocataire s'il y en a une
+                      source={
+                        colocataire.profilpicture !== "default-image-url"
+                          ? { uri: colocataire.profilpicture } // Assurez-vous que l'URL est correcte
+                          : require("../assets/utilisateur.png") // Image par défaut si pas de photo
+                      } // Remplace par l'image du colocataire s'il y en a une
                       style={styles.colocAvatar}
                     />
                     <Text style={styles.colocUsername}>
