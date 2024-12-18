@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
   Image,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,9 +15,8 @@ import { login, logout, coloc } from "../reducers/users";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 function Signin() {
   const navigation = useNavigation();
@@ -32,8 +31,6 @@ function Signin() {
 
   // Correction de la fonction handleSignIn
   const handleSignIn = () => {
-<<<<<<< HEAD
-
     let isValid = true;
 
     // Validation du nom d'utilisateur
@@ -57,10 +54,7 @@ function Signin() {
       return;
     }
 
-    fetch("http://10.9.1.140:3000/users/signin", {
-=======
     fetch("http://10.9.1.137:3000/users/signin", {
->>>>>>> 774eb5e5b684b0891ef417a164423859a08da8ff
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -94,15 +88,15 @@ function Signin() {
           setSignInPassword("");
 
           navigation.navigate(data.redirect);
-        }
-        else {
+        } else {
           // Gérer les erreurs de connexion côté serveur
           if (data.message === "Invalid username") {
             setUsernameError("Nom d'utilisateur invalide.");
           } else if (data.message === "Invalid password") {
             setPasswordError("Mot de passe invalide.");
           }
-      }});
+        }
+      });
   };
 
   const handleSubmit = () => {
@@ -130,7 +124,13 @@ function Signin() {
           value={signInUsername}
           style={styles.input}
         />
-        {usernameError && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Username manquant ou invalide.</Text>}
+        {usernameError && (
+          <Text
+            style={{ color: "red", marginTop: 5, marginLeft: 20, fontSize: 10 }}
+          >
+            Username manquant ou invalide.
+          </Text>
+        )}
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Password"
@@ -156,7 +156,13 @@ function Signin() {
         >
           <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
         </TouchableOpacity>
-        {passwordError && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Mot de passe manquant ou invalide.</Text>}
+        {passwordError && (
+          <Text
+            style={{ color: "red", marginTop: 5, marginLeft: 20, fontSize: 10 }}
+          >
+            Mot de passe manquant ou invalide.
+          </Text>
+        )}
         <TouchableOpacity
           onPress={handleSignIn}
           style={styles.buttonConnect}
@@ -185,15 +191,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F8FE",
     alignItems: "center",
     justifyContent: "center",
-    width: '100%',
+    width: "100%",
   },
   keyboardView: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   logoContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginBottom: windowHeight * 0.03,
   },
   image: {
@@ -201,7 +207,7 @@ const styles = StyleSheet.create({
     height: windowHeight * 0.2, // Augmenté de 0.15 à 0.2
   },
   title: {
-    fontSize: Math.min(windowWidth, windowHeight) * 0.07, 
+    fontSize: Math.min(windowWidth, windowHeight) * 0.07,
     fontWeight: "600",
     marginBottom: windowHeight * 0.03,
   },
@@ -213,18 +219,18 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ec6e5b",
     borderBottomWidth: 1,
     backgroundColor: "white",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.040, // Augmenté de 0.022 à 0.026
+    fontSize: Math.min(windowWidth, windowHeight) * 0.04, // Augmenté de 0.022 à 0.026
     borderRadius: 15,
   },
   inputContainer: {
     position: "relative",
     width: windowWidth * 0.85,
-    alignItems: 'center',
+    alignItems: "center",
   },
   iconContainer: {
     position: "absolute",
     right: windowWidth * 0.05,
-    top: windowHeight * 0.040,
+    top: windowHeight * 0.04,
   },
   buttonConnect: {
     alignItems: "center",
@@ -251,18 +257,18 @@ const styles = StyleSheet.create({
   },
   textContent: {
     flexDirection: "row",
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   textButtonSignUp: {
     color: "blue",
     fontWeight: "600",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.030, // Augmenté de 0.022 à 0.026
+    fontSize: Math.min(windowWidth, windowHeight) * 0.03, // Augmenté de 0.022 à 0.026
   },
   textSignUp: {
     color: "black",
     fontWeight: "600",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.030, // Augmenté de 0.022 à 0.026
+    fontSize: Math.min(windowWidth, windowHeight) * 0.03, // Augmenté de 0.022 à 0.026
   },
   forgotPasswordButton: {
     alignSelf: "flex-end",

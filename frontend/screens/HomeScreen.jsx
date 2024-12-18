@@ -34,7 +34,10 @@ export default function HomeScreen({ navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      fetchProducts();
+      fetchTodos();
       fetchLastSondage();
+      fetchUserDetails();
     }, [])
   );
 
@@ -386,9 +389,9 @@ export default function HomeScreen({ navigation }) {
 
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.containerTodo}>
-          <Text style={styles.textEvent}>Todo List</Text>
-          <View style={styles.todo}>
-            <ScrollView>
+          <ScrollView>
+            <Text style={styles.textEvent}>Todo List</Text>
+            <View style={styles.todo}>
               {todos.length > 0 ? (
                 todos.map((todo, index) => (
                   <View key={index} style={styles.todoItem}>
@@ -425,8 +428,8 @@ export default function HomeScreen({ navigation }) {
               ) : (
                 <Text style={styles.emptyText}>Aucun todo disponible</Text>
               )}
-            </ScrollView>
-          </View>
+            </View>
+          </ScrollView>
         </View>
 
         <View style={styles.containerWidget}>
@@ -459,24 +462,26 @@ export default function HomeScreen({ navigation }) {
             style={styles.sondage}
             onPress={() => navigation.navigate("Sondage")}
           >
-            <Text style={styles.textEvent}>Dernier Sondage</Text>
-            {sondage.title && (
-              <View style={styles.sondageCard}>
-                <Text style={styles.sondageTitle}>{sondage.title}</Text>
-                {sondage.createdBy && (
-                  <Text style={styles.createdByText}>
-                    Sondage créé par: {sondage.createdBy}
-                  </Text>
-                )}
-                <View style={styles.scrollSondage}>
-                  <ScrollView>
-                    <View style={styles.responses}>
-                      {allResponses(sondage)}
-                    </View>
-                  </ScrollView>
+            <ScrollView>
+              <Text style={styles.textEvent}>Dernier Sondage</Text>
+              {sondage.title && (
+                <View style={styles.sondageCard}>
+                  <Text style={styles.sondageTitle}>{sondage.title}</Text>
+                  {sondage.createdBy && (
+                    <Text style={styles.createdByText}>
+                      Sondage créé par: {sondage.createdBy}
+                    </Text>
+                  )}
+                  <View style={styles.scrollSondage}>
+                    <ScrollView>
+                      <View style={styles.responses}>
+                        {allResponses(sondage)}
+                      </View>
+                    </ScrollView>
+                  </View>
                 </View>
-              </View>
-            )}
+              )}
+            </ScrollView>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -573,7 +578,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     padding: 15,
-    minHeight: 200,
+    height: 300,
   },
   todo: {
     flex: 1,

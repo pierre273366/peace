@@ -43,6 +43,9 @@ export default function TodoList({ navigation }) {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         const tomorrowFormatted = formatDateForComparison(tomorrow);
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const nextWeekFormatted = formatDateForComparison(nextWeek);
 
         const updatedTodos = data.todos.map((todo) => {
           const nextOccurrenceFormatted = todo.nextOccurrence
@@ -58,7 +61,7 @@ export default function TodoList({ navigation }) {
             isCompleted = false;
           }
 
-          return { ...todo, isCompleted };
+          return { ...todo, isCompleted, nextOccurrenceFormatted };
         });
 
         setTodos(updatedTodos);
@@ -180,6 +183,40 @@ export default function TodoList({ navigation }) {
       });
   };
 
+  const filterTodos = () => {
+    const today = formatDateForComparison(new Date());
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowFormatted = formatDateForComparison(tomorrow);
+    const nextWeek = new Date();
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    const nextWeekFormatted = formatDateForComparison(nextWeek);
+
+    const todayTasks = todos.filter(
+      (todo) =>
+        todo.nextOccurrenceFormatted === today ||
+        formatDateForComparison(todo.date) === today
+    );
+    const tomorrowTasks = todos.filter(
+      (todo) =>
+        todo.nextOccurrenceFormatted === tomorrowFormatted ||
+        formatDateForComparison(todo.date) === tomorrowFormatted
+    );
+    const nextWeekTasks = todos.filter(
+      (todo) =>
+        todo.nextOccurrenceFormatted > tomorrowFormatted &&
+        todo.nextOccurrenceFormatted <= nextWeekFormatted
+    );
+    const upcomingTasks = todos.filter(
+      (todo) => todo.nextOccurrenceFormatted > nextWeekFormatted
+    );
+
+    return { todayTasks, tomorrowTasks, nextWeekTasks, upcomingTasks };
+  };
+
+  const { todayTasks, tomorrowTasks, nextWeekTasks, upcomingTasks } =
+    filterTodos();
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.containerProfil}>
@@ -220,9 +257,11 @@ export default function TodoList({ navigation }) {
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={{ flex: 1 }}>
-          {todos.length > 0 ? (
-            todos.map((todo) => (
+        {/* Tâches d'aujourd'hui */}
+        {todayTasks.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Aujourd'hui</Text>
+            {todayTasks.map((todo) => (
               <TouchableOpacity
                 onLongPress={() => {
                   Alert.alert(
@@ -286,11 +325,225 @@ export default function TodoList({ navigation }) {
                   </View>
                 </View>
               </TouchableOpacity>
-            ))
-          ) : (
-            <Text style={{ textAlign: "center" }}>Aucun todo disponible</Text>
-          )}
-        </View>
+            ))}
+          </>
+        )}
+
+        {/* Tâches de demain */}
+        {tomorrowTasks.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Demain</Text>
+            {tomorrowTasks.map((todo) => (
+              <TouchableOpacity
+                onLongPress={() => {
+                  Alert.alert(
+                    "Supprimer la tache",
+                    `Êtes-vous sûr de vouloir supprimer "${todo.tâche}" ?`,
+                    [
+                      {
+                        text: "Annuler",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Supprimer",
+                        onPress: () => handleDeleteTodo(todo._id),
+                        style: "destructive",
+                      },
+                    ]
+                  );
+                }}
+                delayLongPress={300}
+                key={todo._id}
+              >
+                <View style={styles.todoItem}>
+                  <View style={styles.todoHeader}>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 18,
+                        marginTop: 10,
+                      }}
+                    >
+                      {todo.participants.map((user, idx) => (
+                        <View style={styles.usernameCircle} key={idx}>
+                          <Text style={styles.usernameText}>
+                            {user.username.substring(0, 2).toUpperCase()}
+                          </Text>
+                        </View>
+                      ))}
+                    </Text>
+                    <View style={styles.todoTextContainer}>
+                      <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                        {todo.tâche}
+                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                    </View>
+                    <Checkbox
+                      style={{ marginRight: 20 }}
+                      value={todo.isCompleted || false}
+                      onValueChange={() =>
+                        toggleTodoCompletion(
+                          todo._id,
+                          todo.récurrence,
+                          todo.date,
+                          todo.nextOccurrence,
+                          todo.isCompleted
+                        )
+                      }
+                      color={
+                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                      }
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
+
+        {/* Tâches de cette semaine */}
+        {nextWeekTasks.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Cette semaine</Text>
+            {nextWeekTasks.map((todo) => (
+              <TouchableOpacity
+                onLongPress={() => {
+                  Alert.alert(
+                    "Supprimer la tache",
+                    `Êtes-vous sûr de vouloir supprimer "${todo.tâche}" ?`,
+                    [
+                      {
+                        text: "Annuler",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Supprimer",
+                        onPress: () => handleDeleteTodo(todo._id),
+                        style: "destructive",
+                      },
+                    ]
+                  );
+                }}
+                delayLongPress={300}
+                key={todo._id}
+              >
+                <View style={styles.todoItem}>
+                  <View style={styles.todoHeader}>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 18,
+                        marginTop: 10,
+                      }}
+                    >
+                      {todo.participants.map((user, idx) => (
+                        <View style={styles.usernameCircle} key={idx}>
+                          <Text style={styles.usernameText}>
+                            {user.username.substring(0, 2).toUpperCase()}
+                          </Text>
+                        </View>
+                      ))}
+                    </Text>
+                    <View style={styles.todoTextContainer}>
+                      <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                        {todo.tâche}
+                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                    </View>
+                    <Checkbox
+                      style={{ marginLeft: 20 }}
+                      value={todo.isCompleted || false}
+                      onValueChange={() =>
+                        toggleTodoCompletion(
+                          todo._id,
+                          todo.récurrence,
+                          todo.date,
+                          todo.nextOccurrence,
+                          todo.isCompleted
+                        )
+                      }
+                      color={
+                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                      }
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
+
+        {/* Tâches à venir */}
+        {upcomingTasks.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>À venir</Text>
+            {upcomingTasks.map((todo) => (
+              <TouchableOpacity
+                onLongPress={() => {
+                  Alert.alert(
+                    "Supprimer la tache",
+                    `Êtes-vous sûr de vouloir supprimer "${todo.tâche}" ?`,
+                    [
+                      {
+                        text: "Annuler",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Supprimer",
+                        onPress: () => handleDeleteTodo(todo._id),
+                        style: "destructive",
+                      },
+                    ]
+                  );
+                }}
+                delayLongPress={300}
+                key={todo._id}
+              >
+                <View style={styles.todoItem}>
+                  <View style={styles.todoHeader}>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        fontSize: 18,
+                        marginTop: 10,
+                      }}
+                    >
+                      {todo.participants.map((user, idx) => (
+                        <View style={styles.usernameCircle} key={idx}>
+                          <Text style={styles.usernameText}>
+                            {user.username.substring(0, 2).toUpperCase()}
+                          </Text>
+                        </View>
+                      ))}
+                    </Text>
+                    <View style={styles.todoTextContainer}>
+                      <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                        {todo.tâche}
+                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                    </View>
+                    <Checkbox
+                      style={{ marginRight: 20 }}
+                      value={todo.isCompleted || false}
+                      onValueChange={() =>
+                        toggleTodoCompletion(
+                          todo._id,
+                          todo.récurrence,
+                          todo.date,
+                          todo.nextOccurrence,
+                          todo.isCompleted
+                        )
+                      }
+                      color={
+                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                      }
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
       </ScrollView>
     </View>
   );
@@ -340,8 +593,8 @@ const styles = StyleSheet.create({
   },
   todoHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start", // Aligner le contenu du haut à gauche
+    justifyContent: "space-around",
+    alignItems: "flex-end",
   },
   todoTextContainer: {
     flexDirection: "column",
@@ -364,8 +617,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   usernameText: {
-    color: "#FD703C",
+    fontSize: 18,
     fontWeight: "bold",
-    fontSize: 16,
+    color: "#FD703C",
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 20,
+    marginTop: 20,
   },
 });
