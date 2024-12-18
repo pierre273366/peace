@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
   Button,
+  ImageBackground,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
@@ -98,16 +99,19 @@ export default function Profil({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <SafeAreaView style={styles.containerProfil}>
-          <View style={{ backgroundColor: "orange", height: "30%" }}>
+          <ScrollView>
+        <ImageBackground
+            source={require("../assets/backgroundProfil.png")} // Remplacez par votre chemin d'image
+            style={styles.imageBackground}
+          >
+            
+            <View style={styles.containerDescript}>
             <TouchableOpacity
               onPress={() => navigation.navigate("ProfilParams")}
               style={styles.iconContainer}
             >
               <FontAwesome name={"gear"} size={30} color="#5F5F5F" />
             </TouchableOpacity>
-            <View style={styles.containerDescript}>
               <View style={styles.avatarContainer}>
                 <ProfilPicture profilpicture={userDetails?.profilpicture} />
               </View>
@@ -117,7 +121,7 @@ export default function Profil({ navigation }) {
                     textAlign: "center",
                     fontSize: 22,
                     fontWeight: "bold",
-                    paddingTop: 5,
+                    paddingTop: 25,
                   }}
                 >
                   @{user.username}
@@ -147,10 +151,11 @@ export default function Profil({ navigation }) {
                 </Text>
               </View>
             </View>
-          </View>
-        </SafeAreaView>
+          </ImageBackground>
+  
 
         {/* Section Réseaux Sociaux */}
+      
 
         <View style={styles.containerInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>Informations</Text>
@@ -294,18 +299,14 @@ const styles = StyleSheet.create({
   },
   containerProfil: {
     width: "100%",
-    height: 300,
     backgroundColor: "orange",
   },
-  iconContainer: {
-    alignItems: "flex-end",
-    marginRight: 20,
-  },
+  
   containerDescript: {
     width: 320,
     height: 220,
     backgroundColor: "white",
-    marginTop: 100,
+    marginTop: 120,
     marginLeft: 40,
     borderRadius: 20,
     shadowColor: "#000", // Couleur de l'ombre
@@ -314,30 +315,39 @@ const styles = StyleSheet.create({
     shadowRadius: 10, // Rayon de flou de l'ombre
     alignItems: "center",
     justifyContent: "center",
+    position: "relative", // Définit le contexte de positionnement pour les enfants
+   
   },
+  iconContainer: {
+    position: "absolute", // Permet de positionner l'icône par rapport à son parent
+    top: 10, // Distance du haut
+    right: 10, // Distance de la droite
+    zIndex: 10, // Assure que l'icône est au-dessus des autres éléments
+  },
+
   containerInfo: {
     marginLeft: 20,
-    paddingTop: 120,
+   
   },
   infoUser: {
     flexDirection: "column",
     justifyContent: "space-between",
-    height: 210,
+    height: 190,
     padding: 20,
   },
   avatarContainer: {
     width: 150,
     height: 150,
-    borderRadius: 150,
+    borderRadius: 50, // Pour que la bordure soit circulaire
+    borderWidth: 2, // Épaisseur de la bordure
+    borderColor: "black", // Couleur de la bordure
+    overflow: "hidden", // Pour que l'image reste dans les limites du conteneur
   },
-  avatar: {
-    width: 150,
-    height: 150,
-    borderRadius: 50,
-  },
+
   presentation: {
     paddingBottom: 130,
   },
+  
   socialContainer: {
     flexDirection: "row",
   },
@@ -379,5 +389,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  imageBackground: {
+    justifyContent: "center",
+    height: '60%'
   },
 });

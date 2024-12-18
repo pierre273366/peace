@@ -54,7 +54,7 @@ function Signin() {
       return;
     }
 
-    fetch("http://10.9.1.137:3000/users/signin", {
+    fetch("http://10.9.1.105:3000/users/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -153,9 +153,7 @@ function Signin() {
         <TouchableOpacity
           onPress={() => navigation.navigate("ForgotPassword")}
           style={styles.forgotPasswordButton}
-        >
-          <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
-        </TouchableOpacity>
+        ></TouchableOpacity>
         {passwordError && (
           <Text
             style={{ color: "red", marginTop: 5, marginLeft: 20, fontSize: 10 }}
