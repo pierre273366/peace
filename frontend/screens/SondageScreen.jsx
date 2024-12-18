@@ -1,15 +1,21 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
 export default function SondageScreen({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
-   const userToken = useSelector((state) => state.users.user.token);
-   const colocToken = useSelector((state) => state.users.coloc.token);
+  const userToken = useSelector((state) => state.users.user.token);
+  const colocToken = useSelector((state) => state.users.coloc.token);
   const [sondages, setSondages] = useState([]);
 
   useFocusEffect(
@@ -20,7 +26,9 @@ export default function SondageScreen({ navigation }) {
 
   const fetchSondages = async () => {
     try {
-      const response = await fetch(`http://10.9.1.105:3000/sondage/getSondages/${colocToken}`);
+      const response = await fetch(
+        `http://10.9.1.137:3000/sondage/getSondages/${colocToken}`
+      );
       const data = await response.json();
 
       if (data.result) {
@@ -41,7 +49,7 @@ export default function SondageScreen({ navigation }) {
         userToken: user.token,
       };
 
-      const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
+      const response = await fetch("http://10.9.1.137:3000/sondage/vote", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(votes),
@@ -58,13 +66,16 @@ export default function SondageScreen({ navigation }) {
 
   const fetchDeleteSondage = async (_id) => {
     try {
-      const response = await fetch("http://10.9.1.105:3000/sondage/deleteSondage", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ _id }),
-      });
+      const response = await fetch(
+        "http://10.9.1.137:3000/sondage/deleteSondage",
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ _id }),
+        }
+      );
       const data = await response.json();
-  
+
       if (data.result) {
         // Recharge les sondages après suppression
         fetchSondages();
@@ -84,12 +95,14 @@ export default function SondageScreen({ navigation }) {
         userToken: user.token,
       };
 
-
-      const response = await fetch("http://10.9.1.105:3000/sondage/deleteVote", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(votes),
-      });
+      const response = await fetch(
+        "http://10.9.1.137:3000/sondage/deleteVote",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(votes),
+        }
+      );
       const data = await response.json();
 
       if (data.result) {
@@ -99,7 +112,6 @@ export default function SondageScreen({ navigation }) {
       console.error("Erreur de fetch:", error.message);
     }
   };
-
 
   const allResponses = (sondage) => {
     const totalVotes = Object.values(sondage.votes).reduce(
@@ -116,7 +128,10 @@ export default function SondageScreen({ navigation }) {
       return (
         <TouchableOpacity
           key={i}
-          style={[styles.responseContainer, isSelected && styles.selectedResponse]}
+          style={[
+            styles.responseContainer,
+            isSelected && styles.selectedResponse,
+          ]}
           onPress={() =>
             isSelected
               ? fetchDeleteVote(sondage._id, response)
@@ -124,7 +139,12 @@ export default function SondageScreen({ navigation }) {
           }
         >
           <View style={styles.responseRow}>
-            <Text style={[styles.responseText, isSelected && styles.selectedResponseText]}>
+            <Text
+              style={[
+                styles.responseText,
+                isSelected && styles.selectedResponseText,
+              ]}
+            >
               {response}
             </Text>
             <Text style={styles.percentageText}>{percentage.toFixed(0)}%</Text>
@@ -140,25 +160,34 @@ export default function SondageScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title1}>Sondages</Text>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+      >
         {sondages.length === 0 ? (
           <Text style={styles.noSondageText}>Aucun sondage disponible.</Text>
         ) : (
           sondages.map((sondage) => (
             <View key={sondage._id} style={styles.sondageCard}>
               <View style={styles.titleIcon}>
-              <Text style={styles.title}>{sondage.title}</Text>
-              {sondage.user === user.token && (
-                <TouchableOpacity onPress={() => fetchDeleteSondage(sondage._id)}>
-              <FontAwesome style={styles.icon}
-                            name="remove"
-                            size={20}
-                            color="#FD703C"
-                          />
-                </TouchableOpacity>)}
+                <Text style={styles.title}>{sondage.title}</Text>
+                {sondage.user === user.token && (
+                  <TouchableOpacity
+                    onPress={() => fetchDeleteSondage(sondage._id)}
+                  >
+                    <FontAwesome
+                      style={styles.icon}
+                      name="remove"
+                      size={20}
+                      color="#FD703C"
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
               {sondage.createdBy && (
-                <Text style={styles.createdByText}>Sondage créé par: {sondage.createdBy}</Text>
+                <Text style={styles.createdByText}>
+                  Sondage créé par: {sondage.createdBy}
+                </Text>
               )}
               <View style={styles.responses}>{allResponses(sondage)}</View>
             </View>
@@ -246,7 +275,7 @@ const styles = StyleSheet.create({
   progressBar: {
     height: "100%",
     backgroundColor: "#FD703C",
-    borderRadius:5,
+    borderRadius: 5,
   },
   percentageText: {
     fontSize: 14,
@@ -275,11 +304,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
   },
-  icon:{
-    position:'relative',
+  icon: {
+    position: "relative",
   },
-  titleIcon:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-  }
+  titleIcon: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });

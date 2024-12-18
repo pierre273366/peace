@@ -108,7 +108,7 @@ export default function Profil({ navigation }) {
             </TouchableOpacity>
             <View style={styles.containerDescript}>
               <View style={styles.avatarContainer}>
-                <ProfilPicture />
+                <ProfilPicture profilpicture={userDetails?.profilpicture} />
               </View>
               <View style={styles.presentation}>
                 <Text
@@ -156,9 +156,9 @@ export default function Profil({ navigation }) {
           <View style={styles.infoUser}>
             <Text>Réseaux Sociaux</Text>
             <View style={styles.socialContainer}>
-              {userDetails.facebook && (
+              {userDetails && userDetails.facebook && (
                 <TouchableOpacity
-                  onPress={() => openLink(userDetails.facebook)}
+                  onPress={() => openLink(userDetails && userDetails.facebook)}
                 >
                   <FontAwesome
                     name="facebook"
@@ -168,9 +168,9 @@ export default function Profil({ navigation }) {
                   />
                 </TouchableOpacity>
               )}
-              {userDetails.instagram && (
+              {userDetails && userDetails.instagram && (
                 <TouchableOpacity
-                  onPress={() => openLink(userDetails.instagram)}
+                  onPress={() => openLink(userDetails && userDetails.instagram)}
                 >
                   <FontAwesome
                     name="instagram"
