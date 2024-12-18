@@ -32,7 +32,6 @@ function Signin() {
 
   // Correction de la fonction handleSignIn
   const handleSignIn = () => {
-<<<<<<< HEAD
 
     let isValid = true;
 
@@ -57,10 +56,7 @@ function Signin() {
       return;
     }
 
-    fetch("http://10.9.1.140:3000/users/signin", {
-=======
-    fetch("http://10.9.1.137:3000/users/signin", {
->>>>>>> 774eb5e5b684b0891ef417a164423859a08da8ff
+    fetch("http://10.9.1.105:3000/users/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -154,7 +150,6 @@ function Signin() {
           onPress={() => navigation.navigate("ForgotPassword")}
           style={styles.forgotPasswordButton}
         >
-          <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
         </TouchableOpacity>
         {passwordError && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Mot de passe manquant ou invalide.</Text>}
         <TouchableOpacity

@@ -104,7 +104,7 @@ function Signup({ navigation }) {
       dispatch(updatePassword(signUpPassword));
     }
 
-    fetch("http://10.9.1.137:3000/users/signup", {
+    fetch("http://10.9.1.105:3000/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(infos),

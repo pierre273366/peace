@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 export default function ImagePickerExample(props) {
   const [image, setImage] = useState(null);
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
-  const backendUrl = "http://10.9.1.137:3000"; // URL du backend
+  const backendUrl = "http://10.9.1.105:3000"; // URL du backend
 
   useEffect(() => {
     if (props?.profilpicture) {

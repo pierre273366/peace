@@ -10,6 +10,7 @@ import {
   ScrollView,
   Modal,
   Button,
+  ImageBackground,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
@@ -98,9 +99,11 @@ export default function Profil({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <SafeAreaView style={styles.containerProfil}>
-          <View style={{ backgroundColor: "orange", height: "30%" }}>
+        
+        <ImageBackground
+            source={require("../assets/backgroundProfil.png")} // Remplacez par votre chemin d'image
+            style={styles.imageBackground}
+          >
             <TouchableOpacity
               onPress={() => navigation.navigate("ProfilParams")}
               style={styles.iconContainer}
@@ -147,10 +150,11 @@ export default function Profil({ navigation }) {
                 </Text>
               </View>
             </View>
-          </View>
-        </SafeAreaView>
+          </ImageBackground>
+  
 
         {/* Section Réseaux Sociaux */}
+        <ScrollView>
 
         <View style={styles.containerInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>Informations</Text>
@@ -294,7 +298,6 @@ const styles = StyleSheet.create({
   },
   containerProfil: {
     width: "100%",
-    height: 300,
     backgroundColor: "orange",
   },
   iconContainer: {
@@ -303,7 +306,7 @@ const styles = StyleSheet.create({
   },
   containerDescript: {
     width: 320,
-    height: 250,
+    height: 220,
     backgroundColor: "white",
     marginTop: 100,
     marginLeft: 40,
@@ -316,14 +319,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerInfo: {
-    marginTop: 20,
     marginLeft: 20,
-    paddingTop: 150,
   },
   infoUser: {
     flexDirection: "column",
     justifyContent: "space-between",
-    height: 230,
+    height: 210,
     padding: 20,
   },
   avatarContainer: {
@@ -380,5 +381,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10,
+  },
+  imageBackground: {
+    justifyContent: "center",
+    height: '60%'
   },
 });
