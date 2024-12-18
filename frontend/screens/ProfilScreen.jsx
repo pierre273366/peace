@@ -320,6 +320,7 @@ const styles = StyleSheet.create({
   },
   containerInfo: {
     marginLeft: 20,
+    paddingTop: 150,
   },
   infoUser: {
     flexDirection: "column",

@@ -32,7 +32,7 @@ export default function GroceryListScreen({ navigation }) {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `http://10.9.1.140:3000/product/${productId}`,
+        `http://10.9.1.137:3000/product/${productId}`,
         {
           method: "DELETE",
           headers: {

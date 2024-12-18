@@ -183,7 +183,7 @@ export default function TodoList({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.containerProfil}>
-        <View style={{ height: "30%" }}>
+        <View>
           <View style={styles.containerBtnTitle}>
             <TouchableOpacity
               onPress={() => navigation.navigate("Home")}
@@ -195,26 +195,32 @@ export default function TodoList({ navigation }) {
                 color="rgb(255, 139, 228)"
               />
             </TouchableOpacity>
-            <View style={styles.containerView}>
-              <TouchableOpacity
-                style={styles.Add}
-                onPress={() => navigation.navigate("TodoCrea")}
-              >
-                <Text style={styles.white}>+</Text>
-              </TouchableOpacity>
-            </View>
+
+            <TouchableOpacity
+              style={styles.Add}
+              onPress={() => navigation.navigate("TodoCrea")}
+            >
+              <Text style={styles.white}>+</Text>
+            </TouchableOpacity>
           </View>
         </View>
-        <View>
-          <Text
-            style={{ fontWeight: "bold", fontSize: 25, textAlign: "center" }}
-          >
-            Todo List
-          </Text>
-        </View>
+
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 25,
+            textAlign: "center",
+            paddingBottom: 20,
+          }}
+        >
+          Todo List
+        </Text>
       </SafeAreaView>
-      <View style={styles.todo}>
-        <ScrollView>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={{ flex: 1 }}>
           {todos.length > 0 ? (
             todos.map((todo) => (
               <TouchableOpacity
@@ -248,13 +254,19 @@ export default function TodoList({ navigation }) {
                       }}
                     >
                       {todo.participants.map((user, idx) => (
-                        <Text key={idx} style={styles.participantText}>
-                          {user.username}
-                          {idx < todo.participants.length - 1 && ", "}
-                        </Text>
-                      ))}{" "}
-                      {todo.tâche}
+                        <View style={styles.usernameCircle} key={idx}>
+                          <Text style={styles.usernameText}>
+                            {user.username.substring(0, 2).toUpperCase()}
+                          </Text>
+                        </View>
+                      ))}
                     </Text>
+                    <View style={styles.todoTextContainer}>
+                      <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                        {todo.tâche}
+                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                    </View>
                     <Checkbox
                       style={{ marginRight: 20 }}
                       value={todo.isCompleted || false}
@@ -272,15 +284,14 @@ export default function TodoList({ navigation }) {
                       }
                     />
                   </View>
-                  <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
                 </View>
               </TouchableOpacity>
             ))
           ) : (
             <Text style={{ textAlign: "center" }}>Aucun todo disponible</Text>
           )}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -316,22 +327,45 @@ const styles = StyleSheet.create({
   },
   todoItem: {
     marginBottom: 20,
-    padding: 10,
+    padding: 5,
     backgroundColor: "white",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 2,
+    marginLeft: 15,
+    marginRight: 15,
+    justifyContent: "center",
   },
   todoHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start", // Aligner le contenu du haut à gauche
+  },
+  todoTextContainer: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    marginRight: 20,
   },
   participantText: {
+    fontSize: 19,
+    color: "#FD703C",
+  },
+  scrollViewContent: {
+    paddingVertical: 10,
+  },
+  usernameCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FD703C20",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  usernameText: {
+    color: "#FD703C",
+    fontWeight: "bold",
     fontSize: 16,
-    marginRight: 5,
   },
 });
