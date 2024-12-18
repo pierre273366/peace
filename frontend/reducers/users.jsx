@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"; // Importation de la fonction cr
 const initialState = {
   // Définition de l'état initial de l'utilisateur.
   // L'utilisateur a un token, un nom d'utilisateur (username) et un mail, initialement définis sur null.
-  user: { token: null, username: null, email: null, phoneNumber: null },
+  user: { token: null, username: null, email: null, phoneNumber: null , name: null, password: null},
   coloc: { name: null, address: null, peoples: null, token: null },
 };
 
@@ -20,6 +20,18 @@ export const userSlice = createSlice({
 
     updatePhone: (state, action) => {
       state.user.phoneNumber = action.payload.phonenumber;
+    },
+
+    updateName: (state, action) => {
+      state.user.name = action.payload.name
+    },
+
+    updateUsername: (state, action) => {
+      state.user.name = action.payload.name
+    },
+
+    updatePassword: (state, action) => {
+      state.user.password = action.payload.password
     },
 
     login: (state, action) => {
@@ -51,7 +63,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout, updateEmail, updatePhone, coloc, supColoc } =
+export const { login, logout, updateEmail, updatePhone, updateName, coloc, supColoc, updateUsername, updatePassword } =
   userSlice.actions;
 // Extraction des actions 'login' et 'logout' de l'objet userSlice.actions.
 // Ces actions sont créées automatiquement par createSlice et sont exportées pour pouvoir être utilisées ailleurs dans l'application.

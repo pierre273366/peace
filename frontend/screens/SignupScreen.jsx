@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout, updatePhone } from "../reducers/users";
+import { login, logout, updatePhone, updateName, updateUsername, updatePassword } from "../reducers/users";
 import { updateEmail } from "../reducers/users";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -21,6 +21,7 @@ function Signup({ navigation }) {
 
   // Déclaration des états locaux pour gérer les valeurs du formulaire
   const [signUpName, setSignUpName] = useState(""); // État pour gérer le nom de l'utilisateur dans le formulaire
+  const [nameInvalid, setNameInvalid] = useState(false)
   const [signUpUsername, setSignUpUsername] = useState("");
   const [signUpEmail, setSignUpEmail] = useState("");
   const [date, setDate] = useState(new Date());
@@ -31,6 +32,8 @@ function Signup({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [phoneInvalid, setPhoneInvalid] = useState(false);
+  const [usernameInvalid, setUsernameInvalid] = useState(false)
+  const [passwordInvalid, setPasswordInvalid] = useState(false);
   const [show, setShow] = useState(false); // Contrôle l'affichage du picker
 
   const dateSet = (event, selectedDate) => {
@@ -65,7 +68,7 @@ function Signup({ navigation }) {
       setEmailInvalid(false);
     } else {
       setEmailInvalid(true);
-      return;
+      
     }
 
     const regexPhone = /^0[1-9]\d{8}$/;
@@ -75,7 +78,28 @@ function Signup({ navigation }) {
       setPhoneInvalid(false);
     } else {
       setPhoneInvalid(true);
+    }
+
+    if (!signUpName.trim()) {
+      setNameInvalid(true);
+    } else {
+      setNameInvalid(false);
+      dispatch(updateName(signUpName));
+    }
+
+    if (!signUpUsername.trim()) {
+      setUsernameInvalid(true);
+    } else {
+      setUsernameInvalid(false);
+      dispatch(updateUsername(signUpUsername));
+    }
+
+    if (!signUpPassword.trim()) {
+      setPasswordInvalid(true);
       return;
+    } else {
+      setPasswordInvalid(false);
+      dispatch(updatePassword(signUpPassword));
     }
 
     fetch("http://10.9.1.137:3000/users/signup", {
@@ -133,19 +157,21 @@ function Signup({ navigation }) {
           value={signUpName} // La valeur du champ est liée à l'état signUpName
           style={styles.input} // Application du style CSS spécifique à ce champ
         />
+        {nameInvalid && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Nom et Prénom manquants ou invalides.</Text>}
         <TextInput
           placeholder="Username" // Texte d'invite pour le champ
           onChangeText={(value) => setSignUpUsername(value)} // Met à jour l'état signUpUsername lorsqu'on tape dans le champ
           value={signUpUsername} // La valeur du champ est liée à l'état signUpUsername
           style={styles.input} // Application du style CSS spécifique à ce champ
         />
+        {usernameInvalid && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Username manquant ou invalide.</Text>}
         <TextInput
           placeholder="Email" // Texte d'invite pour le champ
           onChangeText={(value) => setSignUpEmail(value)} // Met à jour l'état signUpEmail lorsqu'on tape dans le champ
           value={signUpEmail} // La valeur du champ est liée à l'état signUpPassword
           style={styles.input} // Application du style CSS spécifique à ce champ
         />
-        {emailInvalid && <Text>Invalid email address</Text>}
+        {emailInvalid && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Adresse mail manquante ou invalide.</Text>}
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Password" // Texte d'invite pour le champ
@@ -154,6 +180,7 @@ function Signup({ navigation }) {
             style={styles.input} // Application du style CSS spécifique à ce champ
             secureTextEntry={!showPassword}
           />
+          {passwordInvalid && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Mot de passe manquant ou invalide.</Text>}
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.iconContainer}
@@ -171,7 +198,7 @@ function Signup({ navigation }) {
           value={signUpPhone} // La valeur du champ est liée à l'état signUpPassword
           style={styles.input} // Application du style CSS spécifique à ce champ
         />
-        {phoneInvalid && <Text>Invalid phone number</Text>}
+        {phoneInvalid && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Numéro de téléphone manquant ou invalide.</Text>}
         <View style={styles.date}>
           <DateTimePicker
             value={date} // Date initiale

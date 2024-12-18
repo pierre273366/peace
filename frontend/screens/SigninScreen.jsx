@@ -22,9 +22,35 @@ function Signin() {
   const [signInUsername, setSignInUsername] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // Correction de la fonction handleSignIn
   const handleSignIn = () => {
+
+    let isValid = true;
+
+    // Validation du nom d'utilisateur
+    if (!signInUsername) {
+      setUsernameError("Nom d'utilisateur requis.");
+      isValid = false;
+    } else {
+      setUsernameError(""); // Réinitialise l'erreur si valide
+    }
+
+    // Validation du mot de passe
+    if (!signInPassword) {
+      setPasswordError("Mot de passe requis.");
+      isValid = false;
+    } else {
+      setPasswordError(""); // Réinitialise l'erreur si valide
+    }
+
+    // Si les validations échouent, ne pas procéder
+    if (!isValid) {
+      return;
+    }
+
     fetch("http://10.9.1.140:3000/users/signin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -60,7 +86,14 @@ function Signin() {
           
           navigation.navigate(data.redirect);
         }
-      });
+        else {
+          // Gérer les erreurs de connexion côté serveur
+          if (data.message === "Invalid username") {
+            setUsernameError("Nom d'utilisateur invalide.");
+          } else if (data.message === "Invalid password") {
+            setPasswordError("Mot de passe invalide.");
+          }
+      }});
   };
 
   const handleSubmit = () => {
@@ -84,6 +117,7 @@ function Signin() {
           value={signInUsername}
           style={styles.input}
         />
+        {usernameError && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Username manquant ou invalide.</Text>}
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Password"
@@ -103,6 +137,13 @@ function Signin() {
             />
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ForgotPassword")}
+          style={styles.forgotPasswordButton}
+        >
+          <Text style={styles.forgotPasswordText}>Mot de passe oublié ?</Text>
+        </TouchableOpacity>
+        {passwordError && <Text style={{ color: 'red', marginTop: 5, marginLeft:20, fontSize: 10 }}>Mot de passe manquant ou invalide.</Text>}
         <TouchableOpacity
           onPress={handleSignIn}
           style={styles.buttonConnect}
@@ -208,6 +249,16 @@ const styles = StyleSheet.create({
     height: 30,
     fontWeight: "600",
     fontSize: 16,
+  },
+  forgotPasswordButton: {
+    alignSelf: "flex-end",
+    marginTop: 10,
+    marginRight: 25,
+  },
+  forgotPasswordText: {
+    color: "blue",
+    fontSize: 14,
+    fontWeight: "500",
   },
 });
 
