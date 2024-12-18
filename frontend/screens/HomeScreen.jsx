@@ -17,7 +17,10 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 
 
+
+
 export default function HomeScreen({ navigation }) {
+
   const coloc = useSelector((state) => state.users.coloc);
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
   const [isChecked, setChecked] = useState(false);
@@ -333,9 +336,15 @@ const allResponses = (sondage) => {
   };
  
 
+
+  //REAL RETURN
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.profil}>
+      <View style={styles.header}>
+        <View style={styles.welcomeSection}>
+          <Text style={styles.title}>Bienvenue</Text>
+          <Text style={styles.title}>dans ta coloc {user.username} !</Text>
+        </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("Profil")}
           style={styles.user}
@@ -343,126 +352,94 @@ const allResponses = (sondage) => {
           <Text style={{ color: "white", fontWeight: "bold" }}>Mon Profil</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.containerView}>
-        <View style={styles.containerText}>
-          <Text style={styles.title}>Bienvenue</Text>
-          <Text style={styles.title}>dans ta coloc {user.username} !</Text>
-        </View>
-          <View style={styles.containerTodo}>
-            <Text style={styles.textEvent}>Todo List</Text>
-            <View style={styles.todo}>
-              <ScrollView>
-                {todos.length > 0 ? (
-                  todos.map((todo, index) => (
-                    <View key={index} style={styles.todoItem}>
-                      <View style={styles.todoHeader}>
-                        <Text
-                          style={{
-                            fontWeight: "bold",
-                            fontSize: 18,
-                            marginTop: 10,
-                          }}
-                        >
-                          {todo.participants.map((user, idx) => (
-                            <Text key={idx} style={styles.participantText}>
-                              {user.username}
-                              {idx < todo.participants.length - 1 && ", "}
-                            </Text>
-                          ))}{" "}
-                          {todo.tâche}
-                        </Text>
-                        <Checkbox
-                          style={{ marginRight: 20 }}
-                          value={todo.isCompleted || false}
-                          onValueChange={() =>
-                            toggleTodoCompletion(
-                              todo._id,
-                              todo.récurrence,
-                              todo.date,
-                              todo.nextOccurrence,
-                              todo.isCompleted
-                            )
-                          }
-                          color={
+  
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.containerTodo}>
+          <Text style={styles.textEvent}>Todo List</Text>
+          <View style={styles.todo}>
+            <ScrollView>
+              {todos.length > 0 ? (
+                todos.map((todo, index) => (
+                  <View key={index} style={styles.todoItem}>
+                    <View style={styles.todoHeader}>
+                      <Text style={styles.todoText}>
+                        {todo.participants.map((user, idx) => (
+                          <Text key={idx} style={styles.participantText}>
+                            {user.username}
+                            {idx < todo.participants.length - 1 && ", "}
+                          </Text>
+                        ))}{" "}
+                        {todo.tâche}
+                      </Text>
+                      <Checkbox
+                        style={styles.checkbox}
+                        value={todo.isCompleted || false}
+                        onValueChange={() =>
+                          toggleTodoCompletion(
+                            todo._id,
+                            todo.récurrence,
+                            todo.date,
+                            todo.nextOccurrence,
                             todo.isCompleted
-                              ? "rgb(255, 139, 228)"
-                              : "lightgray"
-                          }
-                        />
-                      </View>
-                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                          )
+                        }
+                        color={todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"}
+                      />
                     </View>
-                  ))
-                ) : (
-                  <Text style={{ textAlign: "center" }}>
-                    Aucun todo disponible
-                  </Text>
-                )}
-              </ScrollView>
-            </View>
+                    <Text style={styles.recurrenceText}>{todo.récurrence}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.emptyText}>Aucun todo disponible</Text>
+              )}
+            </ScrollView>
           </View>
+        </View>
+  
         <View style={styles.containerWidget}>
-
           <View style={styles.containerEvent}>
             <Text style={styles.textEvent}>Événements</Text>
             <View style={styles.descriptionEvent}>
               <ScrollView>
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 12,
-                    textAlign: "center",
-                  }}
-                >
-                  {date}
-                </Text>
-                {/* Afficher les événements pour la date sélectionnée */}
+                <Text style={styles.dateText}>{date}</Text>
                 {events[date] ? (
                   events[date].map((event, index) => (
                     <View key={index}>
-                      <Text
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: 18,
-                          marginTop: 10,
-                        }}
-                      >
+                      <Text style={styles.eventTitle}>
                         {event.name} à {formatTime(event.time)} {event.place}
                       </Text>
-                      <Text style={{ marginTop: 5 }}>{event.description}</Text>
+                      <Text style={styles.eventDescription}>{event.description}</Text>
                     </View>
                   ))
                 ) : (
-                  // Message si aucun événement n'est disponible pour la date sélectionnée
-                  <Text>Aucun événement pour cette date</Text>
+                  <Text style={styles.emptyText}>Aucun événement pour cette date</Text>
                 )}
               </ScrollView>
             </View>
           </View>
-
+  
           <TouchableOpacity
             style={styles.sondage}
             onPress={() => navigation.navigate("Sondage")}
           >
             <Text style={styles.textEvent}>Dernier Sondage</Text>
-            {sondage.title &&  (
+            {sondage.title && (
               <View style={styles.sondageCard}>
-              
-              <Text style={styles.title}>{sondage.title}</Text>
-              
-              {sondage.createdBy && (
-                <Text style={styles.createdByText}>
-                  Sondage créé par: {sondage.createdBy}
-                </Text>
-              )}
-              <View style={styles.scrollSondage}>
-                 <ScrollView>
-                   <View style={styles.responses}>{allResponses(sondage)}</View>
-                   </ScrollView>
-                 </View>
-            </View>)}
+                <Text style={styles.sondageTitle}>{sondage.title}</Text>
+                {sondage.createdBy && (
+                  <Text style={styles.createdByText}>
+                    Sondage créé par: {sondage.createdBy}
+                  </Text>
+                )}
+                <View style={styles.scrollSondage}>
+                  <ScrollView>
+                    <View style={styles.responses}>{allResponses(sondage)}</View>
+                  </ScrollView>
+                </View>
+              </View>
+            )}
           </TouchableOpacity>
-
+  
           <TouchableOpacity
             style={styles.liste}
             onPress={() => navigation.navigate("GroceryList")}
@@ -483,12 +460,12 @@ const allResponses = (sondage) => {
               )}
             </ScrollView>
           </TouchableOpacity>
-
+  
           <TouchableOpacity
             style={styles.roue}
             onPress={() => navigation.navigate("WheelScreen")}
           >
-            <Text style={styles.h2}>Roue</Text>
+            <Text style={styles.h2}>Tirage au sort</Text>
             <View style={styles.decorativeWheelContainer}>
               <Animated.View
                 style={[
@@ -520,316 +497,253 @@ const allResponses = (sondage) => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
-
-      
+      </ScrollView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F7F7FF",
-    alignItems: "center",
-  },
-  containerView: {
-    width: "100%",
-  },
-  containerText: {
-    width: "100%",
-  },
-  profil: {
-    width: "100%",
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-  },
-  user: {
-    backgroundColor: "rgb(253, 112, 60)",
-    width: 90,
-    height: 20,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  h2: {
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  h2White: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  containerTodo: {
-    width: '100%',
-    height: 200, 
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
-    marginBottom: 10,
-    marginTop: 10,
-    padding: 10,
-  },
-  todo: {
-    flex: 1,
-    width: '100%',
-  },
-  containerWidget: {
-    backgroundColor: "#BEBFF5",
-    width: "100%",
-    height: "100%",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    marginTop: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  eventCard: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-  },
-  containerEvent: {
-    width: 320,
-    height: 190,
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-    marginTop: 10,
-    width: "48%",
-  },
-  textEvent: {
-    fontSize: 18,
-    textAlign: "center",
-    fontFamily: "inter",
-    fontWeight: "bold",
-    color: "#BEBFF5",
-    paddingTop: 5,
-  },
-  descriptionEvent: {
-    width: 250,
-    height: 150,
-    backgroundColor: "white",
-    borderRadius: 10,
-    overflow: "scroll",
-    alignItems: "center",
-    width: "90%",
-  },
-  sondage: {
-    height: 190,
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-    marginTop: 10,
-    width: "48%",
-  },
-  scrollSondage:{
-    width:'100%',
-    height:115,
-  },
-  liste: {
-    width: 320,
-    height: 190,
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-    marginTop: 10,
-    width: "48%",
-  },
-  roue: {
-    width: 320,
-    height: 190,
-    backgroundColor: "#ffffff",
-    borderRadius: 10,
-    alignItems: "center",
-    marginBottom: 10,
-    marginTop: 10,
-    width: "48%",
-  },
-  wheelContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 30,
-  },
-  wheel: {
-    width: 200,
-    height: 200,
-    borderRadius: 150,
-    backgroundColor: "#e0e0e0",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-    overflow: "hidden", // Masque les sections qui dépassent de la roue
-    marginBottom: 10,
-  },
-  section: {
-    position: "absolute",
-    width: "50%",
-    height: "50%",
-    top: "50%",
-    left: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    transformOrigin: "100% 100%", // Centre de rotation
-    borderBottomLeftRadius: 150, // Arrondi pour chaque section
-    borderBottomRightRadius: 150,
-  },
-  sectionText: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "bold",
-    transform: [{ rotate: "-72deg" }], // Rotation inverse pour que le texte soit lisible
-    textAlign: "center",
-  },
-  spinButton: {
-    backgroundColor: "#fd703c",
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 20,
-  },
-  spinButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  resultText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  decorativeWheelContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
-  },
-  decorativeWheel: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#BEBFF5",
-    position: "relative",
-  },
-  wheelSegment: {
-    position: "absolute",
-    width: "100%",
-    height: 2,
-    backgroundColor: "#ffffff",
-    top: "50%",
-    left: 0,
-    transformOrigin: "center",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#F9F9FF",
-    alignItems: "center",
-  },
-  scrollView: {
-    flex: 1,
-    width: "100%",
-  },
-  contentContainer: {
-    paddingBottom: 100,
-    alignItems: "center",
-  },
-  sondageCard: {
-    padding: 5,
-    borderRadius: 12,
-    width: "95%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-  },
-  responses: {
-    width:'100%',
-    marginTop: 5,
-
-  },
-  title: {
-    fontSize: 12,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  responseContainer: {
-    marginVertical: 2,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    borderRadius: 10,
-    minHeight:35,
-  },
-  selectedResponse: {
-    borderColor: "#FD703C",
-    borderWidth: 2,
-  },
-  responseRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 6,
-  },
-  responseText: {
-    fontSize: 10,
-    paddingBottom: 10,
-    color: "#333",
-  },
-  selectedResponseText: {
-    fontWeight: "bold",
-    color: "#5A5A8F",
-  },
-  progressBarContainer: {
-    height: 8,
-    backgroundColor: "#EDEDF7",
-    borderRadius: 10,
-  },
-  progressBar: {
-    height: "90%",
-    backgroundColor: "#FD703C",
-    borderRadius:5,
-  },
-  percentageText: {
-    fontSize: 10,
-    fontWeight: "600",
-    color: "black",
-  },
-  noSondageText: {
-    fontSize: 16,
-    color: "#999",
-    marginTop: 20,
-    textAlign: "center",
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    width: 60,
-    height: 60,
-    backgroundColor: "#333",
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  addButtonText: {
-    color: "#FFF",
-    fontSize: 28,
-    fontWeight: "bold",
-  },
-  icon:{
-    position:'relative',
-  },
-  titleIcon:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-  }, 
-  createdByText:{
-    fontSize:10,
-    color:"#FD703C",
-  }
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#F7F7FF",
+    },
+    header: {
+      width: "100%",
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      padding: 20,
+      backgroundColor: "#F7F7FF",
+    },
+    welcomeSection: {
+      flex: 1,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#333",
+      letterSpacing: 0.5,
+    },
+    scrollContainer: {
+      flex: 1,
+      paddingHorizontal:16
+    },
+    containerTodo: {
+      width: "100%",
+      backgroundColor: "#ffffff",
+      borderRadius: 10,
+      marginBottom: 10,
+      padding: 15,
+      minHeight: 200,
+    },
+    todo: {
+      flex: 1,
+    },
+    todoItem: {
+      marginBottom: 15,
+    },
+    todoHeader: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    todoText: {
+      fontWeight: "bold",
+      fontSize: 18,
+      marginTop: 10,
+      flex: 1,
+    },
+    recurrenceText: {
+      marginTop: 5,
+      color: "#666",
+    },
+    checkbox: {
+      marginRight: 20,
+    },
+    containerWidget: {
+      backgroundColor: "#F7F7FF",
+      width: "100%",
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+    },
+    containerEvent: {
+      width: "48%",
+      height: 180,
+      backgroundColor: "#ffffff",
+      borderRadius: 10,
+      alignItems: "center",
+      marginBottom: 10,
+      marginTop: 10,
+    },
+    textEvent: {
+      fontSize: 18,
+      textAlign: "center",
+      fontWeight: "bold",
+      color: "#BEBFF5",
+      paddingTop: 5,
+    },
+    descriptionEvent: {
+      width: "90%",
+      height: 150,
+      backgroundColor: "white",
+      borderRadius: 10,
+      overflow: "hidden",
+    },
+    dateText: {
+      fontWeight: "bold",
+      fontSize: 12,
+      textAlign: "center",
+    },
+    eventTitle: {
+      fontWeight: "bold",
+      fontSize: 18,
+      marginTop: 10,
+    },
+    eventDescription: {
+      marginTop: 5,
+    },
+    sondage: {
+      width: "48%",
+      height: 180,
+      backgroundColor: "#ffffff",
+      borderRadius: 10,
+      alignItems: "center",
+      marginBottom: 10,
+      marginTop: 10,
+    },
+    sondageCard: {
+      padding: 5,
+      borderRadius: 12,
+      width: "95%",
+    },
+    sondageTitle: {
+      fontSize: 12,
+      fontWeight: "bold",
+      color: "#333",
+    },
+    scrollSondage: {
+      width: "100%",
+      height: 115,
+    },
+    responses: {
+      width: "100%",
+      marginTop: 5,
+    },
+    responseContainer: {
+      marginVertical: 2,
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      backgroundColor: "white",
+      borderRadius: 10,
+      minHeight: 35,
+    },
+    selectedResponse: {
+      borderColor: "#FD703C",
+      borderWidth: 2,
+    },
+    responseRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 6,
+    },
+    responseText: {
+      fontSize: 10,
+      paddingBottom: 10,
+      color: "#333",
+    },
+    selectedResponseText: {
+      fontWeight: "bold",
+      color: "#5A5A8F",
+    },
+    progressBarContainer: {
+      height: 8,
+      backgroundColor: "#EDEDF7",
+      borderRadius: 10,
+    },
+    progressBar: {
+      height: "90%",
+      backgroundColor: "#FD703C",
+      borderRadius: 5,
+    },
+    liste: {
+      width: "48%",
+      height: 180,
+      backgroundColor: "#ffffff",
+      borderRadius: 10,
+      alignItems: "center",
+      marginBottom: 10,
+      marginTop: 10,
+    },
+    miniList: {
+      width: "90%",
+      marginTop: 10,
+    },
+    miniListItem: {
+      marginVertical: 2,
+    },
+    miniListText: {
+      fontSize: 14,
+    },
+    miniListMore: {
+      fontSize: 12,
+      color: "#666",
+      textAlign: "center",
+      marginTop: 5,
+    },
+    roue: {
+      width: "48%",
+      height: 180,
+      backgroundColor: "#ffffff",
+      borderRadius: 10,
+      alignItems: "center",
+      marginBottom: 10,
+      marginTop: 10,
+    },
+    decorativeWheelContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+      marginTop: 20,
+    },
+    decorativeWheel: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: "#BEBFF5",
+      position: "relative",
+    },
+    wheelSegment: {
+      position: "absolute",
+      width: "100%",
+      height: 2,
+      backgroundColor: "#ffffff",
+      top: "50%",
+      left: 0,
+      transformOrigin: "center",
+    },
+    user: {
+      backgroundColor: "rgb(253, 112, 60)",
+      width: 50,
+      height: 50,
+      borderRadius: 50,
+      alignItems: "center",
+      justifyContent: "center",
+      marginLeft: 15,
+    },
+    h2: {
+      fontSize: 16,
+      fontWeight: "700",
+    },
+    createdByText: {
+      fontSize: 10,
+      color: "#FD703C",
+    },
+    emptyText: {
+      textAlign: "center",
+      color: "#666",
+    },
+    participantText: {
+      color: "#333",
+    },
+  
 });
