@@ -57,6 +57,7 @@ export default function Profil({ navigation }) {
     const data = await response.json();
 
     if (data.result) {
+      console.log(data.users);
       setColocataires(data.users); // Mettez à jour l'état avec la liste des colocataires
     } else {
       console.error(
@@ -202,10 +203,11 @@ export default function Profil({ navigation }) {
                   >
                     <Image
                       source={
+                        colocataire.profilpicture &&
                         colocataire.profilpicture !== "default-image-url"
                           ? { uri: colocataire.profilpicture } // Assurez-vous que l'URL est correcte
                           : require("../assets/utilisateur.png") // Image par défaut si pas de photo
-                      } // Remplace par l'image du colocataire s'il y en a une
+                      }
                       style={styles.colocAvatar}
                     />
                     <Text style={styles.colocUsername}>

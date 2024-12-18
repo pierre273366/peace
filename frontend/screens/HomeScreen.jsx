@@ -10,17 +10,14 @@ import {
   Easing,
   SafeAreaView,
   ScrollView,
+  Image,
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 
-
-
-
 export default function HomeScreen({ navigation }) {
-
   const coloc = useSelector((state) => state.users.coloc);
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
   const [isChecked, setChecked] = useState(false);
@@ -33,12 +30,29 @@ export default function HomeScreen({ navigation }) {
   const rotateAnim = useRef(new Animated.Value(0)).current;
   const userToken = useSelector((state) => state.users.user.token);
   const [sondage, setSondage] = useState({});
+  const [userPicture, setUserPicture] = useState(null); // Détails utilisateur
 
   useFocusEffect(
-      useCallback(() => {
-        fetchLastSondage();
-      }, [])
-    );
+    useCallback(() => {
+      fetchLastSondage();
+    }, [])
+  );
+
+  // Fonction pour récupérer les détails de l'utilisateur
+  const fetchUserDetails = React.useCallback(async () => {
+    try {
+      const response = await fetch(`${backendUrl}/users/${userToken}`);
+      const data = await response.json();
+      if (data.userDet) {
+        setUserPicture(data.userDet.profilpicture);
+      }
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération des informations utilisateur:",
+        error
+      );
+    }
+  }, []);
 
   // Fonction pour formater les événements récupérés afin de les rendre compatibles avec le calendrier et l'agenda.
   const formatEvents = (eventsData) => {
@@ -85,6 +99,7 @@ export default function HomeScreen({ navigation }) {
     fetchProducts();
     fetchTodos();
     fetchLastSondage();
+    fetchUserDetails();
   }, []);
 
   // Fonction pour formater l'heure au format "00h00"
@@ -238,68 +253,71 @@ export default function HomeScreen({ navigation }) {
       console.error("Erreur lors de la mise à jour de la tâche:", error);
     }
   };
-  
-const fetchLastSondage = async () => {
-  try {
-    const response = await fetch(`http://10.9.1.105:3000/sondage/getLastSondage/${colocToken}`)
-    const data = await response.json();
-    if(data.result){
-      setSondage(data.sondage)
+
+  const fetchLastSondage = async () => {
+    try {
+      const response = await fetch(
+        `http://10.9.1.105:3000/sondage/getLastSondage/${colocToken}`
+      );
+      const data = await response.json();
+      if (data.result) {
+        setSondage(data.sondage);
+      }
+    } catch (error) {
+      console.error("Erreur lors du fetch du dernier sondage:", error);
     }
-  } catch (error) {
-    console.error("Erreur lors du fetch du dernier sondage:", error);
-  }
-} 
+  };
 
-const fetchVote = async (_id, vote) => {
-  try {
-    const votes = {
-      _id,
-      vote,
-      userToken: user.token,
-    };
+  const fetchVote = async (_id, vote) => {
+    try {
+      const votes = {
+        _id,
+        vote,
+        userToken: user.token,
+      };
 
-    const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(votes),
-    });
-    const data = await response.json();
+      const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(votes),
+      });
+      const data = await response.json();
 
-    if (data.result) {
-      fetchLastSondage();
+      if (data.result) {
+        fetchLastSondage();
+      }
+    } catch (error) {
+      console.error("Erreur de fetch:", error.message);
     }
-  } catch (error) {
-    console.error("Erreur de fetch:", error.message);
-  }
-};
+  };
 
-const fetchDeleteVote = async (_id, vote) => {
-  try {
-    const votes = {
-      _id,
-      vote,
-      userToken: user.token,
-    };
+  const fetchDeleteVote = async (_id, vote) => {
+    try {
+      const votes = {
+        _id,
+        vote,
+        userToken: user.token,
+      };
 
+      const response = await fetch(
+        "http://10.9.1.105:3000/sondage/deleteVote",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(votes),
+        }
+      );
+      const data = await response.json();
 
-    const response = await fetch("http://10.9.1.105:3000/sondage/deleteVote", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(votes),
-    });
-    const data = await response.json();
-
-    if (data.result) {
-      fetchLastSondage();
+      if (data.result) {
+        fetchLastSondage();
+      }
+    } catch (error) {
+      console.error("Erreur de fetch:", error.message);
     }
-  } catch (error) {
-    console.error("Erreur de fetch:", error.message);
-  }
-};
+  };
 
-
-const allResponses = (sondage) => {
+  const allResponses = (sondage) => {
     const totalVotes = Object.values(sondage.votes).reduce(
       (acc, votesArray) => acc + votesArray.length,
       0
@@ -314,7 +332,10 @@ const allResponses = (sondage) => {
       return (
         <TouchableOpacity
           key={i}
-          style={[styles.responseContainer, isSelected && styles.selectedResponse]}
+          style={[
+            styles.responseContainer,
+            isSelected && styles.selectedResponse,
+          ]}
           onPress={() =>
             isSelected
               ? fetchDeleteVote(sondage._id, response)
@@ -322,7 +343,12 @@ const allResponses = (sondage) => {
           }
         >
           <View style={styles.responseRow}>
-            <Text style={[styles.responseText, isSelected && styles.selectedResponseText]}>
+            <Text
+              style={[
+                styles.responseText,
+                isSelected && styles.selectedResponseText,
+              ]}
+            >
               {response}
             </Text>
             <Text style={styles.percentageText}>{percentage.toFixed(0)}%</Text>
@@ -334,8 +360,6 @@ const allResponses = (sondage) => {
       );
     });
   };
- 
-
 
   //REAL RETURN
   return (
@@ -349,10 +373,17 @@ const allResponses = (sondage) => {
           onPress={() => navigation.navigate("Profil")}
           style={styles.user}
         >
-          <Text style={{ color: "white", fontWeight: "bold" }}>Mon Profil</Text>
+          <Image
+            source={
+              userPicture && userPicture !== "default-image-url"
+                ? { uri: userPicture } // Assurez-vous que l'URL est correcte
+                : require("../assets/utilisateur.png") // Image par défaut si pas de photo
+            }
+            style={styles.avatar}
+          ></Image>
         </TouchableOpacity>
       </View>
-  
+
       <ScrollView style={styles.scrollContainer}>
         <View style={styles.containerTodo}>
           <Text style={styles.textEvent}>Todo List</Text>
@@ -383,7 +414,9 @@ const allResponses = (sondage) => {
                             todo.isCompleted
                           )
                         }
-                        color={todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"}
+                        color={
+                          todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                        }
                       />
                     </View>
                     <Text style={styles.recurrenceText}>{todo.récurrence}</Text>
@@ -395,7 +428,7 @@ const allResponses = (sondage) => {
             </ScrollView>
           </View>
         </View>
-  
+
         <View style={styles.containerWidget}>
           <View style={styles.containerEvent}>
             <Text style={styles.textEvent}>Événements</Text>
@@ -408,16 +441,20 @@ const allResponses = (sondage) => {
                       <Text style={styles.eventTitle}>
                         {event.name} à {formatTime(event.time)} {event.place}
                       </Text>
-                      <Text style={styles.eventDescription}>{event.description}</Text>
+                      <Text style={styles.eventDescription}>
+                        {event.description}
+                      </Text>
                     </View>
                   ))
                 ) : (
-                  <Text style={styles.emptyText}>Aucun événement pour cette date</Text>
+                  <Text style={styles.emptyText}>
+                    Aucun événement pour cette date
+                  </Text>
                 )}
               </ScrollView>
             </View>
           </View>
-  
+
           <TouchableOpacity
             style={styles.sondage}
             onPress={() => navigation.navigate("Sondage")}
@@ -433,13 +470,15 @@ const allResponses = (sondage) => {
                 )}
                 <View style={styles.scrollSondage}>
                   <ScrollView>
-                    <View style={styles.responses}>{allResponses(sondage)}</View>
+                    <View style={styles.responses}>
+                      {allResponses(sondage)}
+                    </View>
                   </ScrollView>
                 </View>
               </View>
             )}
           </TouchableOpacity>
-  
+
           <TouchableOpacity
             style={styles.liste}
             onPress={() => navigation.navigate("GroceryList")}
@@ -460,7 +499,7 @@ const allResponses = (sondage) => {
               )}
             </ScrollView>
           </TouchableOpacity>
-  
+
           <TouchableOpacity
             style={styles.roue}
             onPress={() => navigation.navigate("WheelScreen")}
@@ -501,249 +540,253 @@ const allResponses = (sondage) => {
     </SafeAreaView>
   );
 }
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "#F7F7FF",
-    },
-    header: {
-      width: "100%",
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'flex-start',
-      padding: 20,
-      backgroundColor: "#F7F7FF",
-    },
-    welcomeSection: {
-      flex: 1,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: "bold",
-      color: "#333",
-      letterSpacing: 0.5,
-    },
-    scrollContainer: {
-      flex: 1,
-      paddingHorizontal:16
-    },
-    containerTodo: {
-      width: "100%",
-      backgroundColor: "#ffffff",
-      borderRadius: 10,
-      marginBottom: 10,
-      padding: 15,
-      minHeight: 200,
-    },
-    todo: {
-      flex: 1,
-    },
-    todoItem: {
-      marginBottom: 15,
-    },
-    todoHeader: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    todoText: {
-      fontWeight: "bold",
-      fontSize: 18,
-      marginTop: 10,
-      flex: 1,
-    },
-    recurrenceText: {
-      marginTop: 5,
-      color: "#666",
-    },
-    checkbox: {
-      marginRight: 20,
-    },
-    containerWidget: {
-      backgroundColor: "#F7F7FF",
-      width: "100%",
-      flexDirection: "row",
-      flexWrap: "wrap",
-      justifyContent: "space-between",
-    },
-    containerEvent: {
-      width: "48%",
-      height: 180,
-      backgroundColor: "#ffffff",
-      borderRadius: 10,
-      alignItems: "center",
-      marginBottom: 10,
-      marginTop: 10,
-    },
-    textEvent: {
-      fontSize: 18,
-      textAlign: "center",
-      fontWeight: "bold",
-      color: "#BEBFF5",
-      paddingTop: 5,
-    },
-    descriptionEvent: {
-      width: "90%",
-      height: 150,
-      backgroundColor: "white",
-      borderRadius: 10,
-      overflow: "hidden",
-    },
-    dateText: {
-      fontWeight: "bold",
-      fontSize: 12,
-      textAlign: "center",
-    },
-    eventTitle: {
-      fontWeight: "bold",
-      fontSize: 18,
-      marginTop: 10,
-    },
-    eventDescription: {
-      marginTop: 5,
-    },
-    sondage: {
-      width: "48%",
-      height: 180,
-      backgroundColor: "#ffffff",
-      borderRadius: 10,
-      alignItems: "center",
-      marginBottom: 10,
-      marginTop: 10,
-    },
-    sondageCard: {
-      padding: 5,
-      borderRadius: 12,
-      width: "95%",
-    },
-    sondageTitle: {
-      fontSize: 12,
-      fontWeight: "bold",
-      color: "#333",
-    },
-    scrollSondage: {
-      width: "100%",
-      height: 115,
-    },
-    responses: {
-      width: "100%",
-      marginTop: 5,
-    },
-    responseContainer: {
-      marginVertical: 2,
-      paddingVertical: 5,
-      paddingHorizontal: 10,
-      backgroundColor: "white",
-      borderRadius: 10,
-      minHeight: 35,
-    },
-    selectedResponse: {
-      borderColor: "#FD703C",
-      borderWidth: 2,
-    },
-    responseRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      marginBottom: 6,
-    },
-    responseText: {
-      fontSize: 10,
-      paddingBottom: 10,
-      color: "#333",
-    },
-    selectedResponseText: {
-      fontWeight: "bold",
-      color: "#5A5A8F",
-    },
-    progressBarContainer: {
-      height: 8,
-      backgroundColor: "#EDEDF7",
-      borderRadius: 10,
-    },
-    progressBar: {
-      height: "90%",
-      backgroundColor: "#FD703C",
-      borderRadius: 5,
-    },
-    liste: {
-      width: "48%",
-      height: 180,
-      backgroundColor: "#ffffff",
-      borderRadius: 10,
-      alignItems: "center",
-      marginBottom: 10,
-      marginTop: 10,
-    },
-    miniList: {
-      width: "90%",
-      marginTop: 10,
-    },
-    miniListItem: {
-      marginVertical: 2,
-    },
-    miniListText: {
-      fontSize: 14,
-    },
-    miniListMore: {
-      fontSize: 12,
-      color: "#666",
-      textAlign: "center",
-      marginTop: 5,
-    },
-    roue: {
-      width: "48%",
-      height: 180,
-      backgroundColor: "#ffffff",
-      borderRadius: 10,
-      alignItems: "center",
-      marginBottom: 10,
-      marginTop: 10,
-    },
-    decorativeWheelContainer: {
-      alignItems: "center",
-      justifyContent: "center",
-      marginTop: 20,
-    },
-    decorativeWheel: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      backgroundColor: "#BEBFF5",
-      position: "relative",
-    },
-    wheelSegment: {
-      position: "absolute",
-      width: "100%",
-      height: 2,
-      backgroundColor: "#ffffff",
-      top: "50%",
-      left: 0,
-      transformOrigin: "center",
-    },
-    user: {
-      backgroundColor: "rgb(253, 112, 60)",
-      width: 50,
-      height: 50,
-      borderRadius: 50,
-      alignItems: "center",
-      justifyContent: "center",
-      marginLeft: 15,
-    },
-    h2: {
-      fontSize: 16,
-      fontWeight: "700",
-    },
-    createdByText: {
-      fontSize: 10,
-      color: "#FD703C",
-    },
-    emptyText: {
-      textAlign: "center",
-      color: "#666",
-    },
-    participantText: {
-      color: "#333",
-    },
-  
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F7F7FF",
+  },
+  header: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    padding: 20,
+    backgroundColor: "#F7F7FF",
+  },
+  welcomeSection: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#333",
+    letterSpacing: 0.5,
+  },
+  scrollContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  containerTodo: {
+    width: "100%",
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    marginBottom: 10,
+    padding: 15,
+    minHeight: 200,
+  },
+  todo: {
+    flex: 1,
+  },
+  todoItem: {
+    marginBottom: 15,
+  },
+  todoHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  todoText: {
+    fontWeight: "bold",
+    fontSize: 18,
+    marginTop: 10,
+    flex: 1,
+  },
+  recurrenceText: {
+    marginTop: 5,
+    color: "#666",
+  },
+  checkbox: {
+    marginRight: 20,
+  },
+  containerWidget: {
+    backgroundColor: "#F7F7FF",
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  containerEvent: {
+    width: "48%",
+    height: 180,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  textEvent: {
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#BEBFF5",
+    paddingTop: 5,
+  },
+  descriptionEvent: {
+    width: "90%",
+    height: 150,
+    backgroundColor: "white",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  dateText: {
+    fontWeight: "bold",
+    fontSize: 12,
+    textAlign: "center",
+  },
+  eventTitle: {
+    fontWeight: "bold",
+    fontSize: 18,
+    marginTop: 10,
+  },
+  eventDescription: {
+    marginTop: 5,
+  },
+  sondage: {
+    width: "48%",
+    height: 180,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  sondageCard: {
+    padding: 5,
+    borderRadius: 12,
+    width: "95%",
+  },
+  sondageTitle: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  scrollSondage: {
+    width: "100%",
+    height: 115,
+  },
+  responses: {
+    width: "100%",
+    marginTop: 5,
+  },
+  responseContainer: {
+    marginVertical: 2,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
+    minHeight: 35,
+  },
+  selectedResponse: {
+    borderColor: "#FD703C",
+    borderWidth: 2,
+  },
+  responseRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 6,
+  },
+  responseText: {
+    fontSize: 10,
+    paddingBottom: 10,
+    color: "#333",
+  },
+  selectedResponseText: {
+    fontWeight: "bold",
+    color: "#5A5A8F",
+  },
+  progressBarContainer: {
+    height: 8,
+    backgroundColor: "#EDEDF7",
+    borderRadius: 10,
+  },
+  progressBar: {
+    height: "90%",
+    backgroundColor: "#FD703C",
+    borderRadius: 5,
+  },
+  liste: {
+    width: "48%",
+    height: 180,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  miniList: {
+    width: "90%",
+    marginTop: 10,
+  },
+  miniListItem: {
+    marginVertical: 2,
+  },
+  miniListText: {
+    fontSize: 14,
+  },
+  miniListMore: {
+    fontSize: 12,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 5,
+  },
+  roue: {
+    width: "48%",
+    height: 180,
+    backgroundColor: "#ffffff",
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  decorativeWheelContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 20,
+  },
+  decorativeWheel: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#BEBFF5",
+    position: "relative",
+  },
+  wheelSegment: {
+    position: "absolute",
+    width: "100%",
+    height: 2,
+    backgroundColor: "#ffffff",
+    top: "50%",
+    left: 0,
+    transformOrigin: "center",
+  },
+  user: {
+    backgroundColor: "rgb(253, 112, 60)",
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 15,
+  },
+  h2: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  createdByText: {
+    fontSize: 10,
+    color: "#FD703C",
+  },
+  emptyText: {
+    textAlign: "center",
+    color: "#666",
+  },
+  participantText: {
+    color: "#333",
+  },
+  avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+  },
 });
