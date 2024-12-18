@@ -6,8 +6,16 @@ import {
   Text,
   View,
   ScrollView,
+  Dimensions
 } from "react-native";
 import { Calendar, Agenda } from "react-native-calendars";
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+
+
+
+
 
 const MyCalendar = ({ navigation }) => {
   // Initialisation des états : un objet `events` pour stocker les événements par date
@@ -132,18 +140,10 @@ const MyCalendar = ({ navigation }) => {
 
       {/* Affichage du calendrier */}
       <Calendar
-        markedDates={markedDates} // Passer les dates marquées avec des événements
+        markedDates={markedDates}
         style={styles.calendar}
-        onDayPress={(day) => handleDateSelect(day.dateString)} // Gérer la sélection d'une date
-        renderEmptyData={renderEmptyData} // Message lorsque aucune donnée n'est disponible pour la date
-      />
-
-      {/* Affichage de l'agenda avec les événements pour la date sélectionnée */}
-      <Agenda
-        items={events} // Passer l'objet `events` à la prop `items` du composant Agenda
-        selected={selectedDate} // La date actuellement sélectionnée
-        renderItem={renderItem} // Fonction pour afficher un événement
-        renderEmptyData={renderEmptyData} // Message lorsque aucune donnée n'est disponible
+        onDayPress={(day) => handleDateSelect(day.dateString)}
+        renderEmptyData={renderEmptyData}
       />
 
       {/* Section pour afficher les événements sous forme de texte */}
@@ -151,27 +151,23 @@ const MyCalendar = ({ navigation }) => {
         <Text style={styles.textEvent}>Événements</Text>
         <View style={styles.descriptionEvent}>
           <ScrollView>
-            {/* Afficher les événements pour la date sélectionnée */}
             {events[selectedDate] ? (
               events[selectedDate].map((event, index) => (
                 <View key={index}>
-                  <Text
-                    style={{ fontWeight: "bold", fontSize: 18, marginTop: 10 }}
-                  >
+                  <Text style={styles.eventTitle}>
                     {event.name} à {formatTime(event.time)} {event.place}
                   </Text>
-                  <Text style={{ marginTop: 5 }}>{event.description}</Text>
+                  <Text style={styles.eventDescription}>{event.description}</Text>
                 </View>
               ))
             ) : (
-              // Message si aucun événement n'est disponible pour la date sélectionnée
-              <Text>Aucun événement pour cette date</Text>
+              <Text style={styles.eventDescription}>Aucun événement pour cette date</Text>
             )}
           </ScrollView>
         </View>
       </View>
     </View>
-  );
+);
 };
 
 // Styles pour la mise en page de l'application
@@ -183,59 +179,79 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(247, 247, 255)",
   },
   containerButton: {
-    width: "100%",
+    width: '100%',
     alignItems: "flex-end",
-    padding: 50,
-    marginTop: 40,
+    padding: windowWidth * 0.1,
+    marginTop: windowHeight * 0.05,
   },
   button: {
     backgroundColor: "rgb(253, 112, 60)",
-    width: 80,
-    height: 50,
+    width: windowWidth * 0.2,
+    height: windowHeight * 0.06,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },
   buttonAdd: {
     color: "white",
-    fontSize: 20,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
     fontWeight: "bold",
   },
   calendar: {
-    width: 350,
+    width: windowWidth * 0.9,
     borderRadius: 10,
-    marginBottom: 80,
+    marginBottom: windowHeight * 0.05,
   },
   eventCard: {
-    padding: 10,
+    padding: windowWidth * 0.03,
     backgroundColor: "#fff",
-    marginBottom: 10,
+    marginBottom: windowHeight * 0.01,
     borderRadius: 10,
+    width: windowWidth * 0.85,
   },
   containerEvent: {
-    width: 320,
-    height: 220,
+    width: windowWidth * 0.85,
+    height: windowHeight * 0.3,
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 80,
-    paddingTop: 10,
+    marginBottom: windowHeight * 0.05,
+    paddingTop: windowHeight * 0.01,
   },
   textEvent: {
-    fontSize: 20,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.040,
     textAlign: "center",
     fontFamily: "inter",
     fontWeight: "bold",
     color: "#BEBFF5",
   },
   descriptionEvent: {
-    width: 250,
-    height: 150,
+    width: windowWidth * 0.7,
+    height: windowHeight * 0.2,
     backgroundColor: "#BEBFF5",
     borderRadius: 10,
-    marginTop: 10,
+    marginTop: windowHeight * 0.01,
     overflow: "scroll",
     alignItems: "center",
+    padding: windowWidth * 0.03,
+  },
+  eventName: {
+    fontSize: Math.min(windowWidth, windowHeight) * 0.030,
+    fontWeight: "bold",
+  },
+  eventTime: {
+    fontSize: Math.min(windowWidth, windowHeight) * 0.02,
+    color: "#666",
+  },
+  // Nouveaux styles pour les textes dans la description des événements
+  eventTitle: {
+    fontWeight: "bold", 
+    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
+    marginTop: windowHeight * 0.01,
+  },
+  eventDescription: {
+    fontSize: Math.min(windowWidth, windowHeight) * 0.030,
+    marginTop: windowHeight * 0.005,
   },
 });
 
