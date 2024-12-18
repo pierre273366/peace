@@ -220,12 +220,6 @@ export default function Profil({ navigation }) {
               <Text>Aucun colocataire trouvé.</Text>
             )}
           </View>
-          <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>
-            Badges
-          </Text>
-          <Text style={{ marginTop: 20 }}>
-            {userDetails?.badgeearned || "Aucun badge disponible"}
-          </Text>
         </View>
       </ScrollView>
 
@@ -241,20 +235,23 @@ export default function Profil({ navigation }) {
             <Text style={styles.modalTitle}>
               {selectedColocataire?.username}
             </Text>
-            <Text>
+            <Text style={{ lineHeight: 20 }}>
               🎂{" "}
-              {userDetails?.dateofbirth &&
-                new Date(userDetails.dateofbirth).toISOString().split("T")[0]}
+              {selectedColocataire?.dateofbirth &&
+                new Date(selectedColocataire.dateofbirth)
+                  .toISOString()
+                  .split("T")[0]}
             </Text>
-            <Text>
+            <Text style={{ lineHeight: 40 }}>
               {" "}
-              {userDetails?.description || "Pas de description disponible"}
+              {selectedColocataire?.description ||
+                "Pas de description disponible"}
             </Text>
-            <Text>Réseaux sociaux:</Text>
+            <Text style={{ lineHeight: 20 }}>Réseaux sociaux:</Text>
             <View style={styles.socialContainer}>
-              {userDetails?.facebook && (
+              {selectedColocataire?.facebook && (
                 <TouchableOpacity
-                  onPress={() => openLink(userDetails.facebook)}
+                  onPress={() => openLink(selectedColocataire.facebook)}
                 >
                   <FontAwesome
                     name="facebook"
@@ -264,9 +261,9 @@ export default function Profil({ navigation }) {
                   />
                 </TouchableOpacity>
               )}
-              {userDetails?.instagram && (
+              {selectedColocataire?.instagram && (
                 <TouchableOpacity
-                  onPress={() => openLink(userDetails.instagram)}
+                  onPress={() => openLink(selectedColocataire.instagram)}
                 >
                   <FontAwesome
                     name="instagram"
@@ -277,10 +274,10 @@ export default function Profil({ navigation }) {
                 </TouchableOpacity>
               )}
             </View>
-            <Text>
+            <Text style={{ lineHeight: 20 }}>
               Date d'entrée :{" "}
-              {userDetails?.arrivaldate &&
-                userDetails.arrivaldate.split("T")[0]}
+              {selectedColocataire?.arrivaldate &&
+                selectedColocataire.arrivaldate.split("T")[0]}
             </Text>
             <Button title="Fermer" onPress={closeModal} />
           </View>
@@ -369,13 +366,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.6)",
   },
   modalContainer: {
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
     width: 300,
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalTitle: {
     fontSize: 22,

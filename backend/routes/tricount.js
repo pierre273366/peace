@@ -16,7 +16,9 @@ router.get("/getcolocusers/:token", (req, res) => {
     }
     // Ensuite on utilise son colocToken pour trouver tous les users de la coloc
     User.find({ colocToken: user.colocToken })
-      .select("username profilpicture")
+      .select(
+        "username profilpicture dateofbirth description instagram facebook arrivaldate"
+      )
       .then((users) => {
         if (users.length > 0) {
           res.json({ result: true, users: users });
