@@ -108,7 +108,7 @@ const TabNavigator = ({navigation}) => {
               backgroundColor: '#000',
               width: 50,
               height: 50,
-              borderRadius: 25,
+              borderRadius: 20,
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 999,
