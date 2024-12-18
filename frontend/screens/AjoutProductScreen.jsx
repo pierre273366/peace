@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import {
   View,
   StyleSheet,
@@ -12,10 +12,9 @@ import {
 import Checkbox from "expo-checkbox";
 
 export default function AjoutProductScreen({ navigation }) {
-  const [productName, setProductName] = useState('');
+  const [productName, setProductName] = useState("");
   const [isUrgent, setIsUrgent] = useState(false);
   const colocToken = useSelector((state) => state.users.coloc.token);
-
 
   const handleSubmit = async () => {
     if (!productName.trim()) {
@@ -23,21 +22,20 @@ export default function AjoutProductScreen({ navigation }) {
       return;
     }
 
-    const response = await fetch('http://10.9.1.140:3000/product', { 
-      method: 'POST',
+    const response = await fetch("http://10.9.1.137:3000/product", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         productName,
         isUrgent,
-        colocToken
-
+        colocToken,
       }),
     });
 
     if (response.ok) {
-      setProductName('');
+      setProductName("");
       setIsUrgent(false);
       Alert.alert("Succès", "Produit ajouté !");
       navigation.goBack();
@@ -73,10 +71,7 @@ export default function AjoutProductScreen({ navigation }) {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={styles.partager} 
-          onPress={handleSubmit}
-        >
+        <TouchableOpacity style={styles.partager} onPress={handleSubmit}>
           <Text style={styles.white}>Créer</Text>
         </TouchableOpacity>
       </View>
@@ -90,37 +85,37 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(247, 247, 255)",
   },
   containerView: {
-    width: '100%',
+    width: "100%",
     padding: 16,
   },
   containerBtnTitle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   Add: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 50,
     height: 56,
     width: 56,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   white: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    fontWeight: '600'
+    fontWeight: "600",
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    padding: 16
+    padding: 16,
   },
   input: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    backgroundColor: "white",
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
     gap: 15,
     margin: 16,
     borderRadius: 8,
@@ -133,10 +128,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 16,
-    gap: 8
+    gap: 8,
   },
   checkbox: {
     height: 20,
@@ -147,15 +142,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: "flex-end",
+    alignItems: "center",
     marginBottom: 30,
   },
   partager: {
-    alignItems: 'center',
-    width: '85%',
+    alignItems: "center",
+    width: "85%",
     borderRadius: 50,
-    backgroundColor: '#FD703C',
+    backgroundColor: "#FD703C",
     padding: 25,
   },
 });
