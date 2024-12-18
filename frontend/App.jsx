@@ -26,6 +26,7 @@ import DetailSondageScreen from "./screens/DetailSondageScreen";
 import TodoListCreaScreen from "./screens/TodoListCreaScreen";
 import GroceryListScreen from "./screens/GroceryListScreen";
 import AjoutProductScreen from "./screens/AjoutProductScreen";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import WheelOfFortune from "./screens/WheelScreen";
 import { useState } from 'react';
 
@@ -211,6 +212,7 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Accueil" component={AccueilScreen} />
           <Stack.Screen name="Signin" component={SigninScreen} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
           <Stack.Screen name="DetailTricount" component={DetailTricount} />
           <Stack.Screen name="TricountCrea" component={TricountCreaScreen} />

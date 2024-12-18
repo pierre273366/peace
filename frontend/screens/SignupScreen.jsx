@@ -12,15 +12,19 @@ import {
   Dimensions
 } from "react-native";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login, updatePhone, updateEmail } from "../reducers/users";
+import { useDispatch, useSelector } from "react-redux";
+import { login, logout, updatePhone, updateName, updateUsername, updatePassword } from "../reducers/users";
+import { updateEmail } from "../reducers/users";
+import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 function Signup({ navigation }) {
   const dispatch = useDispatch();
 
-  const [signUpName, setSignUpName] = useState("");
+  // Déclaration des états locaux pour gérer les valeurs du formulaire
+  const [signUpName, setSignUpName] = useState(""); // État pour gérer le nom de l'utilisateur dans le formulaire
+  const [nameInvalid, setNameInvalid] = useState(false)
   const [signUpUsername, setSignUpUsername] = useState("");
   const [signUpEmail, setSignUpEmail] = useState("");
   const [date, setDate] = useState(new Date());
@@ -31,7 +35,9 @@ function Signup({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [emailInvalid, setEmailInvalid] = useState(false);
   const [phoneInvalid, setPhoneInvalid] = useState(false);
-  const [show, setShow] = useState(false);
+  const [usernameInvalid, setUsernameInvalid] = useState(false)
+  const [passwordInvalid, setPasswordInvalid] = useState(false);
+  const [show, setShow] = useState(false); // Contrôle l'affichage du picker
 
   const dateSet = (event, selectedDate) => {
     if (Platform.OS === 'android') {
@@ -65,7 +71,7 @@ function Signup({ navigation }) {
       setEmailInvalid(false);
     } else {
       setEmailInvalid(true);
-      return;
+      
     }
 
     const regexPhone = /^0[1-9]\d{8}$/;
@@ -74,7 +80,28 @@ function Signup({ navigation }) {
       setPhoneInvalid(false);
     } else {
       setPhoneInvalid(true);
+    }
+
+    if (!signUpName.trim()) {
+      setNameInvalid(true);
+    } else {
+      setNameInvalid(false);
+      dispatch(updateName(signUpName));
+    }
+
+    if (!signUpUsername.trim()) {
+      setUsernameInvalid(true);
+    } else {
+      setUsernameInvalid(false);
+      dispatch(updateUsername(signUpUsername));
+    }
+
+    if (!signUpPassword.trim()) {
+      setPasswordInvalid(true);
       return;
+    } else {
+      setPasswordInvalid(false);
+      dispatch(updatePassword(signUpPassword));
     }
 
     fetch("http://10.9.1.137:3000/users/signup", {
@@ -122,25 +149,43 @@ function Signup({ navigation }) {
             source={require("../assets/peacelogo.png")}
           />
           <Text style={styles.textAccount}>Inscription</Text>
+  
           <TextInput
             placeholder="Name"
             onChangeText={(value) => setSignUpName(value)}
             value={signUpName}
             style={styles.input}
           />
+          {nameInvalid && (
+            <Text style={{ color: 'red', marginTop: 5, marginLeft: 20, fontSize: 10 }}>
+              Nom et Prénom manquants ou invalides.
+            </Text>
+          )}
+  
           <TextInput
             placeholder="Username"
             onChangeText={(value) => setSignUpUsername(value)}
             value={signUpUsername}
             style={styles.input}
           />
+          {usernameInvalid && (
+            <Text style={{ color: 'red', marginTop: 5, marginLeft: 20, fontSize: 10 }}>
+              Username manquant ou invalide.
+            </Text>
+          )}
+  
           <TextInput
             placeholder="Email"
             onChangeText={(value) => setSignUpEmail(value)}
             value={signUpEmail}
             style={styles.input}
           />
-          {emailInvalid && <Text style={styles.errorText}>Invalid email address</Text>}
+          {emailInvalid && (
+            <Text style={{ color: 'red', marginTop: 5, marginLeft: 20, fontSize: 10 }}>
+              Adresse mail manquante ou invalide.
+            </Text>
+          )}
+  
           <View style={styles.inputContainer}>
             <TextInput
               placeholder="Password"
@@ -149,6 +194,11 @@ function Signup({ navigation }) {
               style={styles.input}
               secureTextEntry={!showPassword}
             />
+            {passwordInvalid && (
+              <Text style={{ color: 'red', marginTop: 5, marginLeft: 20, fontSize: 10 }}>
+                Mot de passe manquant ou invalide.
+              </Text>
+            )}
             <TouchableOpacity
               onPress={() => setShowPassword(!showPassword)}
               style={styles.iconContainer}
@@ -160,80 +210,35 @@ function Signup({ navigation }) {
               />
             </TouchableOpacity>
           </View>
+  
           <TextInput
             placeholder="PhoneNumber"
             onChangeText={(value) => setSignUpPhone(value)}
             value={signUpPhone}
             style={styles.input}
           />
-          {phoneInvalid && <Text style={styles.errorText}>Invalid phone number</Text>}
-          <View style={styles.dateContainer}>
-            {Platform.OS === 'ios' ? (
-              <View style={styles.dateInputContainer}>
-                <TouchableOpacity 
-                  style={styles.dateButton} 
-                  onPress={() => setShow(true)}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.dateInputWrapper}>
-                    <TextInput 
-                      style={[styles.input, styles.dateInput]}
-                      placeholder="Date de naissance"
-                      value={signUpBirth}
-                      editable={false}
-                      pointerEvents="none"
-                    />
-                  </View>
-                </TouchableOpacity>
-                {show && (
-                  <View style={styles.iosPickerContainer}>
-                    <DateTimePicker
-                      value={date}
-                      mode="date"
-                      display="spinner"
-                      onChange={dateSet}
-                      maximumDate={new Date()}
-                    />
-                    <TouchableOpacity 
-                      style={styles.iosButton}
-                      onPress={() => setShow(false)}
-                    >
-                      <Text style={styles.iosButtonText}>Valider</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            ) : (
-              <View style={styles.dateInputContainer}>
-                <TouchableOpacity 
-                  style={styles.dateButton} 
-                  onPress={() => setShow(true)}
-                >
-                  <TextInput 
-                    style={[styles.input, styles.dateInput]}
-                    placeholder="Date de naissance"
-                    value={signUpBirth}
-                    editable={false}
-                  />
-                </TouchableOpacity>
-                {show && (
-                  <DateTimePicker
-                    value={date}
-                    mode="date"
-                    display="default"
-                    onChange={dateSet}
-                    maximumDate={new Date()}
-                  />
-                )}
-              </View>
-            )}
+          {phoneInvalid && (
+            <Text style={{ color: 'red', marginTop: 5, marginLeft: 20, fontSize: 10 }}>
+              Numéro de téléphone manquant ou invalide.
+            </Text>
+          )}
+  
+          <View style={styles.date}>
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={dateSet}
+              maximumDate={new Date()}
+            />
           </View>
+  
           <TouchableOpacity
             style={styles.checkboxContainer}
             onPress={toggleFirstColoc}
           >
             <Text style={styles.checkboxText}>
-              As tu déjà fait de la colocation ?
+              As-tu déjà fait de la colocation ?
             </Text>
             <View
               style={[
@@ -246,6 +251,7 @@ function Signup({ navigation }) {
               )}
             </View>
           </TouchableOpacity>
+  
           <TouchableOpacity
             style={styles.buttonSignup}
             onPress={() => SignUpBtn()}
@@ -255,8 +261,8 @@ function Signup({ navigation }) {
         </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
-   );
-}
+  );
+}  
   const styles = StyleSheet.create({
     signinContainer: {
       flex: 1,
