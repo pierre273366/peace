@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   },
   containerDescript: {
     width: 320,
-    height: 250,
+    height: 220,
     backgroundColor: "white",
     marginTop: 100,
     marginLeft: 40,
@@ -316,14 +316,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerInfo: {
-    marginTop: 20,
     marginLeft: 20,
-    paddingTop: 150,
+    paddingTop: 120,
   },
   infoUser: {
     flexDirection: "column",
     justifyContent: "space-between",
-    height: 230,
+    height: 210,
     padding: 20,
   },
   avatarContainer: {
