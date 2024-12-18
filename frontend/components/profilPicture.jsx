@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Image,
@@ -7,10 +7,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useSelector } from "react-redux";
 
-export default function ImagePickerExample() {
+export default function ImagePickerExample(props) {
   const [image, setImage] = useState(null);
+  const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
   const backendUrl = "http://10.9.1.137:3000"; // URL du backend
+
+  useEffect(() => {
+    if (props?.profilpicture) {
+      setImage(props.profilpicture);
+    } else {
+      setImage(null);
+    }
+  }, [props]);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -37,25 +47,28 @@ export default function ImagePickerExample() {
     try {
       // Créer un form-data pour envoyer l'image à Cloudinary
       const formData = new FormData();
-      formData.append("file", {
+      formData.append("photoFromFront", {
         uri: uri,
-        type: "",
-        name: "profile_picture.jpg", // Nom du fichier (peut être dynamique si nécessaire)
+        type: "image/jpeg",
+        name: "photo.jpg", // Nom du fichier (peut être dynamique si nécessaire)
       });
 
-      const response = await fetch(`${backendUrl}/users/uploadpicture`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${backendUrl}/users/uploadpicture/${user.token}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await response.json();
 
-      if (data.secure_url) {
+      if (data.result) {
         // L'URL sécurisée de l'image est retournée par Cloudinary
-        console.log("Image uploaded successfully: ", data.secure_url);
-        setImage(data.secure_url); // Sauvegarder l'URL de l'image
+        console.log("Image uploaded successfully: ", data.url);
+        setImage(data.url); // Sauvegarder l'URL de l'image
       } else {
-        console.log("Error", data.error.message);
+        console.log("Error front result fault", data.error.message);
       }
     } catch (error) {
       console.error("Error uploading image: ", error);

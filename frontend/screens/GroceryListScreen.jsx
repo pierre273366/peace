@@ -8,7 +8,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import Checkbox from "expo-checkbox";
 
 export default function GroceryListScreen({ navigation }) {
@@ -21,23 +21,28 @@ export default function GroceryListScreen({ navigation }) {
       Alert.alert("Erreur", "Token de colocation manquant");
       return;
     }
-  
-    const response = await fetch(`http://10.9.1.140:3000/product/getproducts/${colocToken}`);
+
+    const response = await fetch(
+      `http://10.9.1.137:3000/product/getproducts/${colocToken}`
+    );
     const data = await response.json();
     setProducts(data);
   };
 
   const handleDelete = async (productId) => {
     try {
-      const response = await fetch(`http://10.9.1.140:3000/product/${productId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `http://10.9.1.140:3000/product/${productId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
-        setProducts(products.filter(product => product._id !== productId));
+        setProducts(products.filter((product) => product._id !== productId));
       }
     } catch (error) {
       console.error("Erreur lors de la suppression:", error);
@@ -45,7 +50,7 @@ export default function GroceryListScreen({ navigation }) {
   };
 
   const handleCheckboxChange = (productId) => {
-    setCheckedItems(prev => {
+    setCheckedItems((prev) => {
       const newCheckedItems = new Set(prev);
       newCheckedItems.add(productId);
       return newCheckedItems;
@@ -62,7 +67,7 @@ export default function GroceryListScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       fetchProducts(colocToken);
       setCheckedItems(new Set()); // Réinitialise les cases cochées
     });
@@ -70,17 +75,19 @@ export default function GroceryListScreen({ navigation }) {
     return unsubscribe;
   }, [navigation, colocToken]);
 
-  const urgentProducts = products.filter(p => p.isUrgent);
-  const normalProducts = products.filter(p => !p.isUrgent);
+  const urgentProducts = products.filter((p) => p.isUrgent);
+  const normalProducts = products.filter((p) => !p.isUrgent);
 
   const ProductItem = ({ product, isUrgent }) => {
     const isChecked = checkedItems.has(product._id);
-    
+
     return (
-      <View style={[
-        isUrgent ? styles.urgentItem : styles.normalItem,
-        isChecked && styles.checkedItem
-      ]}>
+      <View
+        style={[
+          isUrgent ? styles.urgentItem : styles.normalItem,
+          isChecked && styles.checkedItem,
+        ]}
+      >
         <View style={styles.productContainer}>
           <Text style={[styles.productName, isChecked && styles.checkedText]}>
             {product.name}
@@ -88,7 +95,9 @@ export default function GroceryListScreen({ navigation }) {
           <Checkbox
             style={styles.checkbox}
             value={isChecked}
-            onValueChange={() => !isChecked && handleCheckboxChange(product._id)}
+            onValueChange={() =>
+              !isChecked && handleCheckboxChange(product._id)
+            }
             disabled={isChecked}
           />
         </View>
@@ -101,8 +110,8 @@ export default function GroceryListScreen({ navigation }) {
       <View style={styles.header}>
         <View style={styles.containerBtnTitle}>
           <Text style={styles.title}>Liste de Course</Text>
-          <TouchableOpacity 
-            style={styles.Add} 
+          <TouchableOpacity
+            style={styles.Add}
             onPress={() => navigation.navigate("AjoutProduct")}
           >
             <Text style={styles.white}>+</Text>
@@ -110,11 +119,12 @@ export default function GroceryListScreen({ navigation }) {
         </View>
 
         <Text style={styles.subtitle}>
-          {products.length} produits à acheter dont {urgentProducts.length} urgent
+          {products.length} produits à acheter dont {urgentProducts.length}{" "}
+          urgent
         </Text>
       </View>
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -123,8 +133,12 @@ export default function GroceryListScreen({ navigation }) {
           <View style={styles.urgentSection}>
             <Text style={styles.sectionTitle}>Urgent</Text>
             <View style={styles.urgentGrid}>
-              {urgentProducts.map(product => (
-                <ProductItem key={product._id} product={product} isUrgent={true} />
+              {urgentProducts.map((product) => (
+                <ProductItem
+                  key={product._id}
+                  product={product}
+                  isUrgent={true}
+                />
               ))}
             </View>
           </View>
@@ -132,7 +146,7 @@ export default function GroceryListScreen({ navigation }) {
 
         <View style={styles.normalSection}>
           <Text style={styles.sectionTitle}>Autres produits</Text>
-          {normalProducts.map(product => (
+          {normalProducts.map((product) => (
             <ProductItem key={product._id} product={product} isUrgent={false} />
           ))}
         </View>
@@ -152,21 +166,21 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   containerBtnTitle: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 16,
   },
   Add: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 50,
     height: 56,
     width: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   white: {
-    color: 'white',
+    color: "white",
     fontSize: 26,
   },
   title: {
@@ -174,7 +188,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   subtitle: {
-    color: 'gray',
+    color: "gray",
     fontSize: 14,
     marginBottom: 8,
   },
@@ -190,19 +204,19 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 12,
   },
   urgentGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: 12,
   },
   urgentItem: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 16,
     borderRadius: 8,
-    width: '48%',
+    width: "48%",
     marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: {
@@ -217,7 +231,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   normalItem: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 16,
     borderRadius: 8,
     marginBottom: 8,
@@ -231,9 +245,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   productContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   productName: {
     fontSize: 16,
@@ -244,10 +258,10 @@ const styles = StyleSheet.create({
   },
   checkedItem: {
     opacity: 0.5,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: "#f0f0f0",
   },
   checkedText: {
-    textDecorationLine: 'line-through',
-    color: '#888',
+    textDecorationLine: "line-through",
+    color: "#888",
   },
 });

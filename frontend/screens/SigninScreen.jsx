@@ -7,12 +7,17 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Dimensions
 } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, coloc } from "../reducers/users";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 function Signin() {
   const navigation = useNavigation();
@@ -27,6 +32,7 @@ function Signin() {
 
   // Correction de la fonction handleSignIn
   const handleSignIn = () => {
+<<<<<<< HEAD
 
     let isValid = true;
 
@@ -52,6 +58,9 @@ function Signin() {
     }
 
     fetch("http://10.9.1.140:3000/users/signin", {
+=======
+    fetch("http://10.9.1.137:3000/users/signin", {
+>>>>>>> 774eb5e5b684b0891ef417a164423859a08da8ff
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -83,7 +92,7 @@ function Signin() {
 
           setSignInUsername("");
           setSignInPassword("");
-          
+
           navigation.navigate(data.redirect);
         }
         else {
@@ -104,11 +113,15 @@ function Signin() {
     <View style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardView}
       >
-        <Image
-          style={styles.image}
-          source={require("../assets/peacelogo.png")}
-        />
+        <View style={styles.logoContainer}>
+          <Image
+            style={styles.image}
+            source={require("../assets/peacelogo.png")}
+            resizeMode="contain"
+          />
+        </View>
         <Text style={styles.title}>Connexion</Text>
 
         <TextInput
@@ -132,7 +145,7 @@ function Signin() {
           >
             <FontAwesome
               name={showPassword ? "eye-slash" : "eye"}
-              size={20}
+              size={windowWidth * 0.05}
               color="#5F5F5F"
             />
           </TouchableOpacity>
@@ -172,83 +185,84 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F8FE",
     alignItems: "center",
     justifyContent: "center",
+    width: '100%',
+  },
+  keyboardView: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  logoContainer: {
+    width: '100%',
+    alignItems: 'center',
+    marginBottom: windowHeight * 0.03,
   },
   image: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 250,
-    height: 150,
-    paddingLeft: 55,
+    width: windowWidth * 0.9, // Augmenté de 0.6 à 0.7
+    height: windowHeight * 0.2, // Augmenté de 0.15 à 0.2
   },
   title: {
-    width: "80%",
-    fontSize: 28,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.07, 
     fontWeight: "600",
+    marginBottom: windowHeight * 0.03,
   },
   input: {
-    width: 300,
-    height: 50,
-    marginTop: 25,
-    paddingLeft: 20,
+    width: windowWidth * 0.85,
+    height: windowHeight * 0.07,
+    marginTop: windowHeight * 0.02,
+    paddingLeft: windowWidth * 0.05,
     borderBottomColor: "#ec6e5b",
     borderBottomWidth: 1,
     backgroundColor: "white",
-    fontSize: 18,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.040, // Augmenté de 0.022 à 0.026
     borderRadius: 15,
   },
   inputContainer: {
     position: "relative",
+    width: windowWidth * 0.85,
+    alignItems: 'center',
   },
-
   iconContainer: {
     position: "absolute",
-    right: 10,
-    top: 38,
+    right: windowWidth * 0.05,
+    top: windowHeight * 0.040,
   },
-
   buttonConnect: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 8,
-    width: 200,
-    height: 50,
-    marginTop: 30,
+    width: windowWidth * 0.8, // Augmenté de 0.5 à 0.6
+    height: windowHeight * 0.08, // Augmenté de 0.06 à 0.07
+    marginTop: windowHeight * 0.04,
     backgroundColor: "#EC794C",
-    borderRadius: 30,
-    marginBottom: 80,
-    marginLeft: 50,
+    borderRadius: 40,
+    marginBottom: windowHeight * 0.0,
   },
   buttonSignUp: {
     alignItems: "center",
-    paddingTop: 8,
-    width: "80%",
-    marginTop: 30,
+    justifyContent: "center",
+    width: windowWidth * 0.5,
+    marginTop: windowHeight * 0.01,
     backgroundColor: "#F6F8FE",
     borderRadius: 10,
-    marginBottom: 80,
   },
   textButtonConnect: {
     color: "#ffffff",
-    height: 30,
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.045, // Augmenté de 0.022 à 0.026
   },
   textContent: {
-    flex: 1,
     flexDirection: "row",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-
   textButtonSignUp: {
     color: "blue",
-    height: 30,
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.030, // Augmenté de 0.022 à 0.026
   },
   textSignUp: {
     color: "black",
-    height: 30,
     fontWeight: "600",
-    fontSize: 16,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.030, // Augmenté de 0.022 à 0.026
   },
   forgotPasswordButton: {
     alignSelf: "flex-end",

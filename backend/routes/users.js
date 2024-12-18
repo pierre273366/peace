@@ -336,7 +336,7 @@ router.put("/updateProfile", async (req, res) => {
 });
 
 //ROUTE Post pour photo
-router.post("/uploadpicture", async (req, res) => {
+router.post("/uploadpicture/:usertoken", async (req, res) => {
   try {
     // Crée un chemin temporaire pour sauvegarder l'image avant de la télécharger sur Cloudinary
     const photoPath = `./tmp/${uniqid()}.jpg`;
@@ -352,14 +352,14 @@ router.post("/uploadpicture", async (req, res) => {
       fs.unlinkSync(photoPath);
 
       // Recherche l'utilisateur dans la base de données
-      const user = await User.findOne({ token: req.body.token });
+      const user = await User.findOne({ token: req.params.usertoken });
 
       if (!user) {
         return res.json({ result: false, error: "User not found" });
       }
 
       // Mets à jour le champ profilPicture de l'utilisateur avec l'URL retournée par Cloudinary
-      user.profilPicture = resultCloudinary.secure_url;
+      user.profilpicture = resultCloudinary.secure_url;
 
       // Sauvegarde l'utilisateur avec la nouvelle photo de profil
       await user.save();
@@ -373,8 +373,8 @@ router.post("/uploadpicture", async (req, res) => {
       res.json({ result: false, error: resultMove });
     }
   } catch (error) {
-    console.error("Erreur lors de l'upload", error);
-    res.json({ result: false, error: "Internal Server Error" });
+    console.error("Erreur lors de l'upload back", error);
+    res.json({ result: false, error: "Internal Server Error back" });
   }
 });
 
