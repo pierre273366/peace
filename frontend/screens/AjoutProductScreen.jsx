@@ -22,7 +22,7 @@ export default function AjoutProductScreen({ navigation }) {
       return;
     }
 
-    const response = await fetch("http://10.9.1.137:3000/product", {
+    const response = await fetch("http://10.9.1.105:3000/product", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

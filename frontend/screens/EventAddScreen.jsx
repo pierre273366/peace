@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -23,6 +24,7 @@ const EventAdd = ({ navigation, route }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [timeError, setTimeError] = useState("");
   const colocToken = useSelector((state) => state.users.coloc.token);
+  const backendUrl = "http://10.9.1.105:3000";
 
   const onDateChange = (event, selectedDate) => {
     if (Platform.OS === "android") {
@@ -59,7 +61,7 @@ const EventAdd = ({ navigation, route }) => {
       colocToken,
     };
 
-    fetch("http://10.9.1.137:3000/event", {
+    fetch(`${backendUrl}:3000/event`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newEvent),
@@ -89,6 +91,19 @@ const EventAdd = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      <View
+         style={styles.containerBtnTitle}>
+                          <TouchableOpacity
+                            onPress={() => navigation.navigate("Agenda")}
+                            style={styles.iconContainer}
+                          >
+                            <FontAwesome
+                              name={"arrow-circle-left"}
+                              size={35}
+                              color="rgb(255, 139, 228)"
+                            />
+                          </TouchableOpacity>
+      </View>
       <Text style={styles.title}>Ajouter un événement</Text>
 
       <TextInput
@@ -185,8 +200,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f0f0f0",
     width: "100%",
-    paddingHorizontal: windowWidth * 0.05,
+    height: "100%",
+    paddingBottom:150,
+
   },
+  containerBtnTitle:{
+    width: "100%",
+    alignItems: "flex-end",
+    padding: windowWidth * 0.1,
+    marginTop: windowHeight * 0.05,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    
+  },
+
   title: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.05,
     fontWeight: "bold",

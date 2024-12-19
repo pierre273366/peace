@@ -14,11 +14,14 @@ import {
   ScrollView,
 } from "react-native";
 import { AntDesign, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 export default function TricountCreaScreen({ navigation, route }) {
   const dispatch = useDispatch();
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
+  const backendUrl = "http://10.9.1.105:3000";
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -40,7 +43,7 @@ export default function TricountCreaScreen({ navigation, route }) {
 
   const fetchUsers = async (userToken) => {
     const response = await fetch(
-      `http://10.9.1.137:3000/tricount/getcolocusers/${userToken}`
+      `${backendUrl}/tricount/getcolocusers/${userToken}`
     );
     const data = await response.json();
 
@@ -61,7 +64,7 @@ export default function TricountCreaScreen({ navigation, route }) {
 
   const handleSubmit = async () => {
     const response = await fetch(
-      "http://10.9.1.137:3000/tricount/createtricount",
+      `${backendUrl}/tricount/createtricount`,
       {
         method: "POST",
         headers: {
@@ -133,7 +136,11 @@ export default function TricountCreaScreen({ navigation, route }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <AntDesign name="left" size={24} color="black" />
+          <FontAwesome
+        name={"arrow-circle-left"}
+        size={35}
+        color="rgb(255, 139, 228)"
+        />
         </TouchableOpacity>
         <Text style={styles.title}>Créer un Tricount</Text>
         <View style={{ width: 24 }} />

@@ -21,6 +21,7 @@ import {
 export default function TricountAddExpense({ navigation, route }) {
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
+  const backendUrl = "http://10.9.1.105:3000";
 
   const [title, setTitle] = useState("");
   const [value, setValue] = useState(0);
@@ -35,7 +36,7 @@ export default function TricountAddExpense({ navigation, route }) {
   useEffect(() => {
     if (tricountId) {
       fetch(
-        `http://10.9.1.137:3000/tricount/tricount-participants/${tricountId}`
+        `${backendUrl}/tricount/tricount-participants/${tricountId}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -49,7 +50,7 @@ export default function TricountAddExpense({ navigation, route }) {
 
   const fetchUserId = async (token) => {
     const response = await fetch(
-      `http://10.9.1.137:3000/tricount/user/${token}`
+      `${backendUrl}/tricount/user/${token}`
     );
     const data = await response.json();
     setUserId(data.userId);
@@ -97,7 +98,7 @@ export default function TricountAddExpense({ navigation, route }) {
       },
     };
 
-    fetch("http://10.9.1.137:3000/tricount/add-expense", {
+    fetch(`${backendUrl}/tricount/add-expense`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

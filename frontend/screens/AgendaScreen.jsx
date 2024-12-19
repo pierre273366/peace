@@ -9,6 +9,8 @@ import {
   Dimensions,
 } from "react-native";
 import { Calendar, Agenda } from "react-native-calendars";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -17,7 +19,7 @@ const MyCalendar = ({ navigation }) => {
   // et un `selectedDate` pour la gestion de la date actuellement sélectionnée dans le calendrier.
   const [events, setEvents] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
-  const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
+  const backendUrl = "http://10.9.1.105:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
 
   // useEffect pour récupérer les événements depuis le backend lors du premier rendu du composant
@@ -126,10 +128,22 @@ const MyCalendar = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Bouton pour ajouter un événement */}
       <View style={styles.containerButton}>
+        <View style={styles.containerBtnTitle}>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate("Home")}
+                      style={styles.iconContainer}
+                    >
+                      <FontAwesome
+                        name={"arrow-circle-left"}
+                        size={35}
+                        color="rgb(255, 139, 228)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+      <Text style={styles.title}>Agenda</Text>
         <TouchableOpacity onPress={navigateToAddEvent} style={styles.button}>
-          <Text style={styles.buttonAdd}>Ajouter</Text>
+          <Text style={styles.buttonAdd}>+</Text>
         </TouchableOpacity>
       </View>
 
@@ -177,17 +191,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgb(247, 247, 255)",
   },
+
+  title:{
+color:'black',
+fontSize:25,
+fontWeight:'bold',
+  },
+
   containerButton: {
     width: "100%",
     alignItems: "flex-end",
     padding: windowWidth * 0.1,
     marginTop: windowHeight * 0.05,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
+  
   button: {
-    backgroundColor: "rgb(253, 112, 60)",
-    width: windowWidth * 0.2,
-    height: windowHeight * 0.06,
-    borderRadius: 20,
+    backgroundColor: "rgb(0, 0, 0)",
+    width: 50,
+    height: 50,
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -195,6 +220,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,
     fontWeight: "bold",
+    fontSize: 20,
   },
   calendar: {
     width: windowWidth * 0.9,

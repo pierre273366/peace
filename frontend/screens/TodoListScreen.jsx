@@ -15,7 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export default function TodoList({ navigation }) {
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
-  const backendUrl = "http://10.9.1.137:3000";
+  const backendUrl = "http://10.9.1.105:3000";
   const userToken = useSelector((state) => state.users.user.token);
 
   const formatDateForComparison = (time) => {

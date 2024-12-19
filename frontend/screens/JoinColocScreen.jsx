@@ -18,11 +18,12 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 export default function JoinColoc({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const dispatch = useDispatch();
+  const backendUrl = "http://10.9.1.105:3000";
 
   const [token, setToken] = useState(null);
 
   const handleSubmit = () => {
-    fetch("http://10.9.1.137:3000/users/joincoloc", {
+    fetch(`${backendUrl}/users/joincoloc`, {
       method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
       headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
       body: JSON.stringify({ token: token, user: userToken }),
