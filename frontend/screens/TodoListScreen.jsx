@@ -15,7 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export default function TodoList({ navigation }) {
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "http://10.9.1.137:3000";
   const userToken = useSelector((state) => state.users.user.token);
 
   const formatDateForComparison = (time) => {
@@ -46,22 +46,43 @@ export default function TodoList({ navigation }) {
         const nextWeek = new Date();
         nextWeek.setDate(nextWeek.getDate() + 7);
         const nextWeekFormatted = formatDateForComparison(nextWeek);
+        const nextMonth = new Date();
+        nextMonth.setMonth(nextMonth.getMonth() + 1);
+        const nextMonthFormatted = formatDateForComparison(nextMonth);
 
         const updatedTodos = data.todos.map((todo) => {
+          console.log(todo);
+
           const nextOccurrenceFormatted = todo.nextOccurrence
             ? formatDateForComparison(todo.nextOccurrence)
             : null;
 
-          let isCompleted = todo.completed;
+          let completed = todo.completed;
+          let completedTomorrow = todo.completedTomorrow;
+          let completedHebdomadaire = todo.completedHebdomadaire;
+          let completedMensuel = todo.completedMensuel;
+          // Si la tâche a une prochaine occurrence pour aujourd'hui, elle doit rester cochée
           if (nextOccurrenceFormatted === today) {
-            isCompleted = true;
+            completed = true;
           }
-
+          // Si la prochaine occurrence est demain, la tâche sera affichée comme non complétée pour demain
           if (nextOccurrenceFormatted === tomorrowFormatted) {
-            isCompleted = false;
+            completedTomorrow = false;
           }
-
-          return { ...todo, isCompleted, nextOccurrenceFormatted };
+          if (nextOccurrenceFormatted === nextWeekFormatted) {
+            completedHebdomadaire = false;
+          }
+          if (nextOccurrenceFormatted === nextMonthFormatted) {
+            completedMensuel = false;
+          }
+          return {
+            ...todo,
+            completed,
+            completedTomorrow,
+            completedHebdomadaire,
+            completedMensuel,
+            nextOccurrenceFormatted,
+          };
         });
 
         setTodos(updatedTodos);
@@ -110,7 +131,10 @@ export default function TodoList({ navigation }) {
     récurrence,
     date,
     nextOccurrence,
-    isCompleted
+    completed,
+    completedTomorrow,
+    completedHebdomadaire,
+    completedMensuel
   ) => {
     const nextOccurrenceDate = getNextOccurrence(
       date,
@@ -128,7 +152,10 @@ export default function TodoList({ navigation }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          completed: !isCompleted,
+          completed: completed,
+          completedTomorrow: completedTomorrow,
+          completedHebdomadaire: completedHebdomadaire,
+          completedMensuel: completedMensuel,
           nextOccurrence: nextOccurrenceDate,
         }),
       });
@@ -140,7 +167,10 @@ export default function TodoList({ navigation }) {
             todo._id === _id
               ? {
                   ...todo,
-                  isCompleted: !isCompleted,
+                  completed: completed,
+                  completedTomorrow: completedTomorrow,
+                  completedHebdomadaire: completedHebdomadaire,
+                  completedMensuel: completedMensuel,
                 }
               : todo
           )
@@ -315,18 +345,21 @@ export default function TodoList({ navigation }) {
                     </View>
                     <Checkbox
                       style={styles.checkbox}
-                      value={todo.isCompleted || false}
+                      value={todo.completed}
                       onValueChange={() =>
                         toggleTodoCompletion(
                           todo._id,
                           todo.récurrence,
                           todo.date,
                           todo.nextOccurrence,
-                          todo.isCompleted
+                          !todo.completed,
+                          todo.completedTomorrow,
+                          todo.completedHebdomadaire,
+                          todo.completedMensuel
                         )
                       }
                       color={
-                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                        todo.completed ? "rgb(255, 139, 228)" : "lightgray"
                       }
                     />
                   </View>
@@ -389,18 +422,23 @@ export default function TodoList({ navigation }) {
                     </View>
                     <Checkbox
                       style={styles.checkbox}
-                      value={todo.isCompleted || false}
+                      value={todo.completedTomorrow}
                       onValueChange={() =>
                         toggleTodoCompletion(
                           todo._id,
                           todo.récurrence,
                           todo.date,
                           todo.nextOccurrence,
-                          todo.isCompleted
+                          todo.completed,
+                          !todo.completedTomorrow,
+                          todo.completedHebdomadaire,
+                          todo.completedMensuel
                         )
                       }
                       color={
-                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                        todo.completedTomorrow
+                          ? "rgb(255, 139, 228)"
+                          : "lightgray"
                       }
                     />
                   </View>
@@ -463,18 +501,23 @@ export default function TodoList({ navigation }) {
                     </View>
                     <Checkbox
                       style={styles.checkbox}
-                      value={todo.isCompleted || false}
+                      value={todo.completedHebdomadaire}
                       onValueChange={() =>
                         toggleTodoCompletion(
                           todo._id,
                           todo.récurrence,
                           todo.date,
                           todo.nextOccurrence,
-                          todo.isCompleted
+                          todo.completed,
+                          todo.completedTomorrow,
+                          !todo.completedHebdomadaire,
+                          todo.completedMensuel
                         )
                       }
                       color={
-                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                        todo.completedHebdomadaire
+                          ? "rgb(255, 139, 228)"
+                          : "lightgray"
                       }
                     />
                   </View>
@@ -542,18 +585,23 @@ export default function TodoList({ navigation }) {
                     </View>
                     <Checkbox
                       style={styles.checkbox}
-                      value={todo.isCompleted || false}
+                      value={todo.completedMensuel}
                       onValueChange={() =>
                         toggleTodoCompletion(
                           todo._id,
                           todo.récurrence,
                           todo.date,
                           todo.nextOccurrence,
-                          todo.isCompleted
+                          todo.completed,
+                          todo.completedTomorrow,
+                          todo.completedHebdomadaire,
+                          !todo.completedMensuel
                         )
                       }
                       color={
-                        todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                        todo.completedMensuel
+                          ? "rgb(255, 139, 228)"
+                          : "lightgray"
                       }
                     />
                   </View>

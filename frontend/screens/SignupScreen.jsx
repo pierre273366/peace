@@ -30,16 +30,14 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-
-
 function Signup({ navigation }) {
   const dispatch = useDispatch();
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "http://10.9.1.137:3000";
 
   useEffect(() => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       StatusBar.setTranslucent(true);
-      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setBackgroundColor("transparent");
     }
   }, []);
 
@@ -77,9 +75,22 @@ function Signup({ navigation }) {
     setSignUpBirth(formatted);
   };
 
+
+
+  const wheelColors = [
+    '#BEBFF5', // Couleur originale
+    '#AAAAF0', // Un peu plus foncé
+    '#9696EB', // Encore plus foncé
+    '#8282E6', // Plus foncé
+    '#6E6EE1', // Encore plus foncé
+    '#5A5ADC', // Le plus foncé
+  ];
+
+
+  
   // Gestion de la date
   const dateSet = (event, selectedDate) => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       setShowPicker(false);
       if (selectedDate) {
         setDate(selectedDate);
@@ -186,11 +197,16 @@ function Signup({ navigation }) {
   const MainContent = () => (
     <View style={styles.mainContent}>
       <Text style={styles.title}>Inscription</Text>
-  
+
       <View style={styles.containerInput}>
         {/* Input Name */}
         <View style={styles.input}>
-          <MaterialIcons name="person" size={24} color="#FD703C" style={styles.icon} />
+          <MaterialIcons
+            name="person"
+            size={24}
+            color="#FD703C"
+            style={styles.icon}
+          />
           <View style={styles.inputContent}>
             <Text style={styles.label}>Nom</Text>
             <TextInput
@@ -205,10 +221,15 @@ function Signup({ navigation }) {
         {nameInvalid && (
           <Text style={styles.errorText}>Nom manquant ou invalide</Text>
         )}
-  
+
         {/* Input Username */}
         <View style={styles.input}>
-          <MaterialIcons name="alternate-email" size={24} color="#FD703C" style={styles.icon} />
+          <MaterialIcons
+            name="alternate-email"
+            size={24}
+            color="#FD703C"
+            style={styles.icon}
+          />
           <View style={styles.inputContent}>
             <Text style={styles.label}>Username</Text>
             <TextInput
@@ -223,10 +244,15 @@ function Signup({ navigation }) {
         {usernameInvalid && (
           <Text style={styles.errorText}>Username manquant ou invalide</Text>
         )}
-  
+
         {/* Input Email */}
         <View style={styles.input}>
-          <MaterialIcons name="email" size={24} color="#FD703C" style={styles.icon} />
+          <MaterialIcons
+            name="email"
+            size={24}
+            color="#FD703C"
+            style={styles.icon}
+          />
           <View style={styles.inputContent}>
             <Text style={styles.label}>Email</Text>
             <TextInput
@@ -243,10 +269,15 @@ function Signup({ navigation }) {
         {emailInvalid && (
           <Text style={styles.errorText}>Email manquant ou invalide</Text>
         )}
-  
+
         {/* Input Password */}
         <View style={styles.input}>
-          <MaterialIcons name="lock" size={24} color="#FD703C" style={styles.icon} />
+          <MaterialIcons
+            name="lock"
+            size={24}
+            color="#FD703C"
+            style={styles.icon}
+          />
           <View style={styles.inputContent}>
             <Text style={styles.label}>Mot de passe</Text>
             <TextInput
@@ -270,12 +301,19 @@ function Signup({ navigation }) {
           </TouchableOpacity>
         </View>
         {passwordInvalid && (
-          <Text style={styles.errorText}>Mot de passe manquant ou invalide</Text>
+          <Text style={styles.errorText}>
+            Mot de passe manquant ou invalide
+          </Text>
         )}
-  
+
         {/* Input Phone */}
         <View style={styles.input}>
-          <MaterialIcons name="phone" size={24} color="#FD703C" style={styles.icon} />
+          <MaterialIcons
+            name="phone"
+            size={24}
+            color="#FD703C"
+            style={styles.icon}
+          />
           <View style={styles.inputContent}>
             <Text style={styles.label}>Téléphone</Text>
             <TextInput
@@ -291,61 +329,73 @@ function Signup({ navigation }) {
         {phoneInvalid && (
           <Text style={styles.errorText}>Numéro de téléphone invalide</Text>
         )}
-  
+
         {/* Row pour Date et Expérience */}
         <View style={styles.rowContainer}>
-        <TouchableOpacity 
-  onPress={() => setShowPicker(true)} 
-  style={{ 
-    flex: 1,  // Prend tout l'espace disponible
-    justifyContent: 'center'  // Centre le contenu verticalement
-  }}
->
-  <View style={styles.halfInput}>
-    <MaterialIcons name="calendar-today" size={24} color="#FD703C" style={styles.icon} />
-    <View style={styles.inputContent}>
-      <Text style={styles.label}>Naissance</Text>
-      <TextInput
-        placeholder="Date"
-        value={signUpBirth}
-        style={styles.inputTextDate}
-        editable={false}
-        placeholderTextColor="#999"
-      />
-    </View>
-  </View>
-</TouchableOpacity>
-  
+          <TouchableOpacity
+            onPress={() => setShowPicker(true)}
+            style={{
+              flex: 1, // Prend tout l'espace disponible
+              justifyContent: "center", // Centre le contenu verticalement
+            }}
+          >
+            <View style={styles.halfInput}>
+              <MaterialIcons
+                name="calendar-today"
+                size={24}
+                color="#FD703C"
+                style={styles.icon}
+              />
+              <View style={styles.inputContent}>
+                <Text style={styles.label}>Naissance</Text>
+                <TextInput
+                  placeholder="Date"
+                  value={signUpBirth}
+                  style={styles.inputTextDate}
+                  editable={false}
+                  placeholderTextColor="#999"
+                />
+              </View>
+            </View>
+          </TouchableOpacity>
+
           {/* Colocation Input */}
           <View style={styles.halfInput}>
-            <MaterialIcons name="home" size={24} color="#FD703C" style={styles.icon} />
+            <MaterialIcons
+              name="home"
+              size={24}
+              color="#FD703C"
+              style={styles.icon}
+            />
             <View style={styles.inputContent}>
               <Text style={styles.label}>Expérience</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.checkboxContainer}
                 onPress={toggleFirstColoc}
               >
                 <Text style={styles.checkboxText}>Oui </Text>
-                <View style={[styles.checkbox, signUpFirstColoc === "Yes" && styles.checked]}>
-                  {signUpFirstColoc === "Yes" && <Text style={styles.checkmark}>✓</Text>}
+                <View
+                  style={[
+                    styles.checkbox,
+                    signUpFirstColoc === "Yes" && styles.checked,
+                  ]}
+                >
+                  {signUpFirstColoc === "Yes" && (
+                    <Text style={styles.checkmark}>✓</Text>
+                  )}
                 </View>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </View>
-  
-      
     </View>
   );
-  
-  if (Platform.OS === 'ios') {
+
+  if (Platform.OS === "ios") {
     return (
       <SafeAreaView style={styles.container}>
-        <KeyboardAvoidingView
-          behavior="padding"
-          style={styles.keyboardView}
-        >
+        <KeyboardAvoidingView behavior="padding" style={styles.keyboardView}>
           <MainContent />
           <View style={styles.bottomContent}>
             <TouchableOpacity
@@ -355,7 +405,7 @@ function Signup({ navigation }) {
             >
               <Text style={styles.textButtonConnect}>S'inscrire</Text>
             </TouchableOpacity>
-  
+
             <TouchableOpacity
               onPress={() => navigation.navigate("Signin")}
               style={styles.buttonSignUp}
@@ -367,37 +417,37 @@ function Signup({ navigation }) {
               </View>
             </TouchableOpacity>
           </View>
-          
+
           {showPicker && (
-          <View style={styles.pickerContainer}>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={tempDate}
-              mode="date"
-              display="spinner"
-              onChange={dateSet}
-              maximumDate={new Date()}
-            />
-            <View style={styles.pickerButtonContainer}>
-              <TouchableOpacity
-                onPress={cancelDate}
-                style={styles.pickerCancelButton}
-              >
-                <Text style={styles.pickerButtonText}>Annuler</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={confirmDate}
-                style={styles.pickerValidateButton}
-              >
-                <Text style={styles.pickerButtonText}>Valider</Text>
-              </TouchableOpacity>
+            <View style={styles.pickerContainer}>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={tempDate}
+                mode="date"
+                display="spinner"
+                onChange={dateSet}
+                maximumDate={new Date()}
+              />
+              <View style={styles.pickerButtonContainer}>
+                <TouchableOpacity
+                  onPress={cancelDate}
+                  style={styles.pickerCancelButton}
+                >
+                  <Text style={styles.pickerButtonText}>Annuler</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={confirmDate}
+                  style={styles.pickerValidateButton}
+                >
+                  <Text style={styles.pickerButtonText}>Valider</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-}
+          )}
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContentWrapper}>
@@ -411,7 +461,7 @@ function Signup({ navigation }) {
         >
           <Text style={styles.textButtonConnect}>S'inscrire</Text>
         </TouchableOpacity>
-  
+
         <TouchableOpacity
           onPress={() => navigation.navigate("Signin")}
           style={styles.buttonSignUp}
@@ -423,7 +473,7 @@ function Signup({ navigation }) {
           </View>
         </TouchableOpacity>
       </View>
-      {showPicker && Platform.OS === 'android' && (
+      {showPicker && Platform.OS === "android" && (
         <DateTimePicker
           value={date}
           mode="date"
@@ -438,14 +488,13 @@ function Signup({ navigation }) {
 const styles = StyleSheet.create({
   mainContentWrapper: {
     height: windowHeight - 200, // Soustrayez la hauteur approximative des boutons
-    justifyContent: 'flex-start', // Alignez le contenu en haut
-    alignItems: 'center', // Centre horizontalement
-
+    justifyContent: "flex-start", // Alignez le contenu en haut
+    alignItems: "center", // Centre horizontalement
   },
   container: {
     flex: 1,
     backgroundColor: "#F7F7FF",
-    justifyContent: 'space-between', // Pousse le contenu principal en haut et les boutons en bas
+    justifyContent: "space-between", // Pousse le contenu principal en haut et les boutons en bas
   },
   keyboardView: {
     flex: 1,
@@ -460,9 +509,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginVertical: 5,
-    textAlign: 'center',
-    width: '100%',
-    marginTop:50
+    textAlign: "center",
+    width: "100%",
+    marginTop: 50,
   },
   containerInput: {
     width: "100%",
@@ -479,9 +528,9 @@ const styles = StyleSheet.create({
   },
   // Nouveaux styles pour la ligne de deux inputs
   rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
     gap: 12,
   },
   halfInput: {
@@ -492,7 +541,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 75,
     alignItems: "center",
-  
   },
   icon: {
     width: 30,
@@ -512,16 +560,16 @@ const styles = StyleSheet.create({
   inputText: {
     fontSize: 16,
     height: 30,
-    color: '#000',
-    textAlignVertical: 'center',
+    color: "#000",
+    textAlignVertical: "center",
     paddingVertical: 0,
     marginBottom: 6,
   },
   inputTextDate: {
     fontSize: 13,
     height: 30,
-    color: '#000',
-    textAlignVertical: 'center',
+    color: "#000",
+    textAlignVertical: "center",
     paddingVertical: 0,
     marginBottom: 6,
   },
@@ -537,16 +585,16 @@ const styles = StyleSheet.create({
   },
   // Styles pour le DatePicker
   pickerContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     zIndex: 1000,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    paddingBottom: Platform.OS === "ios" ? 40 : 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -562,7 +610,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 25,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   validateButtonText: {
     color: "white",
@@ -594,7 +642,7 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: 14,
-    color: '#000',
+    color: "#000",
     marginRight: 8,
   },
   // Styles pour le contenu du bas
@@ -619,8 +667,8 @@ const styles = StyleSheet.create({
   },
   buttonSignUp: {
     padding: 8,
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
   },
   textContent: {
     flexDirection: "row",
@@ -634,33 +682,34 @@ const styles = StyleSheet.create({
     color: "#FD703C",
     fontSize: 14,
     fontWeight: "600",
-  }, pickerContainer: {
-    position: 'absolute',
+  },
+  pickerContainer: {
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingBottom: 40,
   },
   pickerButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
   pickerCancelButton: {
     padding: 10,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: "#F0F0F0",
     borderRadius: 10,
   },
   pickerValidateButton: {
     padding: 10,
-    backgroundColor: '#FD703C',
+    backgroundColor: "#FD703C",
     borderRadius: 10,
   },
   pickerButtonText: {
-    color: 'white',
-    fontWeight: '600',
+    color: "white",
+    fontWeight: "600",
   },
 });
 

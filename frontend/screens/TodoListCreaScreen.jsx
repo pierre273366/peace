@@ -19,7 +19,7 @@ export default function TodoListCrea({ navigation, route }) {
   const [recurrenceType, setRecurrenceType] = useState("Quotidienne"); // Type de récurrence
   const [showRecurrence, setShowRecurrence] = useState(false); // Afficher ou non le choix de récurrence
   const [selectTache, setSelectTache] = useState("");
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "http://10.9.1.137:3000";
 
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);

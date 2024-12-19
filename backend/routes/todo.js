@@ -34,6 +34,9 @@ router.get("/recuptodo/:userToken", (req, res) => {
             récurrence: todo.récurrence,
             participants: todo.participants,
             completed: todo.completed,
+            completedTomorrow: todo.completedTomorrow,
+            completedHebdomadaire: todo.completedHebdomadaire,
+            completedMensuel: todo.completedMensuel,
             nextOccurrence: todo.nextOccurrence,
           })),
         });
@@ -82,6 +85,9 @@ router.post("/createtodo", (req, res) => {
     récurrence,
     tâche,
     completed: false, // Initialisation du champ completed à false
+    completedTomorrow: false, // Initialisation du champ completed à false
+    completedHebdomadaire: false, // Initialisation du champ completed à false
+    completedMensuel: false, // Initialisation du champ completed à false
     nextOccurrence,
   });
 
@@ -102,7 +108,13 @@ router.post("/createtodo", (req, res) => {
 // ROUTE POST : Mettre à jour une tâche (incluant le champ `completed`)
 router.post("/update/:todoId", async (req, res) => {
   const todoId = req.params.todoId;
-  const { completed, nextOccurrence } = req.body; // Le champ completed et nextOccurrence
+  const {
+    completed,
+    completedTomorrow,
+    completedHebdomadaire,
+    completedMensuel,
+    nextOccurrence,
+  } = req.body; // Le champ completed et nextOccurrence
 
   try {
     // Trouver la tâche par son ID
@@ -113,8 +125,17 @@ router.post("/update/:todoId", async (req, res) => {
     }
 
     // Mettre à jour l'état 'completed' de la tâche
-    if (completed !== undefined) {
+    if (completed) {
       todo.completed = completed;
+    }
+    if (completedTomorrow) {
+      todo.completedTomorrow = completedTomorrow;
+    }
+    if (completedHebdomadaire) {
+      todo.completedHebdomadaire = completedHebdomadaire;
+    }
+    if (completedMensuel) {
+      todo.completedMensuel = completedMensuel;
     }
 
     // Calculer la prochaine occurrence pour la tâche récurrente

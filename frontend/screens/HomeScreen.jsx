@@ -135,6 +135,20 @@ useEffect(() => {
     fetchUserDetails();
   }, []);
 
+
+
+
+
+  const wheelColors = [
+    '#BEBFF5', // Couleur originale
+    '#AAAAF0', // Un peu plus foncé
+    '#9696EB', // Encore plus foncé
+    '#8282E6', // Plus foncé
+    '#6E6EE1', // Encore plus foncé
+    '#5A5ADC', // Le plus foncé
+  ];
+
+  
   // Fonction pour formater l'heure au format "00h00"
   const formatTime = (time) => {
     const hours = Math.floor(time / 100); // Extraire l'heure (ex: 1430 -> 14)
@@ -430,7 +444,8 @@ useEffect(() => {
       </View>
 
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.containerTodo}>
+        <TouchableOpacity style={styles.containerTodo} 
+        onPress={() => navigation.navigate("TodoList")}>
           <ScrollView>
             <Text style={styles.textEvent}>Todo List</Text>
             <View style={styles.todo}>
@@ -472,10 +487,11 @@ useEffect(() => {
               )}
             </View>
           </ScrollView>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.containerWidget}>
-          <View style={styles.containerEvent}>
+          <TouchableOpacity style={styles.containerEvent}
+          onPress={() => navigation.navigate("Agenda")}>
             <Text style={styles.cardTitle}>Événements</Text>
             <View style={styles.descriptionEvent}>
               <ScrollView>
@@ -498,7 +514,7 @@ useEffect(() => {
                 )}
               </ScrollView>
             </View>
-          </View>
+            </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.sondage}
