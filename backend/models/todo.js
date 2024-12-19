@@ -8,6 +8,9 @@ const todoSchema = mongoose.Schema({
   récurrence: String,
   nextOccurrence: { type: Date },
   completed: Boolean,
+  completedTomorrow: Boolean,
+  completedHebdomadaire: Boolean,
+  completedMensuel: Boolean,
 });
 
 const Todo = mongoose.model("todos", todoSchema);
