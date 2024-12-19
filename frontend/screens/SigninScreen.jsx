@@ -9,6 +9,7 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +24,7 @@ function Signin() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.value);
+  const backendUrl = "http://10.9.1.105:3000";
 
   const [signInUsername, setSignInUsername] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
@@ -49,7 +51,7 @@ function Signin() {
 
     if (!isValid) return;
 
-    fetch("http://10.9.1.137:3000/users/signin", {
+    fetch(`${backendUrl}/users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -93,12 +95,102 @@ function Signin() {
       });
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
+  const MainContent = () => (
+    <View style={styles.mainContent}>
+      <View style={styles.logoContainer}>
+        <Image
+          style={styles.image}
+          source={require("../assets/peacelogo.png")}
+          resizeMode="contain"
+        />
+      </View>
+      <Text style={styles.title}>Connexion</Text>
+
+      <View style={styles.containerInput}>
+        <View style={styles.input}>
+          <MaterialIcons
+            name="person"
+            size={24}
+            color="#FD703C"
+            style={styles.icon}
+          />
+          <View style={styles.inputContent}>
+            <Text style={styles.label}>Username</Text>
+            <TextInput
+              placeholder="Enter your username"
+              onChangeText={(value) => setSignInUsername(value)}
+              value={signInUsername}
+              style={styles.inputText}
+              placeholderTextColor="#999"
+            />
+          </View>
+        </View>
+        {usernameError && (
+          <Text style={styles.errorText}>{usernameError}</Text>
+        )}
+
+        <View style={styles.input}>
+          <MaterialIcons
+            name="lock"
+            size={24}
+            color="#FD703C"
+            style={styles.icon}
+          />
+          <View style={styles.inputContent}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              placeholder="Enter your password"
+              onChangeText={(value) => setSignInPassword(value)}
+              value={signInPassword}
+              style={styles.inputText}
+              secureTextEntry={!showPassword}
+              placeholderTextColor="#999"
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.eyeIcon}
+          >
+            <MaterialIcons
+              name={showPassword ? "visibility-off" : "visibility"}
+              size={24}
+              color="#666"
+            />
+          </TouchableOpacity>
+        </View>
+        {passwordError && (
+          <Text style={styles.errorText}>{passwordError}</Text>
+        )}
+      </View>
+    </View>
+  );
+
+  const BottomContent = () => (
+    <View style={styles.bottomContent}>
+      <TouchableOpacity
+        onPress={handleSignIn}
+        style={styles.buttonConnect}
+        activeOpacity={0.8}
       >
+        <Text style={styles.textButtonConnect}>Se connecter</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Signup")}
+        style={styles.buttonSignUp}
+        activeOpacity={0.8}
+      >
+        <View style={styles.textContent}>
+          <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
+          <Text style={styles.textButtonSignUp}>S'inscrire</Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+
+  if (Platform.OS === 'ios') {
+    return (
+      <SafeAreaView style={styles.container}>
         <View style={styles.mainContent}>
           <View style={styles.logoContainer}>
             <Image
@@ -109,85 +201,83 @@ function Signin() {
           </View>
           <Text style={styles.title}>Connexion</Text>
 
-          <View style={styles.containerInput}>
-            <View style={styles.input}>
-              <MaterialIcons
-                name="person"
-                size={24}
-                color="#FD703C"
-                style={styles.icon}
-              />
-              <View style={styles.inputContent}>
-                <Text style={styles.label}>Username</Text>
-                <TextInput
-                  placeholder="Enter your username"
-                  onChangeText={(value) => setSignInUsername(value)}
-                  value={signInUsername}
-                  style={styles.inputText}
-                  placeholderTextColor="#999"
-                />
-              </View>
-            </View>
-            {usernameError && (
-              <Text style={styles.errorText}>{usernameError}</Text>
-            )}
-
-            <View style={styles.input}>
-              <MaterialIcons
-                name="lock"
-                size={24}
-                color="#FD703C"
-                style={styles.icon}
-              />
-              <View style={styles.inputContent}>
-                <Text style={styles.label}>Password</Text>
-                <TextInput
-                  placeholder="Enter your password"
-                  onChangeText={(value) => setSignInPassword(value)}
-                  value={signInPassword}
-                  style={styles.inputText}
-                  secureTextEntry={!showPassword}
-                  placeholderTextColor="#999"
-                />
-              </View>
-              <TouchableOpacity
-                onPress={() => setShowPassword(!showPassword)}
-                style={styles.eyeIcon}
-              >
+          <KeyboardAvoidingView
+            behavior="padding"
+            style={styles.keyboardView}
+          >
+            <View style={styles.containerInput}>
+              <View style={styles.input}>
                 <MaterialIcons
-                  name={showPassword ? "visibility-off" : "visibility"}
+                  name="person"
                   size={24}
-                  color="#666"
+                  color="#FD703C"
+                  style={styles.icon}
                 />
-              </TouchableOpacity>
+                <View style={styles.inputContent}>
+                  <Text style={styles.label}>Username</Text>
+                  <TextInput
+                    placeholder="Enter your username"
+                    onChangeText={(value) => setSignInUsername(value)}
+                    value={signInUsername}
+                    style={styles.inputText}
+                    placeholderTextColor="#999"
+                  />
+                </View>
+              </View>
+              {usernameError && (
+                <Text style={styles.errorText}>{usernameError}</Text>
+              )}
+
+              <View style={styles.input}>
+                <MaterialIcons
+                  name="lock"
+                  size={24}
+                  color="#FD703C"
+                  style={styles.icon}
+                />
+                <View style={styles.inputContent}>
+                  <Text style={styles.label}>Password</Text>
+                  <TextInput
+                    placeholder="Enter your password"
+                    onChangeText={(value) => setSignInPassword(value)}
+                    value={signInPassword}
+                    style={styles.inputText}
+                    secureTextEntry={!showPassword}
+                    placeholderTextColor="#999"
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  <MaterialIcons
+                    name={showPassword ? "visibility-off" : "visibility"}
+                    size={24}
+                    color="#666"
+                  />
+                </TouchableOpacity>
+              </View>
+              {passwordError && (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              )}
             </View>
-            {passwordError && (
-              <Text style={styles.errorText}>{passwordError}</Text>
-            )}
-          </View>
+          </KeyboardAvoidingView>
         </View>
 
-        <View style={styles.bottomContent}>
-          <TouchableOpacity
-            onPress={handleSignIn}
-            style={styles.buttonConnect}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButtonConnect}>Se connecter</Text>
-          </TouchableOpacity>
+        <BottomContent />
+      </SafeAreaView>
+    );
+  }
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Signup")}
-            style={styles.buttonSignUp}
-            activeOpacity={0.8}
-          >
-            <View style={styles.textContent}>
-              <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
-              <Text style={styles.textButtonSignUp}>S'inscrire</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollViewContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        <MainContent />
+      </ScrollView>
+      <BottomContent />
     </SafeAreaView>
   );
 }
@@ -196,6 +286,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7F7FF",
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   keyboardView: {
     flex: 1,
@@ -271,7 +365,7 @@ const styles = StyleSheet.create({
   bottomContent: {
     width: "100%",
     padding: 16,
-    marginTop: 'auto',
+    backgroundColor: "#F7F7FF",
     paddingBottom: Platform.OS === 'ios' ? 20 : 40,
   },
   buttonConnect: {

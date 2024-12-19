@@ -24,6 +24,7 @@ export default function GroceryListScreen({ navigation }) {
   const [products, setProducts] = useState([]);
   const [checkedItems, setCheckedItems] = useState(new Set());
   const colocToken = useSelector((state) => state.users.coloc.token);
+  const backendUrl = "http://10.9.1.105:3000";
 
   const fetchProducts = async (colocToken) => {
     if (!colocToken) {
@@ -32,7 +33,7 @@ export default function GroceryListScreen({ navigation }) {
     }
 
     const response = await fetch(
-      `http://10.9.1.137:3000/product/getproducts/${colocToken}`
+      `${backendUrl}/product/getproducts/${colocToken}`
     );
     const data = await response.json();
     setProducts(data);
@@ -41,7 +42,7 @@ export default function GroceryListScreen({ navigation }) {
   const handleDelete = async (productId) => {
     try {
       const response = await fetch(
-        `http://10.9.1.137:3000/product/${productId}`,
+        `${backendUrl}/product/${productId}`,
         {
           method: "DELETE",
           headers: {

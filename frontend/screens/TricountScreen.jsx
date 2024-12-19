@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -23,6 +25,7 @@ const windowHeight = Dimensions.get("window").height;
 export default function TricountScreen({ navigation }) {
   const [tricounts, setTricounts] = useState([]);
   const userToken = useSelector((state) => state.users.user.token);
+  const backendUrl = "http://10.9.1.105:3000";
 
   useFocusEffect(
     useCallback(() => {
@@ -39,7 +42,7 @@ export default function TricountScreen({ navigation }) {
   }, []);
 
   const fetchTricounts = () => {
-    fetch(`http://10.9.1.137:3000/tricount/recuptricounts/${userToken}`)
+    fetch(`${backendUrl}/tricount/recuptricounts/${userToken}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -51,7 +54,7 @@ export default function TricountScreen({ navigation }) {
   const handleDeleteTricount = (tricountId) => {
     console.log("Tentative de suppression du tricount:", tricountId);
 
-    fetch(`http://10.9.1.137:3000/tricount/delete/${tricountId}`, {
+    fetch(`${backendUrl}/tricount/delete/${tricountId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -121,6 +124,18 @@ export default function TricountScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.containerView}>
         <View style={styles.containerBtnTitle}>
+           <View style={styles.containerBtnTitle}>
+                              <TouchableOpacity
+                                onPress={() => navigation.navigate("Home")}
+                                style={styles.iconContainer}
+                              >
+                                <FontAwesome
+                                  name={"arrow-circle-left"}
+                                  size={35}
+                                  color="rgb(255, 139, 228)"
+                                />
+                              </TouchableOpacity>
+                            </View>
           <Text style={styles.title}>Tricount</Text>
           <TouchableOpacity
             style={styles.Add}

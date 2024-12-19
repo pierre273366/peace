@@ -33,7 +33,7 @@ export default function HomeScreen({ navigation }) {
   const [isChecked, setChecked] = useState(false);
   const [events, setEvents] = useState([]); // Liste des événements
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // Date du jour
-  const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
+  const backendUrl = "http://10.9.1.105:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [products, setProducts] = useState([]);
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
@@ -132,7 +132,7 @@ export default function HomeScreen({ navigation }) {
 
     try {
       const response = await fetch(
-        `http://192.168.1.11:3000/product/getproducts/${colocToken}`
+        `${backendUrl}/product/getproducts/${colocToken}`
       );
       const data = await response.json();
       setProducts(data);
@@ -280,7 +280,7 @@ export default function HomeScreen({ navigation }) {
   const fetchLastSondage = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.11:3000/sondage/getLastSondage/${colocToken}`
+        `${backendUrl}/sondage/getLastSondage/${colocToken}`
       );
       const data = await response.json();
       if (data.result) {
@@ -299,7 +299,7 @@ export default function HomeScreen({ navigation }) {
         userToken: user.token,
       };
 
-      const response = await fetch("http://192.168.1.11:3000/sondage/vote", {
+      const response = await fetch(`${backendUrl}/sondage/vote`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(votes),
@@ -323,7 +323,7 @@ export default function HomeScreen({ navigation }) {
       };
 
       const response = await fetch(
-        "http://192.168.1.11:3000/sondage/deleteVote",
+        `${backendUrl}/sondage/deleteVote`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

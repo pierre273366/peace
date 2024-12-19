@@ -11,6 +11,8 @@ import {
   Keyboard,
   Dimensions,
   StatusBar,
+  SafeAreaView,
+  ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -22,14 +24,17 @@ import {
   updatePassword,
   updateEmail,
 } from "../reducers/users";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+
 
 function Signup({ navigation }) {
   const dispatch = useDispatch();
+  const backendUrl = "http://10.9.1.105:3000";
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -38,6 +43,7 @@ function Signup({ navigation }) {
     }
   }, []);
 
+  // States
   const [signUpName, setSignUpName] = useState("");
   const [nameInvalid, setNameInvalid] = useState(false);
   const [signUpUsername, setSignUpUsername] = useState("");
@@ -55,6 +61,23 @@ function Signup({ navigation }) {
   const [passwordInvalid, setPasswordInvalid] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
 
+  // New functions for date picker
+  const cancelDate = () => {
+    setShowPicker(false);
+    // Reset tempDate to the current selected date
+    setTempDate(date);
+  };
+
+  const confirmDate = () => {
+    setShowPicker(false);
+    setDate(tempDate);
+    const formatted = `${tempDate.getDate()}/${
+      tempDate.getMonth() + 1
+    }/${tempDate.getFullYear()}`;
+    setSignUpBirth(formatted);
+  };
+
+  // Gestion de la date
   const dateSet = (event, selectedDate) => {
     if (Platform.OS === 'android') {
       setShowPicker(false);
@@ -70,7 +93,54 @@ function Signup({ navigation }) {
     }
   };
 
+  // Validation et envoi du formulaire
   const SignUpBtn = () => {
+    let isValid = true;
+
+    const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    if (regexEmail.test(signUpEmail)) {
+      dispatch(updateEmail(signUpEmail));
+      setEmailInvalid(false);
+    } else {
+      setEmailInvalid(true);
+      isValid = false;
+    }
+
+    const regexPhone = /^0[1-9]\d{8}$/;
+    if (regexPhone.test(signUpPhone)) {
+      dispatch(updatePhone(signUpPhone));
+      setPhoneInvalid(false);
+    } else {
+      setPhoneInvalid(true);
+      isValid = false;
+    }
+
+    if (!signUpName.trim()) {
+      setNameInvalid(true);
+      isValid = false;
+    } else {
+      setNameInvalid(false);
+      dispatch(updateName(signUpName));
+    }
+
+    if (!signUpUsername.trim()) {
+      setUsernameInvalid(true);
+      isValid = false;
+    } else {
+      setUsernameInvalid(false);
+      dispatch(updateUsername(signUpUsername));
+    }
+
+    if (!signUpPassword.trim()) {
+      setPasswordInvalid(true);
+      isValid = false;
+    } else {
+      setPasswordInvalid(false);
+      dispatch(updatePassword(signUpPassword));
+    }
+
+    if (!isValid) return;
+
     const infos = {
       name: signUpName,
       username: signUpUsername,
@@ -81,45 +151,7 @@ function Signup({ navigation }) {
       firstcoloc: signUpFirstColoc,
     };
 
-    const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    if (regexEmail.test(signUpEmail)) {
-      dispatch(updateEmail(signUpEmail));
-      setEmailInvalid(false);
-    } else {
-      setEmailInvalid(true);
-    }
-
-    const regexPhone = /^0[1-9]\d{8}$/;
-    if (regexPhone.test(signUpPhone)) {
-      dispatch(updatePhone(signUpPhone));
-      setPhoneInvalid(false);
-    } else {
-      setPhoneInvalid(true);
-    }
-
-    if (!signUpName.trim()) {
-      setNameInvalid(true);
-    } else {
-      setNameInvalid(false);
-      dispatch(updateName(signUpName));
-    }
-
-    if (!signUpUsername.trim()) {
-      setUsernameInvalid(true);
-    } else {
-      setUsernameInvalid(false);
-      dispatch(updateUsername(signUpUsername));
-    }
-
-    if (!signUpPassword.trim()) {
-      setPasswordInvalid(true);
-      return;
-    } else {
-      setPasswordInvalid(false);
-      dispatch(updatePassword(signUpPassword));
-    }
-
-    fetch("http://10.9.1.137:3000/users/signup", {
+    fetch(`${backendUrl}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(infos),
@@ -145,249 +177,376 @@ function Signup({ navigation }) {
       });
   };
 
+  // Toggle pour la checkbox de colocation
   const toggleFirstColoc = () => {
     setSignUpFirstColoc((prev) => (prev === "Yes" ? "No" : "Yes"));
   };
 
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.signinContainer}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboardView}
-        >
-          <Image
-            style={styles.image}
-            source={require("../assets/peacelogo.png")}
-          />
-          <Text style={styles.textAccount}>Inscription</Text>
-
-          <TextInput
-            placeholder="Name"
-            onChangeText={(value) => setSignUpName(value)}
-            value={signUpName}
-            style={styles.input}
-          />
-          {nameInvalid && (
-            <Text style={styles.errorText}>
-              Nom et Prénom manquants ou invalides.
-            </Text>
-          )}
-
-          <TextInput
-            placeholder="Username"
-            onChangeText={(value) => setSignUpUsername(value)}
-            value={signUpUsername}
-            style={styles.input}
-          />
-          {usernameInvalid && (
-            <Text style={styles.errorText}>
-              Username manquant ou invalide.
-            </Text>
-          )}
-
-          <TextInput
-            placeholder="Email"
-            onChangeText={(value) => setSignUpEmail(value)}
-            value={signUpEmail}
-            style={styles.input}
-          />
-          {emailInvalid && (
-            <Text style={styles.errorText}>
-              Adresse mail manquante ou invalide.
-            </Text>
-          )}
-
-          <View style={styles.inputContainer}>
+  // Composant pour le contenu principal
+  const MainContent = () => (
+    <View style={styles.mainContent}>
+      <Text style={styles.title}>Inscription</Text>
+  
+      <View style={styles.containerInput}>
+        {/* Input Name */}
+        <View style={styles.input}>
+          <MaterialIcons name="person" size={24} color="#FD703C" style={styles.icon} />
+          <View style={styles.inputContent}>
+            <Text style={styles.label}>Nom</Text>
             <TextInput
-              placeholder="Password"
+              placeholder="Entrez votre nom"
+              onChangeText={(value) => setSignUpName(value)}
+              value={signUpName}
+              style={styles.inputText}
+              placeholderTextColor="#999"
+            />
+          </View>
+        </View>
+        {nameInvalid && (
+          <Text style={styles.errorText}>Nom manquant ou invalide</Text>
+        )}
+  
+        {/* Input Username */}
+        <View style={styles.input}>
+          <MaterialIcons name="alternate-email" size={24} color="#FD703C" style={styles.icon} />
+          <View style={styles.inputContent}>
+            <Text style={styles.label}>Username</Text>
+            <TextInput
+              placeholder="Choisissez un nom d'utilisateur"
+              onChangeText={(value) => setSignUpUsername(value)}
+              value={signUpUsername}
+              style={styles.inputText}
+              placeholderTextColor="#999"
+            />
+          </View>
+        </View>
+        {usernameInvalid && (
+          <Text style={styles.errorText}>Username manquant ou invalide</Text>
+        )}
+  
+        {/* Input Email */}
+        <View style={styles.input}>
+          <MaterialIcons name="email" size={24} color="#FD703C" style={styles.icon} />
+          <View style={styles.inputContent}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              placeholder="Entrez votre email"
+              onChangeText={(value) => setSignUpEmail(value)}
+              value={signUpEmail}
+              style={styles.inputText}
+              placeholderTextColor="#999"
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
+        </View>
+        {emailInvalid && (
+          <Text style={styles.errorText}>Email manquant ou invalide</Text>
+        )}
+  
+        {/* Input Password */}
+        <View style={styles.input}>
+          <MaterialIcons name="lock" size={24} color="#FD703C" style={styles.icon} />
+          <View style={styles.inputContent}>
+            <Text style={styles.label}>Mot de passe</Text>
+            <TextInput
+              placeholder="Choisissez un mot de passe"
               onChangeText={(value) => setSignUpPassword(value)}
               value={signUpPassword}
-              style={styles.input}
+              style={styles.inputText}
               secureTextEntry={!showPassword}
+              placeholderTextColor="#999"
             />
-            {passwordInvalid && (
-              <Text style={styles.errorText}>
-                Mot de passe manquant ou invalide.
-              </Text>
-            )}
+          </View>
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.eyeIcon}
+          >
+            <MaterialIcons
+              name={showPassword ? "visibility-off" : "visibility"}
+              size={24}
+              color="#666"
+            />
+          </TouchableOpacity>
+        </View>
+        {passwordInvalid && (
+          <Text style={styles.errorText}>Mot de passe manquant ou invalide</Text>
+        )}
+  
+        {/* Input Phone */}
+        <View style={styles.input}>
+          <MaterialIcons name="phone" size={24} color="#FD703C" style={styles.icon} />
+          <View style={styles.inputContent}>
+            <Text style={styles.label}>Téléphone</Text>
+            <TextInput
+              placeholder="Entrez votre numéro"
+              onChangeText={(value) => setSignUpPhone(value)}
+              value={signUpPhone}
+              style={styles.inputText}
+              placeholderTextColor="#999"
+              keyboardType="phone-pad"
+            />
+          </View>
+        </View>
+        {phoneInvalid && (
+          <Text style={styles.errorText}>Numéro de téléphone invalide</Text>
+        )}
+  
+        {/* Row pour Date et Expérience */}
+        <View style={styles.rowContainer}>
+        <TouchableOpacity 
+  onPress={() => setShowPicker(true)} 
+  style={{ 
+    flex: 1,  // Prend tout l'espace disponible
+    justifyContent: 'center'  // Centre le contenu verticalement
+  }}
+>
+  <View style={styles.halfInput}>
+    <MaterialIcons name="calendar-today" size={24} color="#FD703C" style={styles.icon} />
+    <View style={styles.inputContent}>
+      <Text style={styles.label}>Naissance</Text>
+      <TextInput
+        placeholder="Date"
+        value={signUpBirth}
+        style={styles.inputTextDate}
+        editable={false}
+        placeholderTextColor="#999"
+      />
+    </View>
+  </View>
+</TouchableOpacity>
+  
+          {/* Colocation Input */}
+          <View style={styles.halfInput}>
+            <MaterialIcons name="home" size={24} color="#FD703C" style={styles.icon} />
+            <View style={styles.inputContent}>
+              <Text style={styles.label}>Expérience</Text>
+              <TouchableOpacity 
+                style={styles.checkboxContainer}
+                onPress={toggleFirstColoc}
+              >
+                <Text style={styles.checkboxText}>Oui </Text>
+                <View style={[styles.checkbox, signUpFirstColoc === "Yes" && styles.checked]}>
+                  {signUpFirstColoc === "Yes" && <Text style={styles.checkmark}>✓</Text>}
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </View>
+  
+      
+    </View>
+  );
+  
+  if (Platform.OS === 'ios') {
+    return (
+      <SafeAreaView style={styles.container}>
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={styles.keyboardView}
+        >
+          <MainContent />
+          <View style={styles.bottomContent}>
             <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.iconContainer}
+              onPress={() => SignUpBtn()}
+              style={styles.buttonConnect}
+              activeOpacity={0.8}
             >
-              <FontAwesome
-                name={showPassword ? "eye-slash" : "eye"}
-                size={20}
-                color="#5F5F5F"
-              />
+              <Text style={styles.textButtonConnect}>S'inscrire</Text>
+            </TouchableOpacity>
+  
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Signin")}
+              style={styles.buttonSignUp}
+              activeOpacity={0.8}
+            >
+              <View style={styles.textContent}>
+                <Text style={styles.textSignUp}>Déjà inscrit ? </Text>
+                <Text style={styles.textButtonSignUp}>Se connecter</Text>
+              </View>
             </TouchableOpacity>
           </View>
-
-          <TextInput
-            placeholder="PhoneNumber"
-            onChangeText={(value) => setSignUpPhone(value)}
-            value={signUpPhone}
-            style={styles.input}
-          />
-          {phoneInvalid && (
-            <Text style={styles.errorText}>
-              Numéro de téléphone manquant ou invalide.
-            </Text>
-          )}
-
-          <TouchableOpacity 
-            style={styles.dateButton} 
-            onPress={() => setShowPicker(true)}
-          >
-            <View style={styles.dateInputContainer}>
-              <TextInput
-                style={styles.dateInput}
-                placeholder="Date de naissance"
-                value={signUpBirth}
-                editable={false}
-                pointerEvents="none"
-              />
-            </View>
-          </TouchableOpacity>
-
+          
           {showPicker && (
-            <View style={styles.pickerContainer}>
-              <DateTimePicker
-                value={Platform.OS === 'ios' ? tempDate : date}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                onChange={dateSet}
-                maximumDate={new Date()}
-              />
-              {Platform.OS === 'ios' && (
-                <TouchableOpacity
-                  style={styles.validateButton}
-                  onPress={() => {
-                    setShowPicker(false);
-                    setDate(tempDate);
-                    const formatted = `${tempDate.getDate()}/${
-                      tempDate.getMonth() + 1
-                    }/${tempDate.getFullYear()}`;
-                    setSignUpBirth(formatted);
-                  }}
-                >
-                  <Text style={styles.validateButtonText}>Valider</Text>
-                </TouchableOpacity>
-              )}
+          <View style={styles.pickerContainer}>
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={tempDate}
+              mode="date"
+              display="spinner"
+              onChange={dateSet}
+              maximumDate={new Date()}
+            />
+            <View style={styles.pickerButtonContainer}>
+              <TouchableOpacity
+                onPress={cancelDate}
+                style={styles.pickerCancelButton}
+              >
+                <Text style={styles.pickerButtonText}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={confirmDate}
+                style={styles.pickerValidateButton}
+              >
+                <Text style={styles.pickerButtonText}>Valider</Text>
+              </TouchableOpacity>
             </View>
-          )}
-
-          <TouchableOpacity
-            style={styles.checkboxContainer}
-            onPress={toggleFirstColoc}
-          >
-            <Text style={styles.checkboxText}>
-              As-tu déjà fait de la colocation ?
-            </Text>
-            <View
-              style={[
-                styles.checkbox,
-                signUpFirstColoc === "Yes" && styles.checked,
-              ]}
-            >
-              {signUpFirstColoc === "Yes" && (
-                <Text style={styles.checkmark}>✔</Text>
-              )}
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.buttonSignup}
-            onPress={() => SignUpBtn()}
-          >
-            <Text style={styles.textButtonSignup}>S'inscrire</Text>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
-      </View>
-    </TouchableWithoutFeedback>
+          </View>
+        )}
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
-
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.mainContentWrapper}>
+        <MainContent />
+      </View>
+      <View style={styles.bottomContent}>
+        <TouchableOpacity
+          onPress={() => SignUpBtn()}
+          style={styles.buttonConnect}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButtonConnect}>S'inscrire</Text>
+        </TouchableOpacity>
+  
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Signin")}
+          style={styles.buttonSignUp}
+          activeOpacity={0.8}
+        >
+          <View style={styles.textContent}>
+            <Text style={styles.textSignUp}>Déjà inscrit ? </Text>
+            <Text style={styles.textButtonSignUp}>Se connecter</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      {showPicker && Platform.OS === 'android' && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={dateSet}
+          maximumDate={new Date()}
+        />
+      )}
+    </SafeAreaView>
+  );
+}
 const styles = StyleSheet.create({
-  signinContainer: {
+  mainContentWrapper: {
+    height: windowHeight - 200, // Soustrayez la hauteur approximative des boutons
+    justifyContent: 'flex-start', // Alignez le contenu en haut
+    alignItems: 'center', // Centre horizontalement
+
+  },
+  container: {
     flex: 1,
-    backgroundColor: "#F6F8FE",
-    alignItems: "center",
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: "#F7F7FF",
+    justifyContent: 'space-between', // Pousse le contenu principal en haut et les boutons en bas
   },
   keyboardView: {
     flex: 1,
     width: "100%",
-    alignItems: "center",
-    justifyContent: "space-evenly",
   },
-  image: {
-    width: windowWidth * 0.35,
-    height: windowHeight * 0.12,
-    resizeMode: 'contain',
+  mainContent: {
+    flex: 1,
+    width: "100%",
+    paddingBottom: 10, // Ajoute un espace en bas pour éviter que le contenu ne se chevauche avec les boutons
   },
-  textAccount: {
-    fontSize: windowHeight * 0.025,
-    fontWeight: "600",
-    marginVertical: windowHeight * 0.01,
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginVertical: 5,
+    textAlign: 'center',
+    width: '100%',
+    marginTop:50
+  },
+  containerInput: {
+    width: "100%",
+    padding: 16,
+    gap: 8,
   },
   input: {
-    width: windowWidth * 0.8,
-    height: windowHeight * 0.045,
-    marginTop: windowHeight * 0.01,
-    paddingLeft: 15,
-    borderBottomColor: "#ec6e5b",
-    borderBottomWidth: 1,
+    flexDirection: "row",
     backgroundColor: "white",
-    fontSize: windowHeight * 0.018,
-    borderRadius: 15,
-    paddingVertical: Platform.OS === 'ios' ? 12 : 8,
+    padding: 12,
+    borderRadius: 10,
+    height: 75,
+    alignItems: "center",
   },
-  inputContainer: {
-    position: "relative",
+  // Nouveaux styles pour la ligne de deux inputs
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     width: '100%',
-    alignItems: 'center',
-    height: windowHeight * 0.07,
+    gap: 12,
   },
-  iconContainer: {
-    position: "absolute",
-    right: windowWidth * 0.12,
-    top: windowHeight * 0.02,
+  halfInput: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "white",
+    padding: 12,
+    borderRadius: 10,
+    height: 75,
+    alignItems: "center",
+  
   },
-  dateButton: {
-    width: windowWidth * 0.8,
-    height: windowHeight * 0.055, // Augmenté de 0.045 à 0.055
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 15,
-    marginTop: windowHeight * 0.005,
-    borderBottomColor: "#ec6e5b",
-    borderBottomWidth: 1,
-},
-dateInputContainer: {
-  width: '100%',
-  height: '100%', // Prend toute la hauteur du parent
-  justifyContent: 'center',
-},
-dateInput: {
-  width: '100%',
-  height: '100%',
-  paddingLeft: 15,
-  fontSize: windowHeight * 0.018,
-  textAlignVertical: Platform.OS === 'android' ? 'center' : 'auto', // Ajout uniquement de cette ligne
-},
+  icon: {
+    width: 30,
+    marginRight: 15,
+    alignSelf: "center",
+  },
+  inputContent: {
+    flex: 1,
+    justifyContent: "space-between",
+    height: "100%",
+  },
+  label: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 6,
+  },
+  inputText: {
+    fontSize: 16,
+    height: 30,
+    color: '#000',
+    textAlignVertical: 'center',
+    paddingVertical: 0,
+    marginBottom: 6,
+  },
+  inputTextDate: {
+    fontSize: 13,
+    height: 30,
+    color: '#000',
+    textAlignVertical: 'center',
+    paddingVertical: 0,
+    marginBottom: 6,
+  },
+  eyeIcon: {
+    padding: 8,
+    alignSelf: "center",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 11,
+    marginLeft: 16,
+    marginTop: -8,
+  },
+  // Styles pour le DatePicker
   pickerContainer: {
-    backgroundColor: 'white',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    backgroundColor: 'white',
     zIndex: 1000,
-    paddingTop: 20,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 0,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    paddingTop: 20,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -397,73 +556,111 @@ dateInput: {
     shadowRadius: 3.84,
     elevation: 5,
   },
-  buttonSignup: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: windowWidth * 0.5,
-    height: windowHeight * 0.055,
-    backgroundColor: "#EC794C",
-    borderRadius: 30,
-    marginTop: windowHeight * 0.02,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  textButtonSignup: {
-    color: "#ffffff",
-    fontWeight: "600",
-    fontSize: windowHeight * 0.018,
-  },
   validateButton: {
-    backgroundColor: "#EC794C",
+    backgroundColor: "#FD703C",
+    marginTop: 15,
     paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 20,
+    paddingHorizontal: 30,
+    borderRadius: 25,
     alignSelf: 'center',
-    marginVertical: 15,
   },
   validateButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "600",
   },
+  // Styles pour la checkbox
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: windowHeight * 0.01,
+    justifyContent: "space-between",
   },
   checkbox: {
-    width: windowWidth * 0.07,
-    height: windowWidth * 0.07,
+    width: 20,
+    height: 20,
     borderWidth: 2,
-    borderColor: "#ccc",
-    borderRadius: 5,
+    borderColor: "#ddd",
+    borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: windowWidth * 0.05,
   },
   checked: {
-    backgroundColor: "#4CAF50",
-    borderColor: "#4CAF50",
+    backgroundColor: "#FD703C",
+    borderColor: "#FD703C",
   },
   checkmark: {
-    fontSize: windowHeight * 0.016,
     color: "white",
+    fontSize: 14,
   },
   checkboxText: {
-    fontSize: windowHeight * 0.016,
+    fontSize: 14,
+    color: '#000',
+    marginRight: 8,
   },
-  errorText: {
-    color: "red",
-    fontSize: windowHeight * 0.012,
-    marginTop: 2,
-    alignSelf: 'flex-start',
-    marginLeft: windowWidth * 0.12,
+  // Styles pour le contenu du bas
+  bottomContent: {
+    width: "100%",
+    padding: 10, // Réduire le padding
+    paddingBottom: 20, // Réduire l'espace en bas
+    backgroundColor: "#F7F7FF",
+  },
+  buttonConnect: {
+    alignItems: "center",
+    width: "100%",
+    borderRadius: 50,
+    backgroundColor: "#FD703C",
+    padding: 20,
+    marginBottom: 16,
+  },
+  textButtonConnect: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  buttonSignUp: {
+    padding: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  textContent: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  textSignUp: {
+    color: "#666",
+    fontSize: 14,
+  },
+  textButtonSignUp: {
+    color: "#FD703C",
+    fontSize: 14,
+    fontWeight: "600",
+  }, pickerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    paddingBottom: 40,
+  },
+  pickerButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  pickerCancelButton: {
+    padding: 10,
+    backgroundColor: '#F0F0F0',
+    borderRadius: 10,
+  },
+  pickerValidateButton: {
+    padding: 10,
+    backgroundColor: '#FD703C',
+    borderRadius: 10,
+  },
+  pickerButtonText: {
+    color: 'white',
+    fontWeight: '600',
   },
 });
 
