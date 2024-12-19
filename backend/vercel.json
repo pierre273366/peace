@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "app.js",
-      "use": "@vercel/node"
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "MY_ENV_VAR": "value"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/favicon.ico",
