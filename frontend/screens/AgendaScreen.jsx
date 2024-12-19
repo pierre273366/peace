@@ -129,7 +129,7 @@ const MyCalendar = ({ navigation }) => {
       {/* Bouton pour ajouter un événement */}
       <View style={styles.containerButton}>
         <TouchableOpacity onPress={navigateToAddEvent} style={styles.button}>
-          <Text style={styles.buttonAdd}>Ajouter</Text>
+          <Text style={styles.buttonAdd}>+</Text>
         </TouchableOpacity>
       </View>
 
@@ -180,20 +180,20 @@ const styles = StyleSheet.create({
   containerButton: {
     width: "100%",
     alignItems: "flex-end",
-    padding: windowWidth * 0.1,
+    padding: windowWidth * 0.05,
     marginTop: windowHeight * 0.05,
   },
   button: {
-    backgroundColor: "rgb(253, 112, 60)",
-    width: windowWidth * 0.2,
-    height: windowHeight * 0.06,
-    borderRadius: 20,
+    backgroundColor: "black",
+    width: 60,
+    height: 60, 
+    borderRadius: 30, 
     alignItems: "center",
     justifyContent: "center",
   },
   buttonAdd: {
     color: "white",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.055,
     fontWeight: "bold",
   },
   calendar: {

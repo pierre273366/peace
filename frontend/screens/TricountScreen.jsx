@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   View,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   Alert,
+  Dimensions,
+  Platform,
+  StatusBar
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+
+
 
 export default function TricountScreen({ navigation }) {
   const [tricounts, setTricounts] = useState([]);
@@ -24,6 +29,14 @@ export default function TricountScreen({ navigation }) {
       fetchTricounts();
     }, [])
   );
+
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+  }, []);
 
   const fetchTricounts = () => {
     fetch(`http://10.9.1.137:3000/tricount/recuptricounts/${userToken}`)
@@ -134,15 +147,19 @@ export default function TricountScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-  },
-  containerView: {
-    width: "100%",
-    padding: 16,
-  },
+    container: {
+      flex: 1,
+      backgroundColor: "white",
+      alignItems: "center",
+      // Ajouter un paddingTop conditionnel selon la plateforme
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    },
+    containerView: {
+      width: "100%",
+      padding: 16,
+      // Ajustement du padding vertical
+      paddingVertical: Platform.OS === 'android' ? 10 : 16,
+    },
   containerText: {
     width: "100%",
     padding: 16,
@@ -169,7 +186,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
   },
   containerCard: {
-    height: "100%",
+    flex: 1, // Changé de height: "100%" à flex: 1
     width: "100%",
     padding: 16,
     gap: 10,
@@ -179,7 +196,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     padding: 16,
-    height: "10%",
+    height: 80, // Hauteur fixe au lieu de pourcentage
     alignItems: "center",
     gap: 15,
   },

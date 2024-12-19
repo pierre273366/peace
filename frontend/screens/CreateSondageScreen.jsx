@@ -7,10 +7,7 @@ import {
   TouchableOpacity,
   View,
   Image,
-  Alert,
-  SafeAreaView,
-  SafeAreaProvider,
-  ScrollView,
+  StatusBar
 } from "react-native";
 import React, { useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -22,6 +19,14 @@ export default function CreateSondageScreen({ navigation }) {
   const userName = useSelector((state) => state.users.user.username);
   const [title, setTitle] = useState("");
   const [responses, setResponses] = useState([""]); // Deux réponses initiales
+
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+  }, []);
 
   // Ajouter un nouveau champ de réponse
   const addInput = () => {
@@ -133,69 +138,95 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F6F8FE",
     alignItems: "center",
-    justifyContent: "center",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
-
   imageLogo: {
-    paddingTop: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    width: 250,
-    height: 200,
+    width: '60%',
+    height: undefined,
+    aspectRatio: 1.25, // 250/200
+    resizeMode: 'contain',
+    marginTop: Platform.OS === 'android' ? 10 : 20,
   },
-
-  addBtn: {
-    width: 340,
+  textContainer: {
+    width: '100%',
+    paddingHorizontal: 16,
+    marginVertical: 20,
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: 'center',
+  },
+  sondageContainer: {
+    width: '100%',
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  bloc: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  blocResponse: {
+    width: '100%',
+    alignItems: 'center',
+    position: "relative",
+  },
+  responseRow: {
+    width: '100%',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  input: {
+    width: '100%',
+    maxWidth: 340,
     height: 50,
     borderRadius: 10,
     backgroundColor: "#E6E6FC",
-    paddingTop: 15,
     marginTop: 10,
     paddingLeft: 20,
+    paddingRight: 40, // Espace pour le bouton de suppression
+  },
+  deleteButton: {
+    position: "absolute",
+    right: '5%',
+    top: 25,
+    padding: 5, // Zone de toucher plus grande
+  },
+  addBtn: {
+    width: '100%',
+    maxWidth: 340,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: "#E6E6FC",
+    justifyContent: 'center',
+    paddingLeft: 20,
+    marginTop: 10,
   },
   addSondage: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 8,
-    width: 200,
+    width: '60%',
+    maxWidth: 200,
     height: 50,
-    marginTop: 30,
     backgroundColor: "#EC794C",
     borderRadius: 30,
-    marginBottom: 80,
-    marginLeft: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: Platform.OS === 'android' ? 30 : 80,
+    elevation: 3, // Pour Android
+    shadowColor: "#000", // Pour iOS
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   btnText: {
     color: "#EC794C",
     fontWeight: "bold",
   },
-  input: {
-    width: 340,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: "#E6E6FC",
-    marginTop: 10,
-    position: "relative",
-    paddingLeft: 20,
-  },
-  blocResponse: {
-    position: "relative",
-  },
-
-  deleteButton: {
-    position: "absolute",
-    right: 20,
-    top: 25,
-  },
   btnTextAdd: {
     color: "white",
-    fontWeight: "bold",
-    paddingBottom: 5,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  text: {
-    fontSize: 20,
     fontWeight: "bold",
   },
 });

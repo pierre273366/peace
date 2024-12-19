@@ -8,12 +8,13 @@ import {
   View,
   Image,
   Dimensions,
+  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout, coloc } from "../reducers/users";
 import { useNavigation } from "@react-navigation/native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -29,30 +30,24 @@ function Signin() {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  // Correction de la fonction handleSignIn
   const handleSignIn = () => {
     let isValid = true;
 
-    // Validation du nom d'utilisateur
     if (!signInUsername) {
       setUsernameError("Nom d'utilisateur requis.");
       isValid = false;
     } else {
-      setUsernameError(""); // Réinitialise l'erreur si valide
+      setUsernameError("");
     }
 
-    // Validation du mot de passe
     if (!signInPassword) {
       setPasswordError("Mot de passe requis.");
       isValid = false;
     } else {
-      setPasswordError(""); // Réinitialise l'erreur si valide
+      setPasswordError("");
     }
 
-    // Si les validations échouent, ne pas procéder
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) return;
 
     fetch("http://10.9.1.137:3000/users/signin", {
       method: "POST",
@@ -89,7 +84,6 @@ function Signin() {
 
           navigation.navigate(data.redirect);
         } else {
-          // Gérer les erreurs de connexion côté serveur
           if (data.message === "Invalid username") {
             setUsernameError("Nom d'utilisateur invalide.");
           } else if (data.message === "Invalid password") {
@@ -99,185 +93,218 @@ function Signin() {
       });
   };
 
-  const handleSubmit = () => {
-    navigation.navigate("Signup");
-  };
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
       >
-        <View style={styles.logoContainer}>
-          <Image
-            style={styles.image}
-            source={require("../assets/peacelogo.png")}
-            resizeMode="contain"
-          />
-        </View>
-        <Text style={styles.title}>Connexion</Text>
-
-        <TextInput
-          placeholder="Username"
-          onChangeText={(value) => setSignInUsername(value)}
-          value={signInUsername}
-          style={styles.input}
-        />
-        {usernameError && (
-          <Text
-            style={{ color: "red", marginTop: 5, marginLeft: 20, fontSize: 10 }}
-          >
-            Username manquant ou invalide.
-          </Text>
-        )}
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Password"
-            onChangeText={(value) => setSignInPassword(value)}
-            value={signInPassword}
-            style={styles.input}
-            secureTextEntry={!showPassword}
-          />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={styles.iconContainer}
-          >
-            <FontAwesome
-              name={showPassword ? "eye-slash" : "eye"}
-              size={windowWidth * 0.05}
-              color="#5F5F5F"
+        <View style={styles.mainContent}>
+          <View style={styles.logoContainer}>
+            <Image
+              style={styles.image}
+              source={require("../assets/peacelogo.png")}
+              resizeMode="contain"
             />
+          </View>
+          <Text style={styles.title}>Connexion</Text>
+
+          <View style={styles.containerInput}>
+            <View style={styles.input}>
+              <MaterialIcons
+                name="person"
+                size={24}
+                color="#FD703C"
+                style={styles.icon}
+              />
+              <View style={styles.inputContent}>
+                <Text style={styles.label}>Username</Text>
+                <TextInput
+                  placeholder="Enter your username"
+                  onChangeText={(value) => setSignInUsername(value)}
+                  value={signInUsername}
+                  style={styles.inputText}
+                  placeholderTextColor="#999"
+                />
+              </View>
+            </View>
+            {usernameError && (
+              <Text style={styles.errorText}>{usernameError}</Text>
+            )}
+
+            <View style={styles.input}>
+              <MaterialIcons
+                name="lock"
+                size={24}
+                color="#FD703C"
+                style={styles.icon}
+              />
+              <View style={styles.inputContent}>
+                <Text style={styles.label}>Password</Text>
+                <TextInput
+                  placeholder="Enter your password"
+                  onChangeText={(value) => setSignInPassword(value)}
+                  value={signInPassword}
+                  style={styles.inputText}
+                  secureTextEntry={!showPassword}
+                  placeholderTextColor="#999"
+                />
+              </View>
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeIcon}
+              >
+                <MaterialIcons
+                  name={showPassword ? "visibility-off" : "visibility"}
+                  size={24}
+                  color="#666"
+                />
+              </TouchableOpacity>
+            </View>
+            {passwordError && (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.bottomContent}>
+          <TouchableOpacity
+            onPress={handleSignIn}
+            style={styles.buttonConnect}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.textButtonConnect}>Se connecter</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Signup")}
+            style={styles.buttonSignUp}
+            activeOpacity={0.8}
+          >
+            <View style={styles.textContent}>
+              <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
+              <Text style={styles.textButtonSignUp}>S'inscrire</Text>
+            </View>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ForgotPassword")}
-          style={styles.forgotPasswordButton}
-        ></TouchableOpacity>
-        {passwordError && (
-          <Text
-            style={{ color: "red", marginTop: 5, marginLeft: 20, fontSize: 10 }}
-          >
-            Mot de passe manquant ou invalide.
-          </Text>
-        )}
-        <TouchableOpacity
-          onPress={handleSignIn}
-          style={styles.buttonConnect}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButtonConnect}>Se connecter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleSubmit}
-          style={styles.buttonSignUp}
-          activeOpacity={0.8}
-        >
-          <View style={styles.textContent}>
-            <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
-            <Text style={styles.textButtonSignUp}>S'inscrire</Text>
-          </View>
-        </TouchableOpacity>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F6F8FE",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
+    backgroundColor: "#F7F7FF",
   },
   keyboardView: {
+    flex: 1,
     width: "100%",
-    alignItems: "center",
+  },
+  mainContent: {
+    flex: 1,
+    width: "100%",
   },
   logoContainer: {
     width: "100%",
     alignItems: "center",
-    marginBottom: windowHeight * 0.03,
+    marginTop: 40,
+    marginBottom: 20,
   },
   image: {
-    width: windowWidth * 0.9, // Augmenté de 0.6 à 0.7
-    height: windowHeight * 0.2, // Augmenté de 0.15 à 0.2
+    width: windowWidth * 0.9,
+    height: windowHeight * 0.15,
   },
   title: {
-    fontSize: Math.min(windowWidth, windowHeight) * 0.07,
-    fontWeight: "600",
-    marginBottom: windowHeight * 0.03,
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 30,
+    textAlign: 'center',
+    width: '100%'
+  },
+  containerInput: {
+    width: "100%",
+    padding: 16,
+    gap: 15,
   },
   input: {
-    width: windowWidth * 0.85,
-    height: windowHeight * 0.07,
-    marginTop: windowHeight * 0.02,
-    paddingLeft: windowWidth * 0.05,
-    borderBottomColor: "#ec6e5b",
-    borderBottomWidth: 1,
+    flexDirection: "row",
     backgroundColor: "white",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.04, // Augmenté de 0.022 à 0.026
-    borderRadius: 15,
-  },
-  inputContainer: {
-    position: "relative",
-    width: windowWidth * 0.85,
+    padding: 15,
+    borderRadius: 10,
+    height: 90,
     alignItems: "center",
   },
-  iconContainer: {
-    position: "absolute",
-    right: windowWidth * 0.05,
-    top: windowHeight * 0.04,
+  icon: {
+    width: 30,
+    marginRight: 20,
+    alignSelf: "center",
+  },
+  inputContent: {
+    flex: 1,
+    justifyContent: "space-between",
+    height: "100%",
+  },
+  label: {
+    fontSize: 15,
+    color: "#666",
+    marginBottom: 8,
+  },
+  inputText: {
+    fontSize: 18,
+    height: 35,
+    color: '#000',
+    textAlignVertical: 'center',
+    paddingVertical: 0,
+    marginBottom: 8,
+  },
+  eyeIcon: {
+    padding: 8,
+    alignSelf: "center",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginLeft: 16,
+    marginTop: -10,
+  },
+  bottomContent: {
+    width: "100%",
+    padding: 16,
+    marginTop: 'auto',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 40,
   },
   buttonConnect: {
     alignItems: "center",
-    justifyContent: "center",
-    width: windowWidth * 0.8, // Augmenté de 0.5 à 0.6
-    height: windowHeight * 0.08, // Augmenté de 0.06 à 0.07
-    marginTop: windowHeight * 0.04,
-    backgroundColor: "#EC794C",
-    borderRadius: 40,
-    marginBottom: windowHeight * 0.0,
-  },
-  buttonSignUp: {
-    alignItems: "center",
-    justifyContent: "center",
-    width: windowWidth * 0.5,
-    marginTop: windowHeight * 0.01,
-    backgroundColor: "#F6F8FE",
-    borderRadius: 10,
+    width: "100%",
+    borderRadius: 50,
+    backgroundColor: "#FD703C",
+    padding: 25,
+    marginBottom: 16,
   },
   textButtonConnect: {
-    color: "#ffffff",
+    color: "white",
+    fontSize: 20,
     fontWeight: "600",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.045, // Augmenté de 0.022 à 0.026
+  },
+  buttonSignUp: {
+    padding: 10,
+    alignItems: 'center',
+    width: '100%',
   },
   textContent: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  textButtonSignUp: {
-    color: "blue",
-    fontWeight: "600",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.03, // Augmenté de 0.022 à 0.026
   },
   textSignUp: {
-    color: "black",
-    fontWeight: "600",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.03, // Augmenté de 0.022 à 0.026
-  },
-  forgotPasswordButton: {
-    alignSelf: "flex-end",
-    marginTop: 10,
-    marginRight: 25,
-  },
-  forgotPasswordText: {
-    color: "blue",
+    color: "#666",
     fontSize: 14,
-    fontWeight: "500",
+  },
+  textButtonSignUp: {
+    color: "#FD703C",
+    fontSize: 14,
+    fontWeight: "600",
   },
 });
 
-export default Signin; // Exporte le composant Signin pour qu'il puisse être utilisé ailleurs dans l'application
+export default Signin;
