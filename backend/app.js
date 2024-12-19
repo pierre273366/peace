@@ -7,16 +7,15 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var tricountRouter = require("./routes/tricount");
 var eventRouter = require("./routes/event");
-var sondageRouter = require("./routes/sondage");
-const fileUpload = require("express-fileupload");
-
-var productRouter = require("./routes/product");
-var todoRouter = require("./routes/todo");
-
-var app = express();
 const cors = require("cors");
 app.use(cors());
 require("./models/connection");
+const fileUpload = require("express-fileupload");
+var productRouter = require("./routes/product");
+var todoRouter = require("./routes/todo");
+var sondageRouter = require("./routes/sondage");
+var app = express();
+
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
