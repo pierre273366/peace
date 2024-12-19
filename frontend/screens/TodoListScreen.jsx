@@ -339,29 +339,29 @@ export default function TodoList({ navigation }) {
                       >
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
-                        {todo.récurrence}
-                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
                     </View>
-                    <Checkbox
-                      style={styles.checkbox}
-                      value={todo.completed}
-                      onValueChange={() =>
-                        toggleTodoCompletion(
-                          todo._id,
-                          todo.récurrence,
-                          todo.date,
-                          todo.nextOccurrence,
-                          !todo.completed,
-                          todo.completedTomorrow,
-                          todo.completedHebdomadaire,
-                          todo.completedMensuel
-                        )
-                      }
-                      color={
-                        todo.completed ? "rgb(255, 139, 228)" : "lightgray"
-                      }
-                    />
+                    <View style={styles.checkboxContainer}>
+                      <Checkbox
+                        style={styles.checkbox}
+                        value={todo.completed}
+                        onValueChange={() =>
+                          toggleTodoCompletion(
+                            todo._id,
+                            todo.récurrence,
+                            todo.date,
+                            todo.nextOccurrence,
+                            !todo.completed,
+                            todo.completedTomorrow,
+                            todo.completedHebdomadaire,
+                            todo.completedMensuel
+                          )
+                        }
+                        color={
+                          todo.completed ? "rgb(255, 139, 228)" : "lightgray"
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -416,31 +416,31 @@ export default function TodoList({ navigation }) {
                       <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
-                        {todo.récurrence}
-                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
                     </View>
-                    <Checkbox
-                      style={styles.checkbox}
-                      value={todo.completedTomorrow}
-                      onValueChange={() =>
-                        toggleTodoCompletion(
-                          todo._id,
-                          todo.récurrence,
-                          todo.date,
-                          todo.nextOccurrence,
-                          todo.completed,
-                          !todo.completedTomorrow,
-                          todo.completedHebdomadaire,
-                          todo.completedMensuel
-                        )
-                      }
-                      color={
-                        todo.completedTomorrow
-                          ? "rgb(255, 139, 228)"
-                          : "lightgray"
-                      }
-                    />
+                    <View style={styles.checkboxContainer}>
+                      <Checkbox
+                        style={styles.checkbox}
+                        value={todo.completedTomorrow}
+                        onValueChange={() =>
+                          toggleTodoCompletion(
+                            todo._id,
+                            todo.récurrence,
+                            todo.date,
+                            todo.nextOccurrence,
+                            todo.completed,
+                            !todo.completedTomorrow,
+                            todo.completedHebdomadaire,
+                            todo.completedMensuel
+                          )
+                        }
+                        color={
+                          todo.completedTomorrow
+                            ? "rgb(255, 139, 228)"
+                            : "lightgray"
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -492,34 +492,39 @@ export default function TodoList({ navigation }) {
                       ))}
                     </Text>
                     <View style={styles.todoTextContainer}>
-                      <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 18,
+                        }}
+                      >
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
-                        {todo.récurrence}
-                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
                     </View>
-                    <Checkbox
-                      style={styles.checkbox}
-                      value={todo.completedHebdomadaire}
-                      onValueChange={() =>
-                        toggleTodoCompletion(
-                          todo._id,
-                          todo.récurrence,
-                          todo.date,
-                          todo.nextOccurrence,
-                          todo.completed,
-                          todo.completedTomorrow,
-                          !todo.completedHebdomadaire,
-                          todo.completedMensuel
-                        )
-                      }
-                      color={
-                        todo.completedHebdomadaire
-                          ? "rgb(255, 139, 228)"
-                          : "lightgray"
-                      }
-                    />
+                    <View style={styles.checkboxContainer}>
+                      <Checkbox
+                        style={styles.checkbox}
+                        value={todo.completedHebdomadaire}
+                        onValueChange={() =>
+                          toggleTodoCompletion(
+                            todo._id,
+                            todo.récurrence,
+                            todo.date,
+                            todo.nextOccurrence,
+                            todo.completed,
+                            todo.completedTomorrow,
+                            !todo.completedHebdomadaire,
+                            todo.completedMensuel
+                          )
+                        }
+                        color={
+                          todo.completedHebdomadaire
+                            ? "rgb(255, 139, 228)"
+                            : "lightgray"
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -579,31 +584,31 @@ export default function TodoList({ navigation }) {
                       >
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
-                        {todo.récurrence}
-                      </Text>
+                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
                     </View>
-                    <Checkbox
-                      style={styles.checkbox}
-                      value={todo.completedMensuel}
-                      onValueChange={() =>
-                        toggleTodoCompletion(
-                          todo._id,
-                          todo.récurrence,
-                          todo.date,
-                          todo.nextOccurrence,
-                          todo.completed,
-                          todo.completedTomorrow,
-                          todo.completedHebdomadaire,
-                          !todo.completedMensuel
-                        )
-                      }
-                      color={
-                        todo.completedMensuel
-                          ? "rgb(255, 139, 228)"
-                          : "lightgray"
-                      }
-                    />
+                    <View style={styles.checkboxContainer}>
+                      <Checkbox
+                        style={styles.checkbox}
+                        value={todo.completedMensuel}
+                        onValueChange={() =>
+                          toggleTodoCompletion(
+                            todo._id,
+                            todo.récurrence,
+                            todo.date,
+                            todo.nextOccurrence,
+                            todo.completed,
+                            todo.completedTomorrow,
+                            todo.completedHebdomadaire,
+                            !todo.completedMensuel
+                          )
+                        }
+                        color={
+                          todo.completedMensuel
+                            ? "rgb(255, 139, 228)"
+                            : "lightgray"
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>
@@ -619,9 +624,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgb(247, 247, 255)",
-  },
-  containerProfil: {
-    width: "100%",
   },
   iconContainer: {
     marginLeft: 20,
@@ -646,7 +648,7 @@ const styles = StyleSheet.create({
   },
   todoItem: {
     marginBottom: 20,
-    padding: 5,
+
     backgroundColor: "white",
     borderRadius: 10,
     shadowColor: "#000",
@@ -656,27 +658,24 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
-  todoHeader: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "flex-end",
-  },
+  todoHeader: {},
   todoTextContainer: {
-    alignItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
   },
   scrollViewContent: {
     paddingVertical: 10,
   },
   usernameCircle: {
-    width: 40,
-    height: 40,
+    width: 20,
+    height: 20,
     borderRadius: 20,
     backgroundColor: "#FD703C20",
     justifyContent: "center",
     alignItems: "center",
   },
   usernameText: {
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: "bold",
     color: "#FD703C",
   },
@@ -692,8 +691,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 2,
     borderColor: "#ddd",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 12,
+  },
+  checkboxContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end", // Aligner à droite
+    alignItems: "center", // Centrer verticalement
+    marginRight: 5,
   },
 });
