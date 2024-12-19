@@ -38,7 +38,7 @@ export default function TricountScreen({ navigation }) {
   const handleDeleteTricount = (tricountId) => {
     console.log("Tentative de suppression du tricount:", tricountId);
 
-    fetch(`http://10.9.1.140:3000/tricount/delete/${tricountId}`, {
+    fetch(`http://10.9.1.137:3000/tricount/delete/${tricountId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

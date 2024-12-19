@@ -11,8 +11,8 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const EventAdd = ({ navigation, route }) => {
   const [eventName, setEventName] = useState("");
@@ -25,7 +25,7 @@ const EventAdd = ({ navigation, route }) => {
   const colocToken = useSelector((state) => state.users.coloc.token);
 
   const onDateChange = (event, selectedDate) => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       setShowDatePicker(false);
     }
     if (selectedDate) {
@@ -59,7 +59,7 @@ const EventAdd = ({ navigation, route }) => {
       colocToken,
     };
 
-    fetch("http://10.9.1.105:3000/event", {
+    fetch("http://10.9.1.137:3000/event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newEvent),
@@ -123,7 +123,7 @@ const EventAdd = ({ navigation, route }) => {
       />
 
       <Text style={styles.dateTitle}>Sélectionner une date</Text>
-      {Platform.OS === 'ios' ? (
+      {Platform.OS === "ios" ? (
         <>
           {showDatePicker && (
             <View style={styles.iosPickerContainer}>
@@ -133,7 +133,7 @@ const EventAdd = ({ navigation, route }) => {
                 display="spinner"
                 onChange={onDateChange}
               />
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.iosButton}
                 onPress={() => setShowDatePicker(false)}
               >
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.040,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.04,
     textAlign: "center",
     fontWeight: "bold",
   },
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     color: "rgb(0, 0, 0)",
   },
   iosPickerContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     width: windowWidth * 0.9,
     padding: windowHeight * 0.02,
     borderRadius: 10,
@@ -263,13 +263,13 @@ const styles = StyleSheet.create({
     paddingVertical: windowHeight * 0.015,
     paddingHorizontal: windowWidth * 0.1,
     borderRadius: 20,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginVertical: windowHeight * 0.02,
   },
   iosButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: Math.min(windowWidth, windowHeight) * 0.03,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
 

@@ -301,13 +301,20 @@ export default function TodoList({ navigation }) {
                       ))}
                     </Text>
                     <View style={styles.todoTextContainer}>
-                      <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 18,
+                        }}
+                      >
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
+                        {todo.récurrence}
+                      </Text>
                     </View>
                     <Checkbox
-                      style={{ marginRight: 20 }}
+                      style={styles.checkbox}
                       value={todo.isCompleted || false}
                       onValueChange={() =>
                         toggleTodoCompletion(
@@ -376,10 +383,12 @@ export default function TodoList({ navigation }) {
                       <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
+                        {todo.récurrence}
+                      </Text>
                     </View>
                     <Checkbox
-                      style={{ marginRight: 20 }}
+                      style={styles.checkbox}
                       value={todo.isCompleted || false}
                       onValueChange={() =>
                         toggleTodoCompletion(
@@ -448,10 +457,12 @@ export default function TodoList({ navigation }) {
                       <Text style={{ fontWeight: "bold", fontSize: 18 }}>
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
+                        {todo.récurrence}
+                      </Text>
                     </View>
                     <Checkbox
-                      style={{ marginLeft: 20 }}
+                      style={styles.checkbox}
                       value={todo.isCompleted || false}
                       onValueChange={() =>
                         toggleTodoCompletion(
@@ -517,13 +528,20 @@ export default function TodoList({ navigation }) {
                       ))}
                     </Text>
                     <View style={styles.todoTextContainer}>
-                      <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: 18,
+                        }}
+                      >
                         {todo.tâche}
                       </Text>
-                      <Text style={{ marginTop: 5 }}>{todo.récurrence}</Text>
+                      <Text style={{ marginTop: 5, paddingHorizontal: 80 }}>
+                        {todo.récurrence}
+                      </Text>
                     </View>
                     <Checkbox
-                      style={{ marginRight: 20 }}
+                      style={styles.checkbox}
                       value={todo.isCompleted || false}
                       onValueChange={() =>
                         toggleTodoCompletion(
@@ -589,7 +607,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     marginLeft: 15,
     marginRight: 15,
-    justifyContent: "center",
   },
   todoHeader: {
     flexDirection: "row",
@@ -597,13 +614,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   todoTextContainer: {
-    flexDirection: "column",
     alignItems: "flex-start",
-    marginRight: 20,
-  },
-  participantText: {
-    fontSize: 19,
-    color: "#FD703C",
   },
   scrollViewContent: {
     paddingVertical: 10,
@@ -626,5 +637,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 20,
     marginTop: 20,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: "#ddd",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
   },
 });

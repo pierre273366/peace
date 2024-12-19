@@ -65,21 +65,28 @@ export default function ProfilParam({ navigation }) {
           text: "Quitter",
           onPress: async () => {
             try {
+              // Effectuer la requête pour supprimer l'utilisateur de la coloc
               const response = await fetch(`${backendUrl}/users/${userToken}`, {
                 method: "DELETE",
               });
               const data = await response.json();
               if (data.result) {
                 console.log("Utilisateur supprimé avec succès de la coloc");
-                dispatch(supColoc());
+                dispatch(supColoc()); // Suppression de la coloc dans Redux
+                // Redirection vers la page d'accueil après suppression
+                navigation.navigate("Home"); // Exemple de navigation
               } else {
                 console.error(
-                  "Utilisateur non supprimé de la coloc",
+                  "Erreur lors de la suppression de l'utilisateur :",
                   data.error
                 );
               }
             } catch (error) {
-              console.error("Erreur lors de la requête DELETE:", error);
+              console.error("Erreur lors de la requête DELETE :", error);
+              Alert.alert(
+                "Erreur",
+                "Une erreur est survenue, veuillez réessayer plus tard."
+              );
             }
           },
         },
@@ -184,6 +191,8 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     textAlignVertical: "top",
+    borderBottomColor: "#ec6e5b",
+    borderBottomWidth: 1,
   },
   buttonConnect: {
     alignItems: "center",

@@ -99,63 +99,58 @@ export default function Profil({ navigation }) {
 
   return (
     <View style={styles.container}>
-          <ScrollView>
+      <ScrollView>
         <ImageBackground
-            source={require("../assets/backgroundProfil.png")} // Remplacez par votre chemin d'image
-            style={styles.imageBackground}
-          >
-            
-            <View style={styles.containerDescript}>
+          source={require("../assets/backgroundProfil.png")} // Remplacez par votre chemin d'image
+          style={styles.imageBackground}
+        >
+          <View style={styles.containerDescript}>
             <TouchableOpacity
               onPress={() => navigation.navigate("ProfilParams")}
               style={styles.iconContainer}
             >
               <FontAwesome name={"gear"} size={30} color="#5F5F5F" />
             </TouchableOpacity>
-              <View style={styles.avatarContainer}>
-                <ProfilPicture profilpicture={userDetails?.profilpicture} />
-              </View>
-              <View style={styles.presentation}>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontSize: 22,
-                    fontWeight: "bold",
-                    paddingTop: 25,
-                  }}
-                >
-                  @{user.username}
-                </Text>
-                <Text style={{ textAlign: "center", lineHeight: 30 }}>
-                  Ma coloc: {coloc.name}
-                </Text>
-                <Text style={{ textAlign: "center", lineHeight: 30 }}>
-                  Adresse de la coloc: {coloc.address}
-                </Text>
-                <Text style={{ textAlign: "center", lineHeight: 30 }}>
-                  🎂
-                  {userDetails?.dateofbirth &&
-                    new Date(userDetails.dateofbirth)
-                      .toISOString()
-                      .split("T")[0]}
-                </Text>
-                {/* Affichage de la description */}
-                <Text
-                  style={{
-                    textAlign: "center",
-                    fontStyle: "italic",
-                    marginTop: 10,
-                  }}
-                >
-                  {userDetails?.description || "Pas de description disponible"}
-                </Text>
-              </View>
+            <View style={styles.avatarContainer}>
+              <ProfilPicture profilpicture={userDetails?.profilpicture} />
             </View>
-          </ImageBackground>
-  
+            <View style={styles.presentation}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 22,
+                  fontWeight: "bold",
+                  paddingTop: 5,
+                }}
+              >
+                @{user.username}
+              </Text>
+              <Text style={{ textAlign: "center", lineHeight: 20 }}>
+                Ma coloc: {coloc.name}
+              </Text>
+              <Text style={{ textAlign: "center", lineHeight: 30 }}>
+                Adresse de la coloc: {coloc.address}
+              </Text>
+              <Text style={{ textAlign: "center", lineHeight: 30 }}>
+                🎂
+                {userDetails?.dateofbirth &&
+                  new Date(userDetails.dateofbirth).toISOString().split("T")[0]}
+              </Text>
+              {/* Affichage de la description */}
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontStyle: "italic",
+                  marginTop: 5,
+                }}
+              >
+                {userDetails?.description || "Pas de description disponible"}
+              </Text>
+            </View>
+          </View>
+        </ImageBackground>
 
         {/* Section Réseaux Sociaux */}
-      
 
         <View style={styles.containerInfo}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>Informations</Text>
@@ -301,12 +296,12 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "orange",
   },
-  
+
   containerDescript: {
     width: 320,
     height: 220,
     backgroundColor: "white",
-    marginTop: 120,
+    marginTop: 140,
     marginLeft: 40,
     borderRadius: 20,
     shadowColor: "#000", // Couleur de l'ombre
@@ -316,7 +311,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative", // Définit le contexte de positionnement pour les enfants
-   
   },
   iconContainer: {
     position: "absolute", // Permet de positionner l'icône par rapport à son parent
@@ -327,7 +321,6 @@ const styles = StyleSheet.create({
 
   containerInfo: {
     marginLeft: 20,
-   
   },
   infoUser: {
     flexDirection: "column",
@@ -345,9 +338,9 @@ const styles = StyleSheet.create({
   },
 
   presentation: {
-    paddingBottom: 130,
+    paddingBottom: 90,
   },
-  
+
   socialContainer: {
     flexDirection: "row",
   },
@@ -392,6 +385,6 @@ const styles = StyleSheet.create({
   },
   imageBackground: {
     justifyContent: "center",
-    height: '60%'
+    height: "60%",
   },
 });

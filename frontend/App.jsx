@@ -27,7 +27,7 @@ import TodoListCreaScreen from "./screens/TodoListCreaScreen";
 import GroceryListScreen from "./screens/GroceryListScreen";
 import AjoutProductScreen from "./screens/AjoutProductScreen";
 import WheelOfFortune from "./screens/WheelScreen";
-import { useState } from 'react';
+import { useState } from "react";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -48,8 +48,8 @@ function ProfileStack() {
   );
 }
 
-const TabNavigator = ({navigation}) => {
-  const [currentTab, setCurrentTab] = useState('Home');
+const TabNavigator = ({ navigation }) => {
+  const [currentTab, setCurrentTab] = useState("Home");
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
@@ -75,10 +75,10 @@ const TabNavigator = ({navigation}) => {
           tabBarInactiveTintColor: "#335561",
           headerShown: false,
           tabBarStyle: {
-            position: 'absolute',
+            position: "absolute",
             zIndex: 0,
             elevation: 0,
-          }
+          },
         })}
         screenListeners={{
           state: (e) => {
@@ -98,19 +98,19 @@ const TabNavigator = ({navigation}) => {
         />
       </Tab.Navigator>
 
-      {currentTab === 'Home' && (
+      {currentTab === "Home" && (
         <>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={{
-              position: 'absolute',
+              position: "absolute",
               bottom: 55,
-              left: '43%',
-              backgroundColor: '#000',
+              left: "43%",
+              backgroundColor: "#000",
               width: 50,
               height: 50,
               borderRadius: 20,
-              alignItems: 'center',
-              justifyContent: 'center',
+              alignItems: "center",
+              justifyContent: "center",
               zIndex: 999,
               elevation: 99,
             }}
@@ -125,74 +125,90 @@ const TabNavigator = ({navigation}) => {
             visible={modalVisible}
             onRequestClose={() => setModalVisible(false)}
           >
-            <TouchableOpacity 
+            <TouchableOpacity
               style={{
                 flex: 1,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                justifyContent: 'flex-end',
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                justifyContent: "flex-end",
               }}
               activeOpacity={1}
               onPress={() => setModalVisible(false)}
             >
-              <View 
+              <View
                 style={{
-                  backgroundColor: 'white',
+                  backgroundColor: "white",
                   borderTopLeftRadius: 20,
                   borderTopRightRadius: 20,
                   padding: 20,
                   minHeight: 200,
                 }}
               >
-                <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 20 }}>
+                <Text
+                  style={{ fontSize: 20, fontWeight: "bold", marginBottom: 20 }}
+                >
                   Que voulez-vous créer ?
                 </Text>
-                
-                <TouchableOpacity 
+
+                <TouchableOpacity
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    flexDirection: "row",
+                    alignItems: "center",
                     paddingVertical: 15,
                     borderBottomWidth: 1,
-                    borderBottomColor: '#eee',
+                    borderBottomColor: "#eee",
                   }}
                   onPress={() => {
                     setModalVisible(false);
-                    navigation.navigate('CreateSondage');
+                    navigation.navigate("CreateSondage");
                   }}
                 >
-                  <FontAwesome name="question-circle" size={24} color="rgb(253, 112, 60)" />
+                  <FontAwesome
+                    name="question-circle"
+                    size={24}
+                    color="rgb(253, 112, 60)"
+                  />
                   <Text style={{ marginLeft: 15, fontSize: 16 }}>Sondage</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    flexDirection: "row",
+                    alignItems: "center",
                     paddingVertical: 15,
                     borderBottomWidth: 1,
-                    borderBottomColor: '#eee',
+                    borderBottomColor: "#eee",
                   }}
                   onPress={() => {
                     setModalVisible(false);
-                    navigation.navigate('EventAdd');
+                    navigation.navigate("EventAdd");
                   }}
                 >
-                  <FontAwesome name="calendar-plus-o" size={24} color="rgb(253, 112, 60)" />
-                  <Text style={{ marginLeft: 15, fontSize: 16 }}>Événement</Text>
+                  <FontAwesome
+                    name="calendar-plus-o"
+                    size={24}
+                    color="rgb(253, 112, 60)"
+                  />
+                  <Text style={{ marginLeft: 15, fontSize: 16 }}>
+                    Événement
+                  </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    flexDirection: "row",
+                    alignItems: "center",
                     paddingVertical: 15,
                   }}
                   onPress={() => {
                     setModalVisible(false);
-                    navigation.navigate('TodoCrea');
+                    navigation.navigate("TodoCrea");
                   }}
                 >
-                  <FontAwesome name="list" size={24} color="rgb(253, 112, 60)" />
+                  <FontAwesome
+                    name="list"
+                    size={24}
+                    color="rgb(253, 112, 60)"
+                  />
                   <Text style={{ marginLeft: 15, fontSize: 16 }}>Todo</Text>
                 </TouchableOpacity>
               </View>
@@ -221,7 +237,10 @@ export default function App() {
           <Stack.Screen name="ShareColoc" component={ShareScreen} />
           <Stack.Screen name="ProfilParams" component={ProfilParamScreen} />
           <Stack.Screen name="TodoCrea" component={TodoListCreaScreen} />
-          <Stack.Screen name="TricountAddExpense" component={TricountAddExpense}/>
+          <Stack.Screen
+            name="TricountAddExpense"
+            component={TricountAddExpense}
+          />
           <Stack.Screen name="Sondage" component={SondageScreen} />
           <Stack.Screen name="CreateSondage" component={CreateSondageScreen} />
           <Stack.Screen name="DetailSondage" component={DetailSondageScreen} />

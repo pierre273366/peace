@@ -6,16 +6,11 @@ import {
   Text,
   View,
   ScrollView,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { Calendar, Agenda } from "react-native-calendars";
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-
-
-
-
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const MyCalendar = ({ navigation }) => {
   // Initialisation des états : un objet `events` pour stocker les événements par date
@@ -157,17 +152,21 @@ const MyCalendar = ({ navigation }) => {
                   <Text style={styles.eventTitle}>
                     {event.name} à {formatTime(event.time)} {event.place}
                   </Text>
-                  <Text style={styles.eventDescription}>{event.description}</Text>
+                  <Text style={styles.eventDescription}>
+                    {event.description}
+                  </Text>
                 </View>
               ))
             ) : (
-              <Text style={styles.eventDescription}>Aucun événement pour cette date</Text>
+              <Text style={styles.eventDescription}>
+                Aucun événement pour cette date
+              </Text>
             )}
           </ScrollView>
         </View>
       </View>
     </View>
-);
+  );
 };
 
 // Styles pour la mise en page de l'application
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(247, 247, 255)",
   },
   containerButton: {
-    width: '100%',
+    width: "100%",
     alignItems: "flex-end",
     padding: windowWidth * 0.1,
     marginTop: windowHeight * 0.05,
@@ -202,24 +201,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: windowHeight * 0.05,
   },
-  eventCard: {
-    padding: windowWidth * 0.03,
-    backgroundColor: "#fff",
-    marginBottom: windowHeight * 0.01,
-    borderRadius: 10,
-    width: windowWidth * 0.85,
-  },
   containerEvent: {
     width: windowWidth * 0.85,
     height: windowHeight * 0.3,
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: windowHeight * 0.05,
+    marginBottom: windowHeight * 0.1,
     paddingTop: windowHeight * 0.01,
   },
   textEvent: {
-    fontSize: Math.min(windowWidth, windowHeight) * 0.040,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.04,
     textAlign: "center",
     fontFamily: "inter",
     fontWeight: "bold",
@@ -227,7 +219,7 @@ const styles = StyleSheet.create({
   },
   descriptionEvent: {
     width: windowWidth * 0.7,
-    height: windowHeight * 0.2,
+    height: windowHeight * 0.23,
     backgroundColor: "#BEBFF5",
     borderRadius: 10,
     marginTop: windowHeight * 0.01,
@@ -236,7 +228,7 @@ const styles = StyleSheet.create({
     padding: windowWidth * 0.03,
   },
   eventName: {
-    fontSize: Math.min(windowWidth, windowHeight) * 0.030,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.03,
     fontWeight: "bold",
   },
   eventTime: {
@@ -245,12 +237,12 @@ const styles = StyleSheet.create({
   },
   // Nouveaux styles pour les textes dans la description des événements
   eventTitle: {
-    fontWeight: "bold", 
+    fontWeight: "bold",
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,
     marginTop: windowHeight * 0.01,
   },
   eventDescription: {
-    fontSize: Math.min(windowWidth, windowHeight) * 0.030,
+    fontSize: Math.min(windowWidth, windowHeight) * 0.03,
     marginTop: windowHeight * 0.005,
   },
 });

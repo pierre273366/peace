@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   ScrollView,
   Image,
+  Alert,
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -122,7 +123,7 @@ export default function HomeScreen({ navigation }) {
 
     try {
       const response = await fetch(
-        `http://10.9.1.140:3000/product/getproducts/${colocToken}`
+        `http://192.168.1.11:3000/product/getproducts/${colocToken}`
       );
       const data = await response.json();
       setProducts(data);
@@ -249,6 +250,16 @@ export default function HomeScreen({ navigation }) {
               : todo
           )
         );
+
+        // Alerte sympathique après avoir marqué la tâche comme terminée
+        if (!isCompleted) {
+          Alert.alert(
+            "Bravo Coloc 🎉",
+            `Tu as terminé la tâche: ${
+              todos.find((todo) => todo._id === _id)?.tâche
+            }! 💪`
+          );
+        }
       } else {
         console.error("Erreur lors de la mise à jour de la tâche:", data.error);
       }
@@ -260,7 +271,7 @@ export default function HomeScreen({ navigation }) {
   const fetchLastSondage = async () => {
     try {
       const response = await fetch(
-        `http://10.9.1.105:3000/sondage/getLastSondage/${colocToken}`
+        `http://192.168.1.11:3000/sondage/getLastSondage/${colocToken}`
       );
       const data = await response.json();
       if (data.result) {
@@ -279,7 +290,7 @@ export default function HomeScreen({ navigation }) {
         userToken: user.token,
       };
 
-      const response = await fetch("http://10.9.1.105:3000/sondage/vote", {
+      const response = await fetch("http://192.168.1.11:3000/sondage/vote", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(votes),
@@ -303,7 +314,7 @@ export default function HomeScreen({ navigation }) {
       };
 
       const response = await fetch(
-        "http://10.9.1.105:3000/sondage/deleteVote",
+        "http://192.168.1.11:3000/sondage/deleteVote",
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -370,7 +381,10 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.header}>
         <View style={styles.welcomeSection}>
           <Text style={styles.title}>Bienvenue</Text>
-          <Text style={styles.title}>dans ta coloc {user.username} !</Text>
+          <Text style={styles.title}>
+            à {coloc.name}
+            {user.username} !
+          </Text>
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate("Profil")}
