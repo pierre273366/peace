@@ -7,7 +7,7 @@ require("../models/connection");
 const User = require("../models/users");
 // On importe le modèle User pour interagir avec la collection "users" dans la base de données.
 const Coloc = require("../models/coloc");
-const { checkBody } = require("../modules/checkBody");
+const checkBody = require("../modules/checkBody");
 // On importe une fonction `checkBody` pour valider les données envoyées dans la requête.
 const uid2 = require("uid2");
 // On importe le module `uid2` pour générer des tokens uniques pour les utilisateurs.

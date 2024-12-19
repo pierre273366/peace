@@ -1,4 +1,3 @@
-require("dotenv").config();
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -8,14 +7,16 @@ var usersRouter = require("./routes/users");
 var tricountRouter = require("./routes/tricount");
 var eventRouter = require("./routes/event");
 const cors = require("cors");
-app.use(cors());
-require("./models/connection");
-const fileUpload = require("express-fileupload");
+var fileUpload = require("express-fileupload");
 var productRouter = require("./routes/product");
 var todoRouter = require("./routes/todo");
 var sondageRouter = require("./routes/sondage");
+require("dotenv").config();
+require("./models/connection");
+
 var app = express();
 
+app.use(cors()); // <-- Déplace cette ligne ici, après l'initialisation de `app`
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
