@@ -1,6 +1,5 @@
 import {
   StyleSheet,
-  KeyboardAvoidingView,
   Platform,
   Text,
   TextInput,
@@ -9,7 +8,7 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
-  ScrollView,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -95,16 +94,16 @@ function Signin() {
       });
   };
 
-  const MainContent = () => (
-    <View style={styles.mainContent}>
+  const content = (
+    <>
       <View style={styles.logoContainer}>
         <Image
           style={styles.image}
           source={require("../assets/peacelogo.png")}
           resizeMode="contain"
         />
+        <Text style={styles.title}>Connexion</Text>
       </View>
-      <Text style={styles.title}>Connexion</Text>
 
       <View style={styles.containerInput}>
         <View style={styles.input}>
@@ -118,7 +117,7 @@ function Signin() {
             <Text style={styles.label}>Username</Text>
             <TextInput
               placeholder="Enter your username"
-              onChangeText={(value) => setSignInUsername(value)}
+              onChangeText={setSignInUsername}
               value={signInUsername}
               style={styles.inputText}
               placeholderTextColor="#999"
@@ -140,7 +139,7 @@ function Signin() {
             <Text style={styles.label}>Password</Text>
             <TextInput
               placeholder="Enter your password"
-              onChangeText={(value) => setSignInPassword(value)}
+              onChangeText={setSignInPassword}
               value={signInPassword}
               style={styles.inputText}
               secureTextEntry={!showPassword}
@@ -162,122 +161,45 @@ function Signin() {
           <Text style={styles.errorText}>{passwordError}</Text>
         )}
       </View>
-    </View>
-  );
 
-  const BottomContent = () => (
-    <View style={styles.bottomContent}>
-      <TouchableOpacity
-        onPress={handleSignIn}
-        style={styles.buttonConnect}
-        activeOpacity={0.8}
-      >
-        <Text style={styles.textButtonConnect}>Se connecter</Text>
-      </TouchableOpacity>
+      <View style={styles.bottomContent}>
+        <TouchableOpacity
+          onPress={handleSignIn}
+          style={styles.buttonConnect}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButtonConnect}>Se connecter</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => navigation.navigate("Signup")}
-        style={styles.buttonSignUp}
-        activeOpacity={0.8}
-      >
-        <View style={styles.textContent}>
-          <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
-          <Text style={styles.textButtonSignUp}>S'inscrire</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Signup")}
+          style={styles.buttonSignUp}
+          activeOpacity={0.8}
+        >
+          <View style={styles.textContent}>
+            <Text style={styles.textSignUp}>Vous n'avez pas de compte ? </Text>
+            <Text style={styles.textButtonSignUp}>S'inscrire</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 
   if (Platform.OS === 'ios') {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.mainContent}>
-          <View style={styles.logoContainer}>
-            <Image
-              style={styles.image}
-              source={require("../assets/peacelogo.png")}
-              resizeMode="contain"
-            />
-          </View>
-          <Text style={styles.title}>Connexion</Text>
-
-          <KeyboardAvoidingView
-            behavior="padding"
-            style={styles.keyboardView}
-          >
-            <View style={styles.containerInput}>
-              <View style={styles.input}>
-                <MaterialIcons
-                  name="person"
-                  size={24}
-                  color="#FD703C"
-                  style={styles.icon}
-                />
-                <View style={styles.inputContent}>
-                  <Text style={styles.label}>Username</Text>
-                  <TextInput
-                    placeholder="Enter your username"
-                    onChangeText={(value) => setSignInUsername(value)}
-                    value={signInUsername}
-                    style={styles.inputText}
-                    placeholderTextColor="#999"
-                  />
-                </View>
-              </View>
-              {usernameError && (
-                <Text style={styles.errorText}>{usernameError}</Text>
-              )}
-
-              <View style={styles.input}>
-                <MaterialIcons
-                  name="lock"
-                  size={24}
-                  color="#FD703C"
-                  style={styles.icon}
-                />
-                <View style={styles.inputContent}>
-                  <Text style={styles.label}>Password</Text>
-                  <TextInput
-                    placeholder="Enter your password"
-                    onChangeText={(value) => setSignInPassword(value)}
-                    value={signInPassword}
-                    style={styles.inputText}
-                    secureTextEntry={!showPassword}
-                    placeholderTextColor="#999"
-                  />
-                </View>
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                  style={styles.eyeIcon}
-                >
-                  <MaterialIcons
-                    name={showPassword ? "visibility-off" : "visibility"}
-                    size={24}
-                    color="#666"
-                  />
-                </TouchableOpacity>
-              </View>
-              {passwordError && (
-                <Text style={styles.errorText}>{passwordError}</Text>
-              )}
-            </View>
-          </KeyboardAvoidingView>
-        </View>
-
-        <BottomContent />
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
+          {content}
+        </KeyboardAvoidingView>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
-        contentContainerStyle={styles.scrollViewContent}
-        keyboardShouldPersistTaps="handled"
-      >
-        <MainContent />
-      </ScrollView>
-      <BottomContent />
+      <View style={styles.container}>
+        {content}
+      </View>
     </SafeAreaView>
   );
 }
@@ -287,23 +209,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F7F7FF",
   },
-  scrollViewContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-  },
-  keyboardView: {
-    flex: 1,
-    width: "100%",
-  },
-  mainContent: {
-    flex: 1,
-    width: "100%",
-  },
   logoContainer: {
     width: "100%",
     alignItems: "center",
-    marginTop: 40,
-    marginBottom: 20,
+    marginVertical: 20,
   },
   image: {
     width: windowWidth * 0.9,
@@ -312,6 +221,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
+    marginTop: 20,
     marginBottom: 30,
     textAlign: 'center',
     width: '100%'
@@ -367,6 +277,7 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#F7F7FF",
     paddingBottom: Platform.OS === 'ios' ? 20 : 40,
+    marginTop: 'auto',
   },
   buttonConnect: {
     alignItems: "center",

@@ -51,6 +51,26 @@ export default function HomeScreen({ navigation }) {
     }, [])
   );
 
+
+
+
+  // Animation de la roue
+useEffect(() => {
+  Animated.loop(
+    Animated.timing(rotateAnim, {
+      toValue: 1,
+      duration: 3000, // Durée d'une rotation complète en ms
+      easing: Easing.linear,
+      useNativeDriver: true,
+    })
+  ).start();
+
+  // Nettoyage de l'animation
+  return () => {
+    rotateAnim.stopAnimation();
+  };
+}, []);
+
   // Fonction pour récupérer les détails de l'utilisateur
   const fetchUserDetails = React.useCallback(async () => {
     try {
