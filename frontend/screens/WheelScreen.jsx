@@ -1,11 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity, TextInput, ScrollView, Dimensions, SafeAreaView, Alert } from 'react-native';
 import Svg, { Path, G, Text as SvgText } from 'react-native-svg';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 const { width: screenWidth } = Dimensions.get('window');
 const WHEEL_SIZE = screenWidth - 32;
 
-const WheelPage = () => {
+const WheelPage = ({ navigation }) => {
   const [options, setOptions] = useState([]);
   const [newOption, setNewOption] = useState('');
   const [spinning, setSpinning] = useState(false);
@@ -150,6 +152,16 @@ const WheelPage = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <TouchableOpacity
+              onPress={() => navigation.navigate("Home")}
+              style={styles.iconContainer}
+            >
+              <FontAwesome
+                name={"arrow-circle-left"}
+                size={35}
+                color="rgb(255, 139, 228)"
+              />
+            </TouchableOpacity>
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}

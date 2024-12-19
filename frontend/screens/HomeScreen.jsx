@@ -401,7 +401,8 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.containerTodo}>
+        <TouchableOpacity style={styles.containerTodo} 
+        onPress={() => navigation.navigate("TodoList")}>
           <ScrollView>
             <Text style={styles.textEvent}>Todo List</Text>
             <View style={styles.todo}>
@@ -443,10 +444,11 @@ export default function HomeScreen({ navigation }) {
               )}
             </View>
           </ScrollView>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.containerWidget}>
-          <View style={styles.containerEvent}>
+          <TouchableOpacity style={styles.containerEvent}
+          onPress={() => navigation.navigate("Agenda")}>
             <Text style={styles.cardTitle}>Événements</Text>
             <View style={styles.descriptionEvent}>
               <ScrollView>
@@ -469,7 +471,7 @@ export default function HomeScreen({ navigation }) {
                 )}
               </ScrollView>
             </View>
-          </View>
+            </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.sondage}
