@@ -62,7 +62,7 @@ const EventAdd = ({ navigation, route }) => {
       colocToken,
     };
 
-    fetch(`${backendUrl}:3000/event`, {
+    fetch(`${backendUrl}/event`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newEvent),
