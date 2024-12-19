@@ -19,7 +19,7 @@ const MyCalendar = ({ navigation }) => {
   // et un `selectedDate` pour la gestion de la date actuellement sélectionnée dans le calendrier.
   const [events, setEvents] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
-  const backendUrl = "http://10.9.1.105:3000"; // URL de l'API de ton backend
+  const backendUrl = "https://peace-chi.vercel.app"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
 
   // useEffect pour récupérer les événements depuis le backend lors du premier rendu du composant
@@ -135,9 +135,9 @@ const MyCalendar = ({ navigation }) => {
                       style={styles.iconContainer}
                     >
                       <FontAwesome
-                        name={"arrow-circle-left"}
+                        name={"chevron-left"}
                         size={35}
-                        color="rgb(255, 139, 228)"
+                        color="#FD703C"
                       />
                     </TouchableOpacity>
                   </View>

@@ -8,10 +8,13 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  Image,
+  Platform
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ModalSelector from "react-native-modal-selector"; // Importer ModalSelector
+
 
 export default function TodoListCrea({ navigation, route }) {
   const [showDatePicker, setShowDatePicker] = useState(false); // Contrôle pour afficher ou non le DatePicker
@@ -19,7 +22,7 @@ export default function TodoListCrea({ navigation, route }) {
   const [recurrenceType, setRecurrenceType] = useState("Quotidienne"); // Type de récurrence
   const [showRecurrence, setShowRecurrence] = useState(false); // Afficher ou non le choix de récurrence
   const [selectTache, setSelectTache] = useState("");
-  const backendUrl = "http://10.9.1.137:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
@@ -157,11 +160,12 @@ export default function TodoListCrea({ navigation, route }) {
               style={styles.iconContainer}
             >
               <FontAwesome
-                name={"arrow-circle-left"}
+                name={"chevron-left"}
                 size={35}
-                color="rgb(255, 139, 228)"
+                color="#FD703C"
               />
             </TouchableOpacity>
+            
           </View>
         </View>
         <View>
@@ -174,7 +178,7 @@ export default function TodoListCrea({ navigation, route }) {
       </SafeAreaView>
       <View style={styles.containerCrea}>
         <View style={styles.userscheck}>
-          <Text style={styles.inputContent}>Participants:</Text>
+          <Text style={styles.participantsTitle}>Participants:</Text>
           <View style={styles.containerCheck}>{userChoice}</View>
         </View>
         <TextInput
@@ -256,14 +260,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   input: {
-    width: "70%",
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
-    borderColor: "rgb(255, 139, 228)",
-    backgroundColor: "white",
-    textAlign: "center",
+    width: '100%',
+    maxWidth: 340,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: "#E6E6FC",
+    marginTop: 10,
+    paddingLeft: 20,
+    paddingRight: 40, // Espace pour le bouton de suppression
   },
   dateTitle: {
     fontSize: 18,
@@ -283,6 +287,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "rgb(0, 0, 0)",
   },
+   imageLogo: {
+      width: '60%',
+      height: undefined,
+      aspectRatio: 1.25, // 250/200
+      resizeMode: 'contain',
+      marginTop: Platform.OS === 'android' ? 10 : 20,
+      marginTop: 100, // Ajoutez cette ligne pour décaler le logo vers le bas
+      paddingTop: 10,
+      justifyContent: "center",
+      alignItems: "center",
+      width: 250,
+      height: 200,
+    },
+
   modalSelector: {
     width: "70%",
     marginBottom: 20,
@@ -295,9 +313,12 @@ const styles = StyleSheet.create({
     gap: 20,
     marginBottom: 50,
   },
-  inputContent: {
+  participantsTitle: {
     gap: 20,
     textAlign: "center",
+    fontSize: 18,
+    marginTop: 20,
+    fontWeight: "bold",
   },
   containerCheck: {
     flexDirection: "row",

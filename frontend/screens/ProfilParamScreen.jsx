@@ -19,7 +19,7 @@ export default function ProfilParam({ navigation }) {
   const [facebook, setFacebook] = useState(""); // État pour le lien Facebook
   const [instagram, setInstagram] = useState(""); // État pour le lien Instagram
   const dispatch = useDispatch();
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   // Fonction pour mettre à jour la description et les liens sociaux
   const updateProfile = async () => {
@@ -104,9 +104,9 @@ export default function ProfilParam({ navigation }) {
             style={styles.iconContainer}
           >
             <FontAwesome
-              name={"arrow-circle-left"}
+              name={"chevron-left"}
               size={35}
-              color="rgb(255, 139, 228)"
+              color="#FD703C"
             />
           </TouchableOpacity>
         </View>

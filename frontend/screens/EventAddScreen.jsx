@@ -25,7 +25,7 @@ const EventAdd = ({ navigation, route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const colocToken = useSelector((state) => state.users.coloc.token);
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const onDateChange = (event, selectedDate) => {
     if (Platform.OS === "android") {
@@ -95,17 +95,18 @@ const EventAdd = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.containerBtnTitle}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Agenda")}
-          style={styles.iconContainer}
-        >
-          <FontAwesome
-            name={"arrow-circle-left"}
-            size={35}
-            color="rgb(255, 139, 228)"
-          />
-        </TouchableOpacity>
+      <View
+         style={styles.containerBtnTitle}>
+                          <TouchableOpacity
+                            onPress={() => navigation.navigate("Agenda")}
+                            style={styles.iconContainer}
+                          >
+                            <FontAwesome
+                              name={"chevron-left"}
+                              size={35}
+                              color="#FD703C"
+                            />
+                          </TouchableOpacity>
       </View>
       
       <Image

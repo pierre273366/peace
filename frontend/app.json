@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/peacelogo.png",
       "resizeMode": "contain",
-      "backgroundColor": "rgb(247, 247, 255)"
+      "backgroundColor": "#000000"
     },
     "plugins": [
       [
@@ -26,11 +26,26 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/peacelogo.png",
-        "backgroundColor": "rgb(247, 247, 255)"
-      }
+        "backgroundColor": "#000000"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/peacelogo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "181bbbe8-72b7-4a10-8f07-080f6692f57d"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/181bbbe8-72b7-4a10-8f07-080f6692f57d"
     }
   }
 }
