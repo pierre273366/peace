@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   View,
   Image,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import React, { useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 export default function CreateSondageScreen({ navigation }) {
   const colocToken = useSelector((state) => state.users.coloc.token);
@@ -21,11 +22,10 @@ export default function CreateSondageScreen({ navigation }) {
   const [responses, setResponses] = useState([""]); // Deux réponses initiales
   const backendUrl = "http://10.9.1.105:3000";
 
-
   useEffect(() => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       StatusBar.setTranslucent(true);
-      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setBackgroundColor("transparent");
     }
   }, []);
 
@@ -54,14 +54,11 @@ export default function CreateSondageScreen({ navigation }) {
       userName,
     };
 
-    const response = await fetch(
-      `${backendUrl}/sondage/createSondage`,
-      {
-        method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
-        headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
-        body: JSON.stringify(infosSondage),
-      }
-    );
+    const response = await fetch(`${backendUrl}/sondage/createSondage`, {
+      method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
+      headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+      body: JSON.stringify(infosSondage),
+    });
 
     const data = await response.json(); // Conversion de la réponse du serveur en format JSON
 
@@ -81,15 +78,15 @@ export default function CreateSondageScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-                          onPress={() => navigation.navigate("Sondage")}
-                          style={styles.iconContainer}
-                        >
-                          <FontAwesome
-                            name={"arrow-circle-left"}
-                            size={35}
-                            color="rgb(255, 139, 228)"
-                          />
-                        </TouchableOpacity>
+        onPress={() => navigation.navigate("Sondage")}
+        style={styles.iconContainer}
+      >
+        <FontAwesome
+          name={"arrow-circle-left"}
+          size={35}
+          color="rgb(255, 139, 228)"
+        />
+      </TouchableOpacity>
       <Image
         style={styles.imageLogo}
         source={require("../assets/peacelogo.png")}
@@ -149,21 +146,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F6F8FE",
     alignItems: "center",
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   iconContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: 20,
-    top: 50, 
+    top: 50,
     zIndex: 1,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   imageLogo: {
-    width: '60%',
+    width: "60%",
     height: undefined,
     aspectRatio: 1.25, // 250/200
-    resizeMode: 'contain',
-    marginTop: Platform.OS === 'android' ? 10 : 20,
+    resizeMode: "contain",
+    marginTop: Platform.OS === "android" ? 10 : 20,
     marginTop: 100, // Ajoutez cette ligne pour décaler le logo vers le bas
     paddingTop: 10,
     justifyContent: "center",
@@ -172,36 +169,36 @@ const styles = StyleSheet.create({
     height: 200,
   },
   textContainer: {
-    width: '100%',
+    width: "100%",
     paddingHorizontal: 16,
     marginVertical: 20,
   },
   text: {
     fontSize: 20,
     fontWeight: "bold",
-    textAlign: 'center',
+    textAlign: "center",
   },
   sondageContainer: {
-    width: '100%',
+    width: "100%",
     paddingHorizontal: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   bloc: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
   },
   blocResponse: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     position: "relative",
   },
   responseRow: {
-    width: '100%',
-    alignItems: 'center',
-    position: 'relative',
+    width: "100%",
+    alignItems: "center",
+    position: "relative",
   },
   input: {
-    width: '100%',
+    width: "100%",
     maxWidth: 340,
     height: 50,
     borderRadius: 10,
@@ -212,31 +209,31 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     position: "absolute",
-    right: '5%',
+    right: "5%",
     top: 25,
     padding: 5, // Zone de toucher plus grande
   },
   addBtn: {
-    width: '100%',
+    width: "100%",
     maxWidth: 340,
     height: 50,
     borderRadius: 10,
     backgroundColor: "#E6E6FC",
-    justifyContent: 'center',
+    justifyContent: "center",
     paddingLeft: 20,
     marginTop: 10,
   },
-  
+
   addSondage: {
-    width: '60%',
+    width: "60%",
     maxWidth: 200,
     height: 50,
     backgroundColor: "#EC794C",
     borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 30,
-    marginBottom: Platform.OS === 'android' ? 30 : 80,
+    marginBottom: Platform.OS === "android" ? 30 : 80,
     elevation: 3, // Pour Android
     shadowColor: "#000", // Pour iOS
     shadowOffset: {

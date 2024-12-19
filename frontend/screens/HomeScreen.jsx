@@ -12,20 +12,16 @@ import {
   ScrollView,
   Image,
   Alert,
-  Dimensions ,
-  Platform, 
-  StatusBar
+  Dimensions,
+  Platform,
+  StatusBar,
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
-
-
-
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function HomeScreen({ navigation }) {
   const coloc = useSelector((state) => state.users.coloc);
@@ -51,25 +47,22 @@ export default function HomeScreen({ navigation }) {
     }, [])
   );
 
-
-
-
   // Animation de la roue
-useEffect(() => {
-  Animated.loop(
-    Animated.timing(rotateAnim, {
-      toValue: 1,
-      duration: 3000, // Durée d'une rotation complète en ms
-      easing: Easing.linear,
-      useNativeDriver: true,
-    })
-  ).start();
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(rotateAnim, {
+        toValue: 1,
+        duration: 3000, // Durée d'une rotation complète en ms
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    ).start();
 
-  // Nettoyage de l'animation
-  return () => {
-    rotateAnim.stopAnimation();
-  };
-}, []);
+    // Nettoyage de l'animation
+    return () => {
+      rotateAnim.stopAnimation();
+    };
+  }, []);
 
   // Fonction pour récupérer les détails de l'utilisateur
   const fetchUserDetails = React.useCallback(async () => {
@@ -356,14 +349,11 @@ useEffect(() => {
         userToken: user.token,
       };
 
-      const response = await fetch(
-        `${backendUrl}/sondage/deleteVote`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(votes),
-        }
-      );
+      const response = await fetch(`${backendUrl}/sondage/deleteVote`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(votes),
+      });
       const data = await response.json();
 
       if (data.result) {
@@ -444,8 +434,10 @@ useEffect(() => {
       </View>
 
       <ScrollView style={styles.scrollContainer}>
-        <TouchableOpacity style={styles.containerTodo} 
-        onPress={() => navigation.navigate("TodoList")}>
+        <TouchableOpacity
+          style={styles.containerTodo}
+          onPress={() => navigation.navigate("TodoList")}
+        >
           <ScrollView>
             <Text style={styles.textEvent}>Todo List</Text>
             <View style={styles.todo}>
@@ -456,11 +448,10 @@ useEffect(() => {
                       <Text style={styles.todoText}>
                         {todo.participants.map((user, idx) => (
                           <Text key={idx} style={styles.participantText}>
-                            
                             {idx < todo.participants.length - 1 && "•"}
                           </Text>
                         ))}{" "}
-                       <Text style={styles.tacheTitle}> {todo.tâche}</Text>
+                        <Text style={styles.tacheTitle}> {todo.tâche}</Text>
                       </Text>
                       <Checkbox
                         style={styles.checkbox}
@@ -490,8 +481,10 @@ useEffect(() => {
         </TouchableOpacity>
 
         <View style={styles.containerWidget}>
-          <TouchableOpacity style={styles.containerEvent}
-          onPress={() => navigation.navigate("Agenda")}>
+          <TouchableOpacity
+            style={styles.containerEvent}
+            onPress={() => navigation.navigate("Agenda")}
+          >
             <Text style={styles.cardTitle}>Événements</Text>
             <View style={styles.descriptionEvent}>
               <ScrollView>
@@ -514,7 +507,7 @@ useEffect(() => {
                 )}
               </ScrollView>
             </View>
-            </TouchableOpacity>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.sondage}
@@ -608,8 +601,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7F7FF",
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   header: {
     width: "100%",
@@ -622,10 +614,10 @@ const styles = StyleSheet.create({
   welcomeSection: {
     flex: 1,
   },
-  titleBienvenue:{
-   color: '#FD703C',
-   fontSize: 35,
-   fontWeight:'bold',
+  titleBienvenue: {
+    color: "#FD703C",
+    fontSize: 35,
+    fontWeight: "bold",
   },
   title: {
     fontSize: 24,
@@ -633,17 +625,15 @@ const styles = StyleSheet.create({
     color: "#333",
     letterSpacing: 0.5,
   },
-  tacheTitle:{
+  tacheTitle: {
     fontSize: 15,
     fontWeight: "bold",
     color: "#333",
   },
 
-
   scrollContainer: {
     flex: 1,
     paddingHorizontal: windowWidth * 0.04,
-
   },
   containerTodo: {
     width: "100%",
@@ -660,9 +650,7 @@ const styles = StyleSheet.create({
   todo: {
     flex: 1,
   },
-  todoItem: {
-    
-  },
+  todoItem: {},
   todoHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -687,7 +675,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    
   },
   containerEvent: {
     width: "48%",
@@ -746,7 +733,6 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 12,
     width: "95%",
-    
   },
   sondageTitle: {
     fontSize: 12,
@@ -760,8 +746,6 @@ const styles = StyleSheet.create({
   responses: {
     width: "100%",
     marginTop: 5,
-    
-    
   },
   responseContainer: {
     marginVertical: 2,
@@ -771,8 +755,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     minHeight: 35,
     borderWidth: 0.2,
-    borderColor:'#BEBFF5',
-    
+    borderColor: "#BEBFF5",
   },
   selectedResponse: {
     borderColor: "#FD703C",
@@ -782,7 +765,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 6,
-    
   },
   responseText: {
     fontSize: 10,
@@ -797,7 +779,6 @@ const styles = StyleSheet.create({
     height: 8,
     backgroundColor: "#EDEDF7",
     borderRadius: 10,
-    
   },
   progressBar: {
     height: "90%",
@@ -820,7 +801,6 @@ const styles = StyleSheet.create({
   miniList: {
     width: "90%",
     marginTop: 10,
-    
   },
   miniListItem: {
     marginVertical: 2,
@@ -851,9 +831,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 25,
-    borderWidth:1,
-    borderRadius:50,
-    borderColor:'#FD703C',
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: "#FD703C",
     shadowColor: "#FD703C",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
@@ -904,6 +884,6 @@ const styles = StyleSheet.create({
   avatar: {
     width: windowWidth * 0.15,
     height: windowWidth * 0.15,
-    borderRadius: 50
+    borderRadius: 50,
   },
 });
