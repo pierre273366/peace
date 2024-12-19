@@ -7,9 +7,18 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  Dimensions,
+  StatusBar,
+  Platform
 } from "react-native";
 import { useSelector } from "react-redux";
 import Checkbox from "expo-checkbox";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+
+
+
 
 export default function GroceryListScreen({ navigation }) {
   const [products, setProducts] = useState([]);
@@ -160,25 +169,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgb(247, 247, 255)",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   header: {
     padding: 16,
     backgroundColor: "rgb(247, 247, 255)",
     zIndex: 1,
+    paddingTop: Platform.OS === 'android' ? 10 : 16,
   },
   containerBtnTitle: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 16,
+    paddingHorizontal: 4,
   },
   Add: {
     backgroundColor: "black",
-    borderRadius: 50,
+    borderRadius: 28,
     height: 56,
     width: 56,
     justifyContent: "center",
     alignItems: "center",
+    elevation: 3,
   },
   white: {
     color: "white",
@@ -199,6 +212,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
     paddingTop: 8,
+    paddingBottom: Platform.OS === 'android' ? 24 : 16,
   },
   urgentSection: {
     marginBottom: 24,
@@ -212,12 +226,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 12,
+    justifyContent: 'space-between',
   },
   urgentItem: {
     backgroundColor: "white",
     padding: 16,
     borderRadius: 8,
-    width: "48%",
+    width: windowWidth * 0.42,
     marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: {
@@ -249,10 +264,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    minHeight: 40,
   },
   productName: {
     fontSize: 16,
     flex: 1,
+    paddingRight: 8,
   },
   checkbox: {
     marginLeft: 10,
@@ -265,4 +282,4 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
     color: "#888",
   },
-});
+ });

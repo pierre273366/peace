@@ -96,6 +96,10 @@ const TabNavigator = ({ navigation }) => {
           component={ProfileStack}
           options={{ tabBarButton: () => null }}
         />
+        <Tab.Screen
+          name="GroceryList" component={GroceryListScreen} options={{ tabBarButton: () => null }}/>
+          <Tab.Screen name="Sondage" component={SondageScreen} options={{ tabBarButton: () => null }}/>
+          <Tab.Screen name="WheelScreen" component={WheelOfFortune} options={{ tabBarButton: () => null }}/>
       </Tab.Navigator>
 
       {currentTab === "Home" && (
@@ -224,7 +228,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
           <Stack.Screen name="Accueil" component={AccueilScreen} />
           <Stack.Screen name="Signin" component={SigninScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
@@ -241,12 +245,9 @@ export default function App() {
             name="TricountAddExpense"
             component={TricountAddExpense}
           />
-          <Stack.Screen name="Sondage" component={SondageScreen} />
           <Stack.Screen name="CreateSondage" component={CreateSondageScreen} />
           <Stack.Screen name="DetailSondage" component={DetailSondageScreen} />
-          <Stack.Screen name="GroceryList" component={GroceryListScreen} />
           <Stack.Screen name="AjoutProduct" component={AjoutProductScreen} />
-          <Stack.Screen name="WheelScreen" component={WheelOfFortune} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
