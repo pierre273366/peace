@@ -21,7 +21,7 @@ export default function TricountCreaScreen({ navigation, route }) {
   const dispatch = useDispatch();
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -137,9 +137,9 @@ export default function TricountCreaScreen({ navigation, route }) {
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome
-        name={"arrow-circle-left"}
+        name={"chevron-left"}
         size={35}
-        color="rgb(255, 139, 228)"
+        color="#FD703C"
         />
         </TouchableOpacity>
         <Text style={styles.title}>Créer un Tricount</Text>

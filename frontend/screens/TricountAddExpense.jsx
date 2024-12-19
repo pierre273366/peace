@@ -21,7 +21,7 @@ import {
 export default function TricountAddExpense({ navigation, route }) {
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const [title, setTitle] = useState("");
   const [value, setValue] = useState(0);
@@ -126,7 +126,11 @@ export default function TricountAddExpense({ navigation, route }) {
             onPress={() => navigation.goBack()}
             style={styles.backButton}
           >
-            <Text style={styles.backButtonText}>←</Text>
+            <FontAwesome
+                            name={"chevron-left"}
+                            size={35}
+                            color="#FD703C"
+                          />
           </TouchableOpacity>
           <Text style={styles.title}>Ajouter une dépense</Text>
         </View>

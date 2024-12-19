@@ -33,9 +33,9 @@ return(
 <TouchableOpacity style={styles.iconReturn}
     activeOpacity={0.8}>
     <FontAwesome
-              name={"arrow-circle-left"}
+              name={"chevron-left"}
               size={35}
-              color="rgb(255, 139, 228)"
+              color="#FD703C"
             />
 </TouchableOpacity>
     <Image style={styles.image} source={require('../assets/peacelogo.png')} />

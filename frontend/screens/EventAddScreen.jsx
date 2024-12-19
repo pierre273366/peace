@@ -25,7 +25,7 @@ const EventAdd = ({ navigation, route }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [timeError, setTimeError] = useState("");
   const colocToken = useSelector((state) => state.users.coloc.token);
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const onDateChange = (event, selectedDate) => {
     if (Platform.OS === "android") {
@@ -99,9 +99,9 @@ const EventAdd = ({ navigation, route }) => {
                             style={styles.iconContainer}
                           >
                             <FontAwesome
-                              name={"arrow-circle-left"}
+                              name={"chevron-left"}
                               size={35}
-                              color="rgb(255, 139, 228)"
+                              color="#FD703C"
                             />
                           </TouchableOpacity>
       </View>

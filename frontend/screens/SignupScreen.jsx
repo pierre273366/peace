@@ -32,7 +32,7 @@ const windowHeight = Dimensions.get("window").height;
 
 function Signup({ navigation }) {
   const dispatch = useDispatch();
-  const backendUrl = "http://10.9.1.137:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   useEffect(() => {
     if (Platform.OS === "android") {

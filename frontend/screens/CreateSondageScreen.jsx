@@ -20,7 +20,8 @@ export default function CreateSondageScreen({ navigation }) {
   const userName = useSelector((state) => state.users.user.username);
   const [title, setTitle] = useState("");
   const [responses, setResponses] = useState([""]); // Deux réponses initiales
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
+
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -78,15 +79,15 @@ export default function CreateSondageScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate("Sondage")}
-        style={styles.iconContainer}
-      >
-        <FontAwesome
-          name={"arrow-circle-left"}
-          size={35}
-          color="rgb(255, 139, 228)"
-        />
-      </TouchableOpacity>
+                          onPress={() => navigation.navigate("Sondage")}
+                          style={styles.iconContainer}
+                        >
+                          <FontAwesome
+                            name={"chevron-left"}
+                            size={35}
+                            color="#FD703C"
+                          />
+                        </TouchableOpacity>
       <Image
         style={styles.imageLogo}
         source={require("../assets/peacelogo.png")}

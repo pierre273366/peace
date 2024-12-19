@@ -25,7 +25,7 @@ const windowHeight = Dimensions.get("window").height;
 export default function TricountScreen({ navigation }) {
   const [tricounts, setTricounts] = useState([]);
   const userToken = useSelector((state) => state.users.user.token);
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   useFocusEffect(
     useCallback(() => {
@@ -130,9 +130,9 @@ export default function TricountScreen({ navigation }) {
                                 style={styles.iconContainer}
                               >
                                 <FontAwesome
-                                  name={"arrow-circle-left"}
+                                  name={"chevron-left"}
                                   size={35}
-                                  color="rgb(255, 139, 228)"
+                                  color="#FD703C"
                                 />
                               </TouchableOpacity>
                             </View>

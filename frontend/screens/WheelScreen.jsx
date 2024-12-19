@@ -169,9 +169,9 @@ const WheelPage = ({ navigation }) => {
               style={styles.iconContainer}
             >
               <FontAwesome
-                name={"arrow-circle-left"}
+                name={"chevron-left"}
                 size={35}
-                color="rgb(255, 139, 228)"
+                color="#FD703C"
               />
             </TouchableOpacity>
       <ScrollView 
