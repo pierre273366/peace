@@ -24,7 +24,7 @@ export default function Profil({ navigation }) {
   const [colocataires, setColocataires] = useState([]); // Liste des colocataires
   const [modalVisible, setModalVisible] = useState(false); // Etat pour la modal
   const [selectedColocataire, setSelectedColocataire] = useState(null); // Colocataire sélectionné pour la modal
-  const backendUrl = "http://10.9.1.137:3000"; // URL du backend
+  const backendUrl = "http://10.9.1.105:3000"; // URL du backend
   const userToken = user.token;
 
   // Fonction pour formater les dates

@@ -22,6 +22,7 @@ export default function CreateSondageScreen({ navigation }) {
   const userName = useSelector((state) => state.users.user.username);
   const [title, setTitle] = useState("");
   const [responses, setResponses] = useState([""]); // Deux réponses initiales
+  const backendUrl = "http://10.9.1.105:3000";
 
   // Ajouter un nouveau champ de réponse
   const addInput = () => {
@@ -49,7 +50,7 @@ export default function CreateSondageScreen({ navigation }) {
     };
 
     const response = await fetch(
-      "http://10.9.1.137:3000/sondage/createSondage",
+      `${backendUrl}/sondage/createSondage`,
       {
         method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
         headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
@@ -74,6 +75,16 @@ export default function CreateSondageScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+                          onPress={() => navigation.navigate("Sondage")}
+                          style={styles.iconContainer}
+                        >
+                          <FontAwesome
+                            name={"arrow-circle-left"}
+                            size={35}
+                            color="rgb(255, 139, 228)"
+                          />
+                        </TouchableOpacity>
       <Image
         style={styles.imageLogo}
         source={require("../assets/peacelogo.png")}
@@ -133,10 +144,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F6F8FE",
     alignItems: "center",
-    justifyContent: "center",
+  },
+  iconContainer: {
+    position: 'absolute',
+    left: 20,
+    top: 50, 
+    zIndex: 1,
+    alignSelf: 'flex-start',
   },
 
   imageLogo: {
+    marginTop: 100, // Ajoutez cette ligne pour décaler le logo vers le bas
     paddingTop: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -153,6 +171,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingLeft: 20,
   },
+  
   addSondage: {
     alignItems: "center",
     justifyContent: "center",

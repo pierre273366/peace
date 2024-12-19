@@ -17,6 +17,7 @@ export default function SondageScreen({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [sondages, setSondages] = useState([]);
+  const backendUrl = "http://10.9.1.105:3000";
 
   useFocusEffect(
     useCallback(() => {
@@ -27,7 +28,7 @@ export default function SondageScreen({ navigation }) {
   const fetchSondages = async () => {
     try {
       const response = await fetch(
-        `http://10.9.1.137:3000/sondage/getSondages/${colocToken}`
+        `${backendUrl}/sondage/getSondages/${colocToken}`
       );
       const data = await response.json();
 
@@ -49,7 +50,7 @@ export default function SondageScreen({ navigation }) {
         userToken: user.token,
       };
 
-      const response = await fetch("http://10.9.1.137:3000/sondage/vote", {
+      const response = await fetch(`${backendUrl}/sondage/vote`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(votes),
@@ -67,7 +68,7 @@ export default function SondageScreen({ navigation }) {
   const fetchDeleteSondage = async (_id) => {
     try {
       const response = await fetch(
-        "http://10.9.1.137:3000/sondage/deleteSondage",
+        `${backendUrl}/sondage/deleteSondage`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -96,7 +97,7 @@ export default function SondageScreen({ navigation }) {
       };
 
       const response = await fetch(
-        "http://10.9.1.137:3000/sondage/deleteVote",
+        `${backendUrl}/sondage/deleteVote`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -159,7 +160,19 @@ export default function SondageScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title1}>Sondages</Text>
+      <View style={styles.header}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Home")}
+                    style={styles.iconContainer}
+                  >
+                    <FontAwesome
+                      name={"arrow-circle-left"}
+                      size={35}
+                      color="rgb(255, 139, 228)"
+                    />
+                  </TouchableOpacity>
+                 <Text style={styles.title1}>Sondages</Text>
+      </View>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -210,6 +223,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9F9FF",
     alignItems: "center",
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center', // Ajouter cette ligne
+    width: '100%', // Ajouter cette ligne
+    paddingHorizontal: 20, // Ajouter cette ligne pour l'espacement
+    marginTop: 10, // Ajouter cette ligne pour l'espacement en haut
+    position: 'relative', // Ajouter cette ligne
+  },
+
+  iconContainer:{
+    position: 'absolute', // Ajouter cette ligne
+    left: 20, // Ajouter cette ligne
+    zIndex: 1, // Ajouter cette ligne
+  },
+  
   scrollView: {
     flex: 1,
     width: "100%",
@@ -242,6 +270,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     marginVertical: 20,
+    flex: 1, // Ajouter cette ligne
+    textAlign: 'center', // Ajouter cette ligne
   },
   responseContainer: {
     marginVertical: 8,
@@ -290,15 +320,16 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 20,
+    top: 40,  // au lieu de bottom: 20
     right: 20,
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     backgroundColor: "#333",
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-  },
+    zIndex: 1, // pour s'assurer qu'il reste au-dessus des autres éléments
+},
   addButtonText: {
     color: "#FFF",
     fontSize: 28,

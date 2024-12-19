@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   Dimensions,
   Platform,
+  Image,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -23,6 +25,7 @@ const EventAdd = ({ navigation, route }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [timeError, setTimeError] = useState("");
   const colocToken = useSelector((state) => state.users.coloc.token);
+  const backendUrl = "http://10.9.1.105:3000";
 
   const onDateChange = (event, selectedDate) => {
     if (Platform.OS === "android") {
@@ -59,7 +62,7 @@ const EventAdd = ({ navigation, route }) => {
       colocToken,
     };
 
-    fetch("http://10.9.1.137:3000/event", {
+    fetch(`${backendUrl}:3000/event`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newEvent),
@@ -89,7 +92,24 @@ const EventAdd = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ajouter un événement</Text>
+      <View
+         style={styles.containerBtnTitle}>
+                          <TouchableOpacity
+                            onPress={() => navigation.navigate("Agenda")}
+                            style={styles.iconContainer}
+                          >
+                            <FontAwesome
+                              name={"arrow-circle-left"}
+                              size={35}
+                              color="rgb(255, 139, 228)"
+                            />
+                          </TouchableOpacity>
+      </View>
+      <Image
+              style={styles.imageLogo}
+              source={require("../assets/peacelogo.png")}
+            />
+      <Text style={styles.title}>Je crée un événement</Text>
 
       <TextInput
         style={styles.input}
@@ -172,7 +192,7 @@ const EventAdd = ({ navigation, route }) => {
       )}
 
       <TouchableOpacity onPress={handleAddEvent} style={styles.button}>
-        <Text style={styles.buttonText}>Ajouter l'événement</Text>
+        <Text style={styles.buttonText}>Ajouter</Text>
       </TouchableOpacity>
     </View>
   );
@@ -183,24 +203,45 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "white",
     width: "100%",
-    paddingHorizontal: windowWidth * 0.05,
+    height: "100%",
+    paddingBottom:300,
+    paddingTop:50,
+
   },
+  imageLogo:{
+height:150
+  },
+
+  iconContainer:{
+paddingTop: 220,
+  },
+
+  containerBtnTitle:{
+    width: "100%",
+    alignItems: "flex-end",
+    padding: windowWidth * 0.1,
+    marginTop: windowHeight * 0.05,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    
+  },
+
   title: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.05,
     fontWeight: "bold",
     marginBottom: windowHeight * 0.03,
   },
   input: {
-    width: windowWidth * 0.9,
-    padding: windowHeight * 0.02,
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: windowHeight * 0.02,
-    borderColor: "rgb(255, 139, 228)",
-    backgroundColor: "white",
-    fontSize: Math.min(windowWidth, windowHeight) * 0.04,
+    width: 340,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: "#E6E6FC",
+    marginTop: 10,
+    position: "relative",
+    paddingLeft: 20,
   },
   inputError: {
     borderColor: "red",
@@ -211,11 +252,14 @@ const styles = StyleSheet.create({
     marginBottom: windowHeight * 0.01,
   },
   button: {
-    backgroundColor: "#ff6347",
-    padding: windowHeight * 0.025,
-    borderRadius: 15,
-    marginTop: windowHeight * 0.03,
-    width: windowWidth * 0.9,
+    alignItems: "center",
+    justifyContent: "center",
+    width: 200,
+    height: 50,
+    marginTop: 30,
+    backgroundColor: "#EC794C",
+    borderRadius: 30,
+    marginBottom: 70,
   },
   buttonText: {
     color: "#fff",
@@ -229,13 +273,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   dateInput: {
-    backgroundColor: "white",
+    width: 340,
+    height: 60,
+    borderRadius: 10,
+    backgroundColor: "#E6E6FC",
+    marginTop: 10,
+    paddingLeft: 20,
     padding: windowHeight * 0.025,
-    borderWidth: 1,
-    borderColor: "rgb(255, 139, 228)",
-    borderRadius: 5,
     marginBottom: windowHeight * 0.03,
-    width: windowWidth * 0.9,
+    
   },
   selectedDate: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,

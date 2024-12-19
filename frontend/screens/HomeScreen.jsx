@@ -24,7 +24,7 @@ export default function HomeScreen({ navigation }) {
   const [isChecked, setChecked] = useState(false);
   const [events, setEvents] = useState([]); // Liste des événements
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // Date du jour
-  const backendUrl = "http://10.9.1.137:3000"; // URL de l'API de ton backend
+  const backendUrl = "http://10.9.1.105:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [products, setProducts] = useState([]);
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
@@ -123,7 +123,7 @@ export default function HomeScreen({ navigation }) {
 
     try {
       const response = await fetch(
-        `http://192.168.1.11:3000/product/getproducts/${colocToken}`
+        `${backendUrl}/product/getproducts/${colocToken}`
       );
       const data = await response.json();
       setProducts(data);
@@ -271,7 +271,7 @@ export default function HomeScreen({ navigation }) {
   const fetchLastSondage = async () => {
     try {
       const response = await fetch(
-        `http://192.168.1.11:3000/sondage/getLastSondage/${colocToken}`
+        `${backendUrl}/sondage/getLastSondage/${colocToken}`
       );
       const data = await response.json();
       if (data.result) {
@@ -290,7 +290,7 @@ export default function HomeScreen({ navigation }) {
         userToken: user.token,
       };
 
-      const response = await fetch("http://192.168.1.11:3000/sondage/vote", {
+      const response = await fetch(`${backendUrl}/sondage/vote`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(votes),
@@ -314,7 +314,7 @@ export default function HomeScreen({ navigation }) {
       };
 
       const response = await fetch(
-        "http://192.168.1.11:3000/sondage/deleteVote",
+        `${backendUrl}/sondage/deleteVote`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -380,10 +380,9 @@ export default function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.welcomeSection}>
-          <Text style={styles.title}>Bienvenue</Text>
+          <Text style={styles.titleBienvenue}>Bienvenue</Text>
           <Text style={styles.title}>
-            à {coloc.name}
-            {user.username} !
+            à {coloc.name} {user.username} !
           </Text>
         </View>
         <TouchableOpacity
@@ -413,11 +412,11 @@ export default function HomeScreen({ navigation }) {
                       <Text style={styles.todoText}>
                         {todo.participants.map((user, idx) => (
                           <Text key={idx} style={styles.participantText}>
-                            {user.username}
-                            {idx < todo.participants.length - 1 && ", "}
+                            
+                            {idx < todo.participants.length - 1 && "•"}
                           </Text>
                         ))}{" "}
-                        {todo.tâche}
+                       <Text style={styles.tacheTitle}> {todo.tâche}</Text>
                       </Text>
                       <Checkbox
                         style={styles.checkbox}
@@ -448,7 +447,7 @@ export default function HomeScreen({ navigation }) {
 
         <View style={styles.containerWidget}>
           <View style={styles.containerEvent}>
-            <Text style={styles.textEvent}>Événements</Text>
+            <Text style={styles.cardTitle}>Événements</Text>
             <View style={styles.descriptionEvent}>
               <ScrollView>
                 <Text style={styles.dateText}>{date}</Text>
@@ -477,7 +476,7 @@ export default function HomeScreen({ navigation }) {
             onPress={() => navigation.navigate("Sondage")}
           >
             <ScrollView>
-              <Text style={styles.textEvent}>Dernier Sondage</Text>
+              <Text style={styles.cardTitle}>Dernier Sondage</Text>
               {sondage.title && (
                 <View style={styles.sondageCard}>
                   <Text style={styles.sondageTitle}>{sondage.title}</Text>
@@ -502,7 +501,7 @@ export default function HomeScreen({ navigation }) {
             style={styles.liste}
             onPress={() => navigation.navigate("GroceryList")}
           >
-            <Text style={styles.h2}>Liste de course</Text>
+            <Text style={styles.cardTitle}>Liste de course</Text>
             <ScrollView style={styles.miniList}>
               {products.slice(0, 3).map((product, index) => (
                 <View key={product._id} style={styles.miniListItem}>
@@ -523,7 +522,7 @@ export default function HomeScreen({ navigation }) {
             style={styles.roue}
             onPress={() => navigation.navigate("WheelScreen")}
           >
-            <Text style={styles.h2}>Tirage au sort</Text>
+            <Text style={styles.cardTitle}>Tirage au sort</Text>
             <View style={styles.decorativeWheelContainer}>
               <Animated.View
                 style={[
@@ -576,12 +575,24 @@ const styles = StyleSheet.create({
   welcomeSection: {
     flex: 1,
   },
+  titleBienvenue:{
+   color: '#FD703C',
+   fontSize: 35,
+   fontWeight:'bold',
+  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#333",
     letterSpacing: 0.5,
   },
+  tacheTitle:{
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#333",
+  },
+
+
   scrollContainer: {
     flex: 1,
     paddingHorizontal: 16,
@@ -592,13 +603,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     padding: 15,
-    height: 300,
+    height: 150,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   todo: {
     flex: 1,
   },
   todoItem: {
-    marginBottom: 15,
+    
   },
   todoHeader: {
     flexDirection: "row",
@@ -612,8 +627,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   recurrenceText: {
-    marginTop: 5,
     color: "#666",
+    fontSize: 8,
   },
   checkbox: {
     marginRight: 20,
@@ -624,6 +639,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    
   },
   containerEvent: {
     width: "48%",
@@ -633,8 +649,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
-  textEvent: {
+  cardTitle: {
     fontSize: 18,
     textAlign: "center",
     fontWeight: "bold",
@@ -669,11 +689,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   sondageCard: {
     padding: 5,
     borderRadius: 12,
     width: "95%",
+    
   },
   sondageTitle: {
     fontSize: 12,
@@ -687,6 +712,8 @@ const styles = StyleSheet.create({
   responses: {
     width: "100%",
     marginTop: 5,
+    
+    
   },
   responseContainer: {
     marginVertical: 2,
@@ -695,6 +722,9 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     minHeight: 35,
+    borderWidth: 0.2,
+    borderColor:'#BEBFF5',
+    
   },
   selectedResponse: {
     borderColor: "#FD703C",
@@ -704,6 +734,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 6,
+    
   },
   responseText: {
     fontSize: 10,
@@ -718,6 +749,7 @@ const styles = StyleSheet.create({
     height: 8,
     backgroundColor: "#EDEDF7",
     borderRadius: 10,
+    
   },
   progressBar: {
     height: "90%",
@@ -732,10 +764,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   miniList: {
     width: "90%",
     marginTop: 10,
+    
   },
   miniListItem: {
     marginVertical: 2,
@@ -757,16 +794,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   decorativeWheelContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
+    marginTop: 25,
+    borderWidth:1,
+    borderRadius:50,
+    borderColor:'#FD703C',
+    shadowColor: "#FD703C",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   decorativeWheel: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 90,
+    height: 90,
+    borderRadius: 50,
     backgroundColor: "#BEBFF5",
     position: "relative",
   },
@@ -801,6 +849,8 @@ const styles = StyleSheet.create({
     color: "#666",
   },
   participantText: {
+    fontSize: 12,
+    fontWeight: "bold",
     color: "#333",
   },
   avatar: {

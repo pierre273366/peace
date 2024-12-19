@@ -28,6 +28,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 function Signup({ navigation }) {
   const dispatch = useDispatch();
+  const backendUrl = "http://10.9.1.105:3000";
 
   // Déclaration des états locaux pour gérer les valeurs du formulaire
   const [signUpName, setSignUpName] = useState(""); // État pour gérer le nom de l'utilisateur dans le formulaire
@@ -104,13 +105,16 @@ function Signup({ navigation }) {
 
     if (!signUpPassword.trim()) {
       setPasswordInvalid(true);
-      return;
     } else {
       setPasswordInvalid(false);
       dispatch(updatePassword(signUpPassword));
     }
 
-    fetch("http://10.9.1.137:3000/users/signup", {
+    if(passwordInvalid || usernameInvalid || nameInvalid || phoneInvalid || emailInvalid){
+      return;
+    }
+
+    fetch(`${backendUrl}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(infos),

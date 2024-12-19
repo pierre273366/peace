@@ -16,6 +16,7 @@ export default function DetailTricount({ navigation, route }) {
   const [tricountData, setTricountData] = useState(null);
   const tricountId = route.params.tricountId;
   const [userId, setUserId] = useState("");
+  const backendUrl = "http://10.9.1.105:3000";
 
   useFocusEffect(
     React.useCallback(() => {
@@ -25,7 +26,7 @@ export default function DetailTricount({ navigation, route }) {
   );
 
   const fetchTricountData = () => {
-    fetch(`http://10.9.1.137:3000/tricount/tricountExpense/${tricountId}`)
+    fetch(`${backendUrl}/tricount/tricountExpense/${tricountId}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
@@ -40,7 +41,7 @@ export default function DetailTricount({ navigation, route }) {
   const fetchUserId = async (token) => {
     try {
       const response = await fetch(
-        `http://10.9.1.137:3000/tricount/user/${token}`
+        `${backendUrl}/tricount/user/${token}`
       );
       const data = await response.json();
       setUserId(data.userId);
@@ -126,7 +127,7 @@ export default function DetailTricount({ navigation, route }) {
     );
 
     const fetchBalances = () => {
-      fetch(`http://10.9.1.137:3000/tricount/balances/${tricountId}`)
+      fetch(`${backendUrl}/tricount/balances/${tricountId}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {

@@ -19,6 +19,7 @@ export default function TodoListCrea({ navigation, route }) {
   const [recurrenceType, setRecurrenceType] = useState("Quotidienne"); // Type de récurrence
   const [showRecurrence, setShowRecurrence] = useState(false); // Afficher ou non le choix de récurrence
   const [selectTache, setSelectTache] = useState("");
+  const backendUrl = "http://10.9.1.105:3000";
 
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
@@ -44,7 +45,7 @@ export default function TodoListCrea({ navigation, route }) {
   //fetch de tous les utilisateurs de la colocs
   const fetchUsers = async (userToken) => {
     const response = await fetch(
-      `http://10.9.1.137:3000/tricount/getcolocusers/${userToken}`
+      `${backendUrl}/tricount/getcolocusers/${userToken}`
     );
     const data = await response.json();
 
@@ -125,7 +126,7 @@ export default function TodoListCrea({ navigation, route }) {
   ];
 
   const handleSubmit = async () => {
-    const response = await fetch("http://10.9.1.137:3000/todo/createtodo/", {
+    const response = await fetch(`${backendUrl}/todo/createtodo/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -152,7 +153,7 @@ export default function TodoListCrea({ navigation, route }) {
         <View style={{ height: "20%" }}>
           <View style={styles.containerBtnTitle}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => navigation.navigate("TodoList")}
               style={styles.iconContainer}
             >
               <FontAwesome
