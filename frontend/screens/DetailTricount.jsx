@@ -9,6 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function DetailTricount({ navigation, route }) {
   const userToken = useSelector((state) => state.users.user.token);
@@ -16,7 +17,7 @@ export default function DetailTricount({ navigation, route }) {
   const [tricountData, setTricountData] = useState(null);
   const tricountId = route.params.tricountId;
   const [userId, setUserId] = useState("");
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   useFocusEffect(
     React.useCallback(() => {
@@ -184,7 +185,11 @@ export default function DetailTricount({ navigation, route }) {
               onPress={() => navigation.navigate("Tricount")}
               style={styles.backButton}
             >
-              <Text style={styles.backButtonText}>←</Text>
+              <FontAwesome
+                              name={"chevron-left"}
+                              size={35}
+                              color="#FD703C"
+                            />
             </TouchableOpacity>
             <Text style={styles.title}>{route.params.tricountTitle}</Text>
           </View>

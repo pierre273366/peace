@@ -24,7 +24,7 @@ export default function SondageScreen({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [sondages, setSondages] = useState([]);
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   useFocusEffect(
     useCallback(() => {
@@ -181,9 +181,9 @@ export default function SondageScreen({ navigation }) {
                     style={styles.iconContainer}
                   >
                     <FontAwesome
-                      name={"arrow-circle-left"}
+                      name={"chevron-left"}
                       size={35}
-                      color="rgb(255, 139, 228)"
+                      color="#FD703C"
                     />
                   </TouchableOpacity>
                  <Text style={styles.title1}>Sondages</Text>

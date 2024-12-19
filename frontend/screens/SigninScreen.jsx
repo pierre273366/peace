@@ -23,7 +23,7 @@ function Signin() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.value);
-  const backendUrl = "http://10.9.1.137:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const [signInUsername, setSignInUsername] = useState("");
   const [signInPassword, setSignInPassword] = useState("");

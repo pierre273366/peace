@@ -19,7 +19,7 @@ export default function CreateSondageScreen({ navigation }) {
   const userName = useSelector((state) => state.users.user.username);
   const [title, setTitle] = useState("");
   const [responses, setResponses] = useState([""]); // Deux réponses initiales
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
 
   useEffect(() => {
@@ -85,9 +85,9 @@ export default function CreateSondageScreen({ navigation }) {
                           style={styles.iconContainer}
                         >
                           <FontAwesome
-                            name={"arrow-circle-left"}
+                            name={"chevron-left"}
                             size={35}
-                            color="rgb(255, 139, 228)"
+                            color="#FD703C"
                           />
                         </TouchableOpacity>
       <Image

@@ -24,7 +24,7 @@ export default function GroceryListScreen({ navigation }) {
   const [products, setProducts] = useState([]);
   const [checkedItems, setCheckedItems] = useState(new Set());
   const colocToken = useSelector((state) => state.users.coloc.token);
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const fetchProducts = async (colocToken) => {
     if (!colocToken) {
