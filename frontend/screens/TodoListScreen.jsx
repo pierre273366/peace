@@ -15,7 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export default function TodoList({ navigation }) {
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
-  const backendUrl = "http://10.9.1.105:3000";
+  const backendUrl = "http://10.9.1.137:3000";
   const userToken = useSelector((state) => state.users.user.token);
 
   const formatDateForComparison = (time) => {
@@ -152,10 +152,10 @@ export default function TodoList({ navigation }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          completed: !completed,
-          completedTomorrow: !completedTomorrow,
-          completedHebdomadaire: !completedHebdomadaire,
-          completedMensuel: !completedMensuel,
+          completed: completed,
+          completedTomorrow: completedTomorrow,
+          completedHebdomadaire: completedHebdomadaire,
+          completedMensuel: completedMensuel,
           nextOccurrence: nextOccurrenceDate,
         }),
       });
@@ -167,10 +167,10 @@ export default function TodoList({ navigation }) {
             todo._id === _id
               ? {
                   ...todo,
-                  completed: !completed,
-                  completedTomorrow: !completedTomorrow,
-                  completedHebdomadaire: !completedHebdomadaire,
-                  completedMensuel: !completedMensuel,
+                  completed: completed,
+                  completedTomorrow: completedTomorrow,
+                  completedHebdomadaire: completedHebdomadaire,
+                  completedMensuel: completedMensuel,
                 }
               : todo
           )
@@ -352,7 +352,7 @@ export default function TodoList({ navigation }) {
                           todo.récurrence,
                           todo.date,
                           todo.nextOccurrence,
-                          todo.completed,
+                          !todo.completed,
                           todo.completedTomorrow,
                           todo.completedHebdomadaire,
                           todo.completedMensuel
@@ -430,7 +430,7 @@ export default function TodoList({ navigation }) {
                           todo.date,
                           todo.nextOccurrence,
                           todo.completed,
-                          todo.completedTomorrow,
+                          !todo.completedTomorrow,
                           todo.completedHebdomadaire,
                           todo.completedMensuel
                         )
@@ -510,7 +510,7 @@ export default function TodoList({ navigation }) {
                           todo.nextOccurrence,
                           todo.completed,
                           todo.completedTomorrow,
-                          todo.completedHebdomadaire,
+                          !todo.completedHebdomadaire,
                           todo.completedMensuel
                         )
                       }
@@ -595,7 +595,7 @@ export default function TodoList({ navigation }) {
                           todo.completed,
                           todo.completedTomorrow,
                           todo.completedHebdomadaire,
-                          todo.completedMensuel
+                          !todo.completedMensuel
                         )
                       }
                       color={
