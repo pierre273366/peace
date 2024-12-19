@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
+    }
+  ],
   "routes": [
     {
       "src": "/favicon.ico",
@@ -7,7 +13,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/app.js"
+      "dest": "app.js"
     }
   ]
 }
