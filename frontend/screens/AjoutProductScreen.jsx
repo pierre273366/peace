@@ -8,6 +8,8 @@ import {
   SafeAreaView,
   TextInput,
   Alert,
+  Platform,
+  StatusBar,
 } from "react-native";
 import Checkbox from "expo-checkbox";
 
@@ -15,6 +17,13 @@ export default function AjoutProductScreen({ navigation }) {
   const [productName, setProductName] = useState("");
   const [isUrgent, setIsUrgent] = useState(false);
   const colocToken = useSelector((state) => state.users.coloc.token);
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+  }, []);
 
   const handleSubmit = async () => {
     if (!productName.trim()) {
@@ -83,6 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgb(247, 247, 255)",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   containerView: {
     width: "100%",
@@ -95,11 +105,12 @@ const styles = StyleSheet.create({
   },
   Add: {
     backgroundColor: "black",
-    borderRadius: 50,
+    borderRadius: 28,
     height: 56,
     width: 56,
     justifyContent: "center",
     alignItems: "center",
+    elevation: 3,
   },
   white: {
     color: "white",
@@ -110,6 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     padding: 16,
+    marginTop: Platform.OS === 'android' ? 10 : 0,
   },
   input: {
     flexDirection: "row",
@@ -119,6 +131,14 @@ const styles = StyleSheet.create({
     gap: 15,
     margin: 16,
     borderRadius: 8,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
   },
   inputContent: {
     gap: 10,
@@ -126,6 +146,8 @@ const styles = StyleSheet.create({
   },
   inputText: {
     fontSize: 16,
+    padding: Platform.OS === 'android' ? 0 : 2,
+    minHeight: Platform.OS === 'android' ? 40 : 35,
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -144,13 +166,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: Platform.OS === 'android' ? 40 : 30,
+    paddingHorizontal: 16,
   },
   partager: {
     alignItems: "center",
-    width: "85%",
+    width: "100%",
+    maxWidth: 400,
     borderRadius: 50,
     backgroundColor: "#FD703C",
-    padding: 25,
+    padding: Platform.OS === 'android' ? 20 : 25,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
   },
 });

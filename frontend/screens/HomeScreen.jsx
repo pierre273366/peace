@@ -12,11 +12,20 @@ import {
   ScrollView,
   Image,
   Alert,
+  Dimensions ,
+  Platform, 
+  StatusBar
 } from "react-native";
 import Checkbox from "expo-checkbox";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+
+
+
 
 export default function HomeScreen({ navigation }) {
   const coloc = useSelector((state) => state.users.coloc);
@@ -41,6 +50,26 @@ export default function HomeScreen({ navigation }) {
       fetchUserDetails();
     }, [])
   );
+
+
+
+
+  // Animation de la roue
+useEffect(() => {
+  Animated.loop(
+    Animated.timing(rotateAnim, {
+      toValue: 1,
+      duration: 3000, // Durée d'une rotation complète en ms
+      easing: Easing.linear,
+      useNativeDriver: true,
+    })
+  ).start();
+
+  // Nettoyage de l'animation
+  return () => {
+    rotateAnim.stopAnimation();
+  };
+}, []);
 
   // Fonction pour récupérer les détails de l'utilisateur
   const fetchUserDetails = React.useCallback(async () => {
@@ -401,7 +430,8 @@ export default function HomeScreen({ navigation }) {
       </View>
 
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.containerTodo}>
+        <TouchableOpacity style={styles.containerTodo} 
+        onPress={() => navigation.navigate("TodoList")}>
           <ScrollView>
             <Text style={styles.textEvent}>Todo List</Text>
             <View style={styles.todo}>
@@ -443,10 +473,11 @@ export default function HomeScreen({ navigation }) {
               )}
             </View>
           </ScrollView>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.containerWidget}>
-          <View style={styles.containerEvent}>
+          <TouchableOpacity style={styles.containerEvent}
+          onPress={() => navigation.navigate("Agenda")}>
             <Text style={styles.cardTitle}>Événements</Text>
             <View style={styles.descriptionEvent}>
               <ScrollView>
@@ -469,7 +500,7 @@ export default function HomeScreen({ navigation }) {
                 )}
               </ScrollView>
             </View>
-          </View>
+            </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.sondage}
@@ -563,13 +594,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7F7FF",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+
   },
   header: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    padding: 20,
+    padding: windowWidth * 0.05,
     backgroundColor: "#F7F7FF",
   },
   welcomeSection: {
@@ -595,13 +628,14 @@ const styles = StyleSheet.create({
 
   scrollContainer: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: windowWidth * 0.04,
+
   },
   containerTodo: {
     width: "100%",
     backgroundColor: "#ffffff",
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: windowHeight * 0.01,
     padding: 15,
     height: 150,
     shadowColor: "#000",
@@ -643,7 +677,7 @@ const styles = StyleSheet.create({
   },
   containerEvent: {
     width: "48%",
-    height: 180,
+    height: windowHeight * 0.25, // Ajusté pour être proportionnel
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
@@ -683,7 +717,7 @@ const styles = StyleSheet.create({
   },
   sondage: {
     width: "48%",
-    height: 180,
+    height: windowHeight * 0.25,
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
@@ -758,7 +792,7 @@ const styles = StyleSheet.create({
   },
   liste: {
     width: "48%",
-    height: 180,
+    height: windowHeight * 0.25,
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
@@ -788,7 +822,7 @@ const styles = StyleSheet.create({
   },
   roue: {
     width: "48%",
-    height: 180,
+    height: windowHeight * 0.25,
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
@@ -829,9 +863,9 @@ const styles = StyleSheet.create({
   },
   user: {
     backgroundColor: "rgb(253, 112, 60)",
-    width: 50,
-    height: 50,
-    borderRadius: 50,
+    width: windowWidth * 0.12,
+    height: windowWidth * 0.12,
+    borderRadius: windowWidth * 0.06,
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 15,
@@ -854,8 +888,8 @@ const styles = StyleSheet.create({
     color: "#333",
   },
   avatar: {
-    width: 70,
-    height: 70,
-    borderRadius: 50,
+    width: windowWidth * 0.15,
+    height: windowWidth * 0.15,
+    borderRadius: 50
   },
 });

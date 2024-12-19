@@ -1,17 +1,31 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity, TextInput, ScrollView, Dimensions, SafeAreaView, Alert } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, Animated, Easing, TouchableOpacity, TextInput, ScrollView, Dimensions, SafeAreaView, Alert, Platform,StatusBar } from 'react-native';
 import Svg, { Path, G, Text as SvgText } from 'react-native-svg';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const { width: screenWidth } = Dimensions.get('window');
-const WHEEL_SIZE = screenWidth - 32;
 
-const WheelPage = () => {
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
+const WHEEL_SIZE = Math.min(screenWidth - 32, screenHeight * 0.5); // Ajusté pour éviter le débordement vertical
+
+
+const WheelPage = ({ navigation }) => {
   const [options, setOptions] = useState([]);
   const [newOption, setNewOption] = useState('');
   const [spinning, setSpinning] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
+
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+  }, []);
+
+
+  
   const addOption = () => {
     if (newOption.trim() === '') {
       Alert.alert('Erreur', 'Veuillez entrer une option');
@@ -150,6 +164,16 @@ const WheelPage = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <TouchableOpacity
+              onPress={() => navigation.navigate("Home")}
+              style={styles.iconContainer}
+            >
+              <FontAwesome
+                name={"arrow-circle-left"}
+                size={35}
+                color="rgb(255, 139, 228)"
+              />
+            </TouchableOpacity>
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -216,17 +240,19 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   scrollView: {
     flex: 1,
   },
   contentContainer: {
     padding: 16,
+    paddingBottom: Platform.OS === 'android' ? 24 : 16,
   },
   inputSection: {
     flexDirection: 'row',
     marginBottom: 16,
-    paddingTop: 8,
+    paddingTop: Platform.OS === 'android' ? 8 : 16,
   },
   input: {
     flex: 1,
@@ -238,12 +264,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     fontSize: 16,
+    minHeight: Platform.OS === 'android' ? 46 : 40,
   },
   addButton: {
     backgroundColor: '#2196F3',
     justifyContent: 'center',
     paddingHorizontal: 16,
     borderRadius: 8,
+    elevation: 2,
   },
   addButtonText: {
     color: '#fff',
@@ -252,7 +280,13 @@ const styles = StyleSheet.create({
   },
   optionsList: {
     marginBottom: 16,
-    maxHeight: 240,
+    maxHeight: screenHeight * 0.3,
+  },
+  optionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 8,
   },
   optionItem: {
     flexDirection: 'row',
@@ -270,11 +304,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
     elevation: 2,
   },
-  optionsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
   optionItemCompact: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -291,6 +320,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
+    minHeight: 40,
   },
   optionText: {
     flex: 1,
@@ -320,7 +350,8 @@ const styles = StyleSheet.create({
   },
   wheelContainer: {
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: Platform.OS === 'android' ? 12 : 16,
+    paddingBottom: Platform.OS === 'android' ? 20 : 0,
   },
   wheel: {
     width: WHEEL_SIZE,
@@ -346,14 +377,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF5252',
     zIndex: 1,
     borderRadius: 5,
+    elevation: 6,
   },
   spinButton: {
     backgroundColor: '#4CAF50',
-    padding: 15,
+    padding: Platform.OS === 'android' ? 12 : 15,
     borderRadius: 25,
     marginTop: 20,
     minWidth: 150,
     alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   spinButtonDisabled: {
     backgroundColor: '#999',

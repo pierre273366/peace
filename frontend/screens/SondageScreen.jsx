@@ -5,12 +5,19 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Dimensions,
+  Platform,
+  StatusBar
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+
 
 export default function SondageScreen({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
@@ -24,6 +31,14 @@ export default function SondageScreen({ navigation }) {
       fetchSondages();
     }, [])
   );
+
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      StatusBar.setTranslucent(true);
+      StatusBar.setBackgroundColor('transparent');
+    }
+  }, []);
 
   const fetchSondages = async () => {
     try {
@@ -222,6 +237,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9F9FF",
     alignItems: "center",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   header: {
     flexDirection: 'row',
@@ -243,8 +259,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   contentContainer: {
-    paddingBottom: 100,
+    paddingBottom: 120, // Augmenté pour éviter que le dernier élément soit caché par le bouton
     alignItems: "center",
+    width: "100%",
   },
   sondageCard: {
     backgroundColor: "#F7F7FF",
@@ -256,6 +273,25 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
+    elevation: 5, // Pour Android
+  },
+  title1: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+    marginVertical: Platform.OS === 'android' ? 10 : 20, // Ajusté pour Android
+  },
+  addButton: {
+    position: "absolute",
+    bottom: Platform.OS === 'android' ? 30 : 20, // Ajusté pour Android
+    right: 20,
+    width: 56,
+    height: 56,
+    backgroundColor: "#333",
+    borderRadius: 28,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 8, // Pour Android
   },
   responses: {
     marginTop: 10,
