@@ -83,7 +83,7 @@ export default function ImagePickerExample(props) {
           <Image source={{ uri: image }} style={styles.avatar} />
         ) : (
           <Image
-            source={require("../assets/utilisateur.png")} // Image par défaut
+            source={require("../assets/utilisateur2.jpg")} // Image par défaut
             style={styles.avatar}
           />
         )}
@@ -93,9 +93,13 @@ export default function ImagePickerExample(props) {
 }
 
 const styles = StyleSheet.create({
+  imageContainer:{
+    alignItems:'center',
+    justifyContent:'center',
+  },
   avatar: {
-    width: 150,
-    height: 150,
+    width: 215,
+    height: 215,
     borderRadius: 50,
   },
 });

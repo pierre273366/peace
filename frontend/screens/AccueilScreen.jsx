@@ -30,8 +30,10 @@ export default function Accueil({ navigation }) {
         </View>
 
         <View style={styles.textContainer}>
+          <Text style={styles.bienvenue}>
+            Bienvenue sur Peace!{'\n'}
+          </Text>
           <Text style={styles.text}>
-            Bienvenue sur Peace!{'\n\n'}
             Gérer votre colocation n'a jamais été aussi facile. Organisez vos dépenses, 
             événements et plus encore, en quelques clics
           </Text>
@@ -80,12 +82,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageLogo: {
-    width: windowWidth * 0.6,
-    height: windowHeight * 0.15,
+    marginTop:90,
+    width: windowWidth * 1,
+    height: windowHeight * 0.19,
   },
   textContainer: {
     width: '90%',
     paddingVertical: windowHeight * 0.02,
+    marginTop:50,
   },
   text: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.04,
@@ -93,6 +97,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: Math.min(windowWidth, windowHeight) * 0.06,
     color: '#333',
+  },
+  bienvenue:{
+    fontSize:28,
+    fontWeight:'bold',
+    color:'black',
+    textAlign:'center',
   },
   btnGo: {
     padding: windowWidth * 0.02,
