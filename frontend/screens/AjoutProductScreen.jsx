@@ -21,6 +21,7 @@ export default function AjoutProductScreen({ navigation }) {
   const [productName, setProductName] = useState("");
   const [isUrgent, setIsUrgent] = useState(false);
   const colocToken = useSelector((state) => state.users.coloc.token);
+  const backendUrl = "https://peace-chi.vercel.app";
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -35,7 +36,7 @@ export default function AjoutProductScreen({ navigation }) {
       return;
     }
 
-    const response = await fetch("https://peace-chi.vercel.app/product", {
+    const response = await fetch(`${backendUrl}/product`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

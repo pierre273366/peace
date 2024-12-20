@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
   modalSelector: {
     width: "100%",
   },
-  datePickerContainer: {
+   datePickerContainer: {
     width: '100%',
     alignItems: 'center',
     backgroundColor: '#f8f8f8',
