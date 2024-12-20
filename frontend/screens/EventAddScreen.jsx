@@ -84,7 +84,9 @@ const EventAdd = ({ navigation, route }) => {
 
   const formatTime = (date) => {
     if (!date) return "";
-    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    return `${String(date.getHours()).padStart(2, "0")}:${String(
+      date.getMinutes()
+    ).padStart(2, "0")}`;
   };
 
   const renderTimePickerContent = () => {
@@ -94,26 +96,29 @@ const EventAdd = ({ navigation, route }) => {
     return <Text style={styles.selectedTime}>{formatTime(eventTime)}</Text>;
   };
 
-  // Fonction pour vérifier les mots-clés dans la description et afficher une alerte avec un message aléatoire
-  const checkKeywordsInDescription = (description) => {
+  // Fonction pour vérifier les mots-clés dans le nom de l'événement et afficher une alerte avec un message aléatoire
+  const checkKeywordsInName = (name) => {
+    if (!name || typeof name !== "string") {
+      return;
+    }
+
     const motsCles = ["soirée", "apéro", "fête", "party", "fiesta"];
     const messages = [
       "L'apéro est lancé ! 🍹",
       "Soirée en vue ! 🎉",
       "Que la fête commence !🥳",
-      "j'espère que tu as pensé aux glaçons 🧊",
+      "J'espère que tu as pensé aux glaçons 🧊",
     ];
 
-    // Vérifie si un mot-clé est dans la description
+    // Convertir le nom en minuscule pour la comparaison
+    const nameLower = name.toLowerCase();
+
+    // Vérifier si un mot-clé est dans le nom
     for (let mot of motsCles) {
-      if (description.toLowerCase().includes(mot)) {
-        // Si un mot-clé est trouvé, choisir un message aléatoire
+      if (nameLower.includes(mot)) {
         const randomMessage =
           messages[Math.floor(Math.random() * messages.length)];
-        Alert.alert(
-          randomMessage, // Message à afficher dans l'alerte
-          [{ text: "OK" }] // Bouton pour fermer l'alerte
-        );
+        Alert.alert("", randomMessage, [{ text: "OK" }]);
         return;
       }
     }
@@ -129,7 +134,7 @@ const EventAdd = ({ navigation, route }) => {
           <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
         </TouchableOpacity>
       </View>
-      
+
       <Image
         style={styles.imageLogo}
         source={require("../assets/peacelogo.png")}
@@ -140,7 +145,10 @@ const EventAdd = ({ navigation, route }) => {
         style={styles.input}
         placeholder="Nom de l'événement"
         value={eventName}
-        onChangeText={setEventName}
+        onChangeText={(text) => {
+          setEventName(text);
+          checkKeywordsInName(text); // Vérifier les mots-clés à chaque changement du nom
+        }}
       />
 
       {/* Time picker section */}
@@ -200,10 +208,7 @@ const EventAdd = ({ navigation, route }) => {
         style={styles.input}
         placeholder="Description"
         value={eventDescription}
-        onChangeText={(text) => {
-          setEventDescription(text);
-          checkKeywordsInDescription(text); // Vérifier les mots-clés à chaque changement
-        }}
+        onChangeText={setEventDescription}
       />
 
       <Text style={styles.dateTitle}>Sélectionner une date</Text>

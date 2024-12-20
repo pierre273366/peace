@@ -187,13 +187,25 @@ export default function Profil({ navigation }) {
                 </TouchableOpacity>
               )}
             </View>
-            <Text>Tél: {userDetails?.phonenumber}</Text>
             <Text>
-              Date d'entrée dans la coloc:{" "}
+              <Text style={{ fontWeight: "bold" }}>Tél:</Text>
+              <Text>
+                {userDetails?.phonenumber
+                  ? `+33 ${userDetails.phonenumber}`
+                  : "Numéro non disponible"}
+              </Text>
+            </Text>
+            <Text>
+              <Text style={{ fontWeight: "bold" }}>
+                Date d'entrée dans la coloc:{" "}
+              </Text>
               {userDetails?.arrivaldate &&
                 userDetails.arrivaldate.split("T")[0]}
             </Text>
-            <Text>Token de ma coloc :{coloc.token}</Text>
+            <Text>
+              <Text style={{ fontWeight: "bold" }}>Token de ma coloc : </Text>
+              {coloc.token}
+            </Text>
           </View>
           <View style={styles.mescolocs}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>Mes colocs</Text>
@@ -367,7 +379,6 @@ const styles = StyleSheet.create({
   },
   colocUsername: {
     textAlign: "center",
-    marginTop: 5,
   },
   modalBackground: {
     flex: 1,
