@@ -113,7 +113,6 @@ const EventAdd = ({ navigation, route }) => {
       "party",
       "fiesta", // Événements festifs
       "anniversaire",
-      "noel",
       "noël",
       "réveillon",
       "nouvel an", // Événements spéciaux
@@ -132,7 +131,7 @@ const EventAdd = ({ navigation, route }) => {
         "C'est le grand jour, fête bien ! 🥳",
         "Un an de plus, mais qui compte ! 🎈",
       ],
-      noel: ["Joyeux Noël à tous ! 🎄", "Le Père Noël est passé ! 🎅"],
+      noël: ["Joyeux Noël à tous ! 🎄", "Le Père Noël est passé ! 🎅"],
       "nouvel an": [
         "Bonne année ! 🥂",
         "Que 2024 soit encore mieux ! 🎉",
