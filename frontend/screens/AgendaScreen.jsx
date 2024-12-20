@@ -130,18 +130,14 @@ const MyCalendar = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.containerButton}>
         <View style={styles.containerBtnTitle}>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate("Home")}
-                      style={styles.iconContainer}
-                    >
-                      <FontAwesome
-                        name={"chevron-left"}
-                        size={35}
-                        color="#FD703C"
-                      />
-                    </TouchableOpacity>
-                  </View>
-      <Text style={styles.title}>Agenda</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Home")}
+            style={styles.iconContainer}
+          >
+            <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.title}>Agenda</Text>
         <TouchableOpacity onPress={navigateToAddEvent} style={styles.button}>
           <Text style={styles.buttonAdd}>+</Text>
         </TouchableOpacity>
@@ -192,10 +188,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(247, 247, 255)",
   },
 
-  title:{
-color:'black',
-fontSize:25,
-fontWeight:'bold',
+  title: {
+    color: "black",
+    fontSize: 25,
+    fontWeight: "bold",
   },
 
   containerButton: {
@@ -207,7 +203,7 @@ fontWeight:'bold',
     justifyContent: "space-between",
     alignItems: "center",
   },
-  
+
   button: {
     backgroundColor: "rgb(0, 0, 0)",
     width: 50,

@@ -8,6 +8,7 @@ import {
   Dimensions,
   Platform,
   Image,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
@@ -93,20 +94,40 @@ const EventAdd = ({ navigation, route }) => {
     return <Text style={styles.selectedTime}>{formatTime(eventTime)}</Text>;
   };
 
+  // Fonction pour vérifier les mots-clés dans la description et afficher une alerte avec un message aléatoire
+  const checkKeywordsInDescription = (description) => {
+    const motsCles = ["soirée", "apéro", "fête", "party", "fiesta"];
+    const messages = [
+      "L'apéro est lancé ! 🍹",
+      "Soirée en vue ! 🎉",
+      "Que la fête commence !🥳",
+      "j'espère que tu as pensé aux glaçons 🧊",
+    ];
+
+    // Vérifie si un mot-clé est dans la description
+    for (let mot of motsCles) {
+      if (description.toLowerCase().includes(mot)) {
+        // Si un mot-clé est trouvé, choisir un message aléatoire
+        const randomMessage =
+          messages[Math.floor(Math.random() * messages.length)];
+        Alert.alert(
+          randomMessage, // Message à afficher dans l'alerte
+          [{ text: "OK" }] // Bouton pour fermer l'alerte
+        );
+        return;
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View
-         style={styles.containerBtnTitle}>
-                          <TouchableOpacity
-                            onPress={() => navigation.navigate("Agenda")}
-                            style={styles.iconContainer}
-                          >
-                            <FontAwesome
-                              name={"chevron-left"}
-                              size={35}
-                              color="#FD703C"
-                            />
-                          </TouchableOpacity>
+      <View style={styles.containerBtnTitle}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Agenda")}
+          style={styles.iconContainer}
+        >
+          <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
+        </TouchableOpacity>
       </View>
       
       <Image
@@ -179,7 +200,10 @@ const EventAdd = ({ navigation, route }) => {
         style={styles.input}
         placeholder="Description"
         value={eventDescription}
-        onChangeText={setEventDescription}
+        onChangeText={(text) => {
+          setEventDescription(text);
+          checkKeywordsInDescription(text); // Vérifier les mots-clés à chaque changement
+        }}
       />
 
       <Text style={styles.dateTitle}>Sélectionner une date</Text>
@@ -246,19 +270,16 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: "100%",
     height: "100%",
-    paddingBottom:300,
-    paddingTop:50,
-
+    paddingBottom: 300,
+    paddingTop: 50,
   },
-  imageLogo:{
-height:150
+  imageLogo: {
+    height: 150,
   },
-
-  iconContainer:{
-paddingTop: 220,
+  iconContainer: {
+    paddingTop: 220,
   },
-
-  containerBtnTitle:{
+  containerBtnTitle: {
     width: "100%",
     alignItems: "flex-end",
     padding: windowWidth * 0.1,
@@ -266,9 +287,7 @@ paddingTop: 220,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    
   },
-
   title: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.05,
     fontWeight: "bold",
@@ -321,7 +340,6 @@ paddingTop: 220,
     paddingLeft: 20,
     padding: windowHeight * 0.025,
     marginBottom: windowHeight * 0.03,
-    
   },
   selectedDate: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,

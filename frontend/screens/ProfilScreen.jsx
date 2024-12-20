@@ -126,10 +126,15 @@ export default function Profil({ navigation }) {
                 @{user.username}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 20 }}>
-                Ma coloc: {coloc.name}
+                <Text style={{ fontWeight: "bold" }}>Ma coloc</Text>:{" "}
+                {coloc.name}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 30 }}>
-                Adresse de la coloc: {coloc.address}
+                <Text style={{ fontWeight: "bold" }}>
+                  {" "}
+                  Adresse de la coloc:
+                </Text>{" "}
+                {coloc.address}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 30 }}>
                 🎂
