@@ -10,7 +10,8 @@ import {
   SafeAreaView,
   Image,
   Platform,
-  Modal
+  Modal,
+  ScrollView
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -162,7 +163,7 @@ export default function TodoListCrea({ navigation, route }) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.containerProfil}>
         <View style={styles.header}>
           <TouchableOpacity
@@ -174,141 +175,143 @@ export default function TodoListCrea({ navigation, route }) {
           <Text style={styles.headerTitle}>Todo List</Text>
         </View>
       </SafeAreaView>
-
+  
       <View style={styles.containerCrea}>
-      <View style={styles.input}>
-      <FontAwesome name="users" size={24} color="#FD703C"  />
-  <View style={styles.inputContent}>
-    <View style={styles.participantsHeader}>
-      <Text>Participants</Text>
-      <TouchableOpacity
-        onPress={() => setSelectedUsers(users.map(user => user._id))}
-        style={styles.selectAllButton}
-      >
-        <Text style={styles.selectAllText}>Tout sélectionner</Text>
-      </TouchableOpacity>
-    </View>
-    <View style={styles.participantsList}>
-      {users.map((item) => (
-        <TouchableOpacity
-          key={item._id}
-          style={styles.participantItem}
-          onPress={() => handleCheckboxChange(item)}
-        >
-          <View style={styles.participantInfo}>
-            <View style={styles.avatarCircle}>
-              <Text style={styles.avatarText}>
-                {item.username.charAt(0).toUpperCase()}
-              </Text>
+        <View style={styles.input}>
+          <FontAwesome name="users" size={24} color="#FD703C" />
+          <View style={styles.inputContent}>
+            <View style={styles.participantsHeader}>
+              <Text>Participants</Text>
+              <TouchableOpacity
+                onPress={() => setSelectedUsers(users.map(user => user._id))}
+                style={styles.selectAllButton}
+              >
+                <Text style={styles.selectAllText}>Tout sélectionner</Text>
+              </TouchableOpacity>
             </View>
-            <Text style={styles.participantName}>
-              {item.username}
-            </Text>
-          </View>
-          <View
-            style={[
-              styles.checkbox,
-              selectedUsers.includes(item._id) && styles.checkboxSelected,
-            ]}
-          >
-            {selectedUsers.includes(item._id) && (
-              <Text style={styles.checkmark}>✓</Text>
+            <View style={styles.participantsList}>
+              {users.map((item) => (
+                <TouchableOpacity
+                  key={item._id}
+                  style={styles.participantItem}
+                  onPress={() => handleCheckboxChange(item)}
+                >
+                  <View style={styles.participantInfo}>
+                    <View style={styles.avatarCircle}>
+                      <Text style={styles.avatarText}>
+                        {item.username.charAt(0).toUpperCase()}
+                      </Text>
+                    </View>
+                    <Text style={styles.participantName}>
+                      {item.username}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      selectedUsers.includes(item._id) && styles.checkboxSelected,
+                    ]}
+                  >
+                    {selectedUsers.includes(item._id) && (
+                      <Text style={styles.checkmark}>✓</Text>
+                    )}
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+            {selectedUsers.length > 0 && (
+              <Text style={styles.selectedCount}>
+                {selectedUsers.length} participant
+                {selectedUsers.length > 1 ? 's' : ''} sélectionné
+                {selectedUsers.length > 1 ? 's' : ''}
+              </Text>
             )}
           </View>
-        </TouchableOpacity>
-      ))}
-    </View>
-    {selectedUsers.length > 0 && (
-      <Text style={styles.selectedCount}>
-        {selectedUsers.length} participant
-        {selectedUsers.length > 1 ? 's' : ''} sélectionné
-        {selectedUsers.length > 1 ? 's' : ''}
-      </Text>
-    )}
-  </View>
-</View>
-<View style={styles.input}>
-  <FontAwesome name="tasks" size={24} color="#FD703C" style={{ alignSelf: "center" }} />
-  <View style={styles.inputContent}>
-    <Text>Nom de la tâche</Text>
-    <TextInput
-      placeholder="Exemple: Faire les courses"
-      value={selectTache}
-      onChangeText={setSelectTache}
-      style={styles.textInput}
-    />
-  </View>
-</View>
-<View style={styles.input}>
-  <FontAwesome name="calendar" size={24} color="#FD703C" style={{ alignSelf: "center" }} />
-  <View style={styles.inputContent}>
-    <Text>Sélectionner une date</Text>
-    <TouchableOpacity
-      onPress={() => {
-        setShowDatePicker(true);
-        setTempDate(selectedDate);
-      }}
-      style={styles.dateButton}
-    >
-      <Text style={styles.dateText}>{formatDate(selectedDate)}</Text>
-    </TouchableOpacity>
-
-    {showDatePicker && (
-      <View style={styles.datePickerContainer}>
-        {Platform.OS === 'ios' && (
-          <View style={styles.iosButtonsContainer}>
-            <TouchableOpacity 
-              onPress={() => setShowDatePicker(false)}
-              style={styles.iosButton}
-            >
-              <Text style={styles.iosButtonTextCancel}>Annuler</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              onPress={() => {
-                setSelectedDate(tempDate);
-                setShowDatePicker(false);
-              }}
-              style={styles.iosButton}
-            >
-              <Text style={styles.iosButtonTextConfirm}>Valider</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        <View style={styles.datePickerWrapper}>
-          <DateTimePicker
-            value={Platform.OS === 'ios' ? tempDate : selectedDate}
-            mode="date"
-            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-            onChange={onDateChange}
-            style={styles.datePicker}
-          />
         </View>
-      </View>
-    )}
-  </View>
-</View>
-
-
-<View style={styles.input}>
-  <FontAwesome name="refresh" size={24} color="#FD703C" style={{ alignSelf: "center" }} />
-  <View style={styles.inputContent}>
-    <Text>Type de récurrence</Text>
-    <ModalSelector
-      data={recurrenceOptions}
-      initValue={recurrenceType}
-      onChange={(option) => setRecurrenceType(option.key)}
-      style={styles.modalSelector}
-      selectedItemTextStyle={styles.selectedItemText}
-    >
-      <View style={styles.dateButton}>
-        <Text style={styles.dateText}>{recurrenceType}</Text>
-      </View>
-    </ModalSelector>
-    <Text style={styles.nextOccurrence}>
-      Prochaine tâche: {formatDate(calculateNextOccurrence(selectedDate, recurrenceType))}
-    </Text>
-  </View>
-</View>
+  
+        <View style={styles.input}>
+          <FontAwesome name="tasks" size={24} color="#FD703C" style={styles.inputIcon} />
+          <View style={styles.inputContent}>
+            <Text>Nom de la tâche</Text>
+            <TextInput
+              placeholder="Exemple: Faire les courses"
+              value={selectTache}
+              onChangeText={setSelectTache}
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+  
+        <View style={styles.input}>
+          <FontAwesome name="calendar" size={24} color="#FD703C" style={styles.inputIcon} />
+          <View style={styles.inputContent}>
+            <Text>Sélectionner une date</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setShowDatePicker(true);
+                setTempDate(selectedDate);
+              }}
+              style={styles.dateButton}
+            >
+              <Text style={styles.dateText}>{formatDate(selectedDate)}</Text>
+            </TouchableOpacity>
+  
+            {showDatePicker && (
+              <View style={styles.datePickerContainer}>
+                {Platform.OS === 'ios' && (
+                  <View style={styles.iosButtonsContainer}>
+                    <TouchableOpacity 
+                      onPress={() => setShowDatePicker(false)}
+                      style={styles.iosButton}
+                    >
+                      <Text style={styles.iosButtonTextCancel}>Annuler</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      onPress={() => {
+                        setSelectedDate(tempDate);
+                        setShowDatePicker(false);
+                      }}
+                      style={styles.iosButton}
+                    >
+                      <Text style={styles.iosButtonTextConfirm}>Valider</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+                <View style={styles.datePickerWrapper}>
+                  <DateTimePicker
+                    value={Platform.OS === 'ios' ? tempDate : selectedDate}
+                    mode="date"
+                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                    onChange={onDateChange}
+                    style={styles.datePicker}
+                  />
+                </View>
+              </View>
+            )}
+          </View>
+        </View>
+  
+        <View style={styles.input}>
+          <FontAwesome name="refresh" size={24} color="#FD703C" style={styles.inputIcon} />
+          <View style={styles.inputContent}>
+            <Text>Type de récurrence</Text>
+            <ModalSelector
+              data={recurrenceOptions}
+              initValue={recurrenceType}
+              onChange={(option) => setRecurrenceType(option.key)}
+              style={styles.modalSelector}
+              selectedItemTextStyle={styles.selectedItemText}
+            >
+              <View style={styles.dateButton}>
+                <Text style={styles.dateText}>{recurrenceType}</Text>
+              </View>
+            </ModalSelector>
+            <Text style={styles.nextOccurrence}>
+              Prochaine tâche: {formatDate(calculateNextOccurrence(selectedDate, recurrenceType))}
+            </Text>
+          </View>
+        </View>
+  
         <TouchableOpacity
           style={styles.partager}
           onPress={() => handleSubmit()}
@@ -316,7 +319,7 @@ export default function TodoListCrea({ navigation, route }) {
           <Text style={styles.white}>Créer</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
