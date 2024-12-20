@@ -14,13 +14,12 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { useCallback } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-
-
 export default function SondageScreen({ navigation }) {
-  const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
+  const user = useSelector((state) => state.users.user);
   const userToken = useSelector((state) => state.users.user.token);
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [sondages, setSondages] = useState([]);
@@ -31,7 +30,6 @@ export default function SondageScreen({ navigation }) {
       fetchSondages();
     }, [])
   );
-
 
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -93,7 +91,6 @@ export default function SondageScreen({ navigation }) {
       const data = await response.json();
 
       if (data.result) {
-        // Recharge les sondages après suppression
         fetchSondages();
       } else {
         console.error("Erreur: Sondage non supprimé.");
@@ -176,18 +173,25 @@ export default function SondageScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("Home")}
-                    style={styles.iconContainer}
-                  >
-                    <FontAwesome
-                      name={"chevron-left"}
-                      size={35}
-                      color="#FD703C"
-                    />
-                  </TouchableOpacity>
-                 <Text style={styles.title1}>Sondages</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home")}
+          style={styles.iconContainer}
+        >
+          <FontAwesome
+            name={"chevron-left"}
+            size={35}
+            color="#FD703C"
+          />
+        </TouchableOpacity>
+        <Text style={styles.title1}>Sondages</Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate("CreateSondage")}
+        >
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
       </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -222,12 +226,6 @@ export default function SondageScreen({ navigation }) {
           ))
         )}
       </ScrollView>
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate("CreateSondage")}
-      >
-        <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -241,25 +239,31 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center', // Ajouter cette ligne
-    width: '100%', // Ajouter cette ligne
-    paddingHorizontal: 20, // Ajouter cette ligne pour l'espacement
-    marginTop: 10, // Ajouter cette ligne pour l'espacement en haut
-    position: 'relative', // Ajouter cette ligne
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginTop: 10,
+    height: 50,
   },
-
-  iconContainer:{
-    position: 'absolute', // Ajouter cette ligne
-    left: 20, // Ajouter cette ligne
-    zIndex: 1, // Ajouter cette ligne
+  iconContainer: {
+    width: 50,
+    justifyContent: 'center',
   },
-  
+  title1: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+    flex: 1,
+    textAlign: 'center',
+  },
   scrollView: {
     flex: 1,
     width: "100%",
   },
   contentContainer: {
-    paddingBottom: 120, // Augmenté pour éviter que le dernier élément soit caché par le bouton
+    paddingTop: 20,
+    paddingBottom: 40,
     alignItems: "center",
     width: "100%",
   },
@@ -273,25 +277,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 5, // Pour Android
-  },
-  title1: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginVertical: Platform.OS === 'android' ? 10 : 20, // Ajusté pour Android
+    elevation: 5,
   },
   addButton: {
-    position: "absolute",
-    bottom: Platform.OS === 'android' ? 30 : 20, // Ajusté pour Android
-    right: 20,
-    width: 56,
-    height: 56,
-    backgroundColor: "#333",
-    borderRadius: 28,
+    width: 50,
+    height: 50,
+    backgroundColor: "black",
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 8, // Pour Android
+  },
+  addButtonText: {
+    color: "#FFF",
+    fontSize: 28,
+    fontWeight: "bold",
+    marginTop: -2,
   },
   responses: {
     marginTop: 10,
@@ -300,14 +300,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
-  },
-  title1: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333",
-    marginVertical: 20,
-    flex: 1, // Ajouter cette ligne
-    textAlign: 'center', // Ajouter cette ligne
   },
   responseContainer: {
     marginVertical: 8,
@@ -354,28 +346,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textAlign: "center",
   },
-  addButton: {
-    position: "absolute",
-    top: 40,  // au lieu de bottom: 20
-    right: 20,
-    width: 50,
-    height: 50,
-    backgroundColor: "#333",
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1, // pour s'assurer qu'il reste au-dessus des autres éléments
-},
-  addButtonText: {
-    color: "#FFF",
-    fontSize: 28,
-    fontWeight: "bold",
-  },
   icon: {
     position: "relative",
   },
   titleIcon: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  createdByText: {
+    fontSize: 14,
+    color: "#666",
+    marginTop: 5,
+    marginBottom: 10,
+    fontStyle: "italic",
   },
 });
