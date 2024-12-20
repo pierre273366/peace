@@ -678,11 +678,11 @@ const styles = StyleSheet.create({
   },
   containerEvent: {
     width: "48%",
-    height: windowHeight * 0.25, // Ajusté pour être proportionnel
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
     marginTop: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
@@ -718,11 +718,11 @@ const styles = StyleSheet.create({
   },
   sondage: {
     width: "48%",
-    height: windowHeight * 0.25,
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
     marginTop: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
@@ -787,7 +787,7 @@ const styles = StyleSheet.create({
   },
   liste: {
     width: "48%",
-    height: windowHeight * 0.25,
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
@@ -816,7 +816,7 @@ const styles = StyleSheet.create({
   },
   roue: {
     width: "48%",
-    height: windowHeight * 0.25,
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
