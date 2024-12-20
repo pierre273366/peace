@@ -59,7 +59,7 @@ export default function Profil({ navigation }) {
 
     if (data.result) {
       console.log(data.users);
-      setColocataires(data.users); // Mettez à jour l'état avec la liste des colocataires
+      setColocataires(data.users); // Mise à jour l'état avec la liste des colocataires
     } else {
       console.error(
         "Erreur lors de la récupération des colocataires:",
@@ -94,7 +94,7 @@ export default function Profil({ navigation }) {
   // Fonction pour fermer la modal
   const closeModal = () => {
     setModalVisible(false);
-    setSelectedColocataire(null); // Réinitialiser l'utilisateur sélectionné
+    setSelectedColocataire(null); // Réinitialise l'utilisateur sélectionné
   };
 
   return (
@@ -246,7 +246,7 @@ export default function Profil({ navigation }) {
                       source={
                         colocataire.profilpicture &&
                         colocataire.profilpicture !== "default-image-url"
-                          ? { uri: colocataire.profilpicture } // Assurez-vous que l'URL est correcte
+                          ? { uri: colocataire.profilpicture }
                           : require("../assets/utilisateur2.jpg") // Image par défaut si pas de photo
                       }
                       style={styles.colocAvatar}
@@ -348,19 +348,19 @@ const styles = StyleSheet.create({
     marginTop: 140,
     marginLeft: 40,
     borderRadius: 20,
-    shadowColor: "#000", // Couleur de l'ombre
-    shadowOffset: { width: 0, height: 4 }, // Décalage de l'ombre
-    shadowOpacity: 0.1, // Opacité de l'ombre
-    shadowRadius: 10, // Rayon de flou de l'ombre
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
     alignItems: "center",
     justifyContent: "center",
-    position: "relative", // Définit le contexte de positionnement pour les enfants
+    position: "relative",
   },
   iconContainer: {
-    position: "absolute", // Permet de positionner l'icône par rapport à son parent
-    top: 10, // Distance du haut
-    right: 10, // Distance de la droite
-    zIndex: 10, // Assure que l'icône est au-dessus des autres éléments
+    position: "absolute",
+    top: 10,
+    right: 10,
+    zIndex: 10,
   },
 
   containerInfo: {
@@ -375,10 +375,10 @@ const styles = StyleSheet.create({
   avatarContainer: {
     width: 150,
     height: 150,
-    borderRadius: 50, // Pour que la bordure soit circulaire
-    borderWidth: 2, // Épaisseur de la bordure
-    borderColor: "black", // Couleur de la bordure
-    overflow: "hidden", // Pour que l'image reste dans les limites du conteneur
+    borderRadius: 50,
+    borderWidth: 2,
+    borderColor: "black",
+    overflow: "hidden",
   },
 
   presentation: {

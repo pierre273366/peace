@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
   google_id: String,
   token: String,
   phonenumber: Number,
-  dateofbirth: String,
+  dateofbirth: Date,
   firstcoloc: String,
   profilpicture: {
     type: String,
