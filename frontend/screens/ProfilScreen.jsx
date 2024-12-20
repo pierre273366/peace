@@ -206,7 +206,7 @@ export default function Profil({ navigation }) {
                         colocataire.profilpicture &&
                         colocataire.profilpicture !== "default-image-url"
                           ? { uri: colocataire.profilpicture } // Assurez-vous que l'URL est correcte
-                          : require("../assets/utilisateur.png") // Image par défaut si pas de photo
+                          : require("../assets/utilisateur2.jpg") // Image par défaut si pas de photo
                       }
                       style={styles.colocAvatar}
                     />
@@ -356,9 +356,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   colocAvatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 50,
   },
   colocUsername: {
     textAlign: "center",

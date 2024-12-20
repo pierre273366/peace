@@ -426,7 +426,7 @@ export default function HomeScreen({ navigation }) {
             source={
               userPicture && userPicture !== "default-image-url"
                 ? { uri: userPicture } // Assurez-vous que l'URL est correcte
-                : require("../assets/utilisateur.png") // Image par défaut si pas de photo
+                : require("../assets/utilisateur2.jpg") // Image par défaut si pas de photo
             }
             style={styles.avatar}
           ></Image>
@@ -439,10 +439,10 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate("TodoList")}
         >
           <ScrollView>
-            <Text style={styles.textEvent}>Todo List</Text>
+            <Text style={styles.cardTitle}>Todo List</Text>
             <View style={styles.todo}>
-              {todos.length > 0 ? (
-                todos.map((todo, index) => (
+              {todos.slice(0, 2).length > 0 ? (
+                todos.slice(0, 2).map((todo, index) => (
                   <View key={index} style={styles.todoItem}>
                     <View style={styles.todoHeader}>
                       <Text style={styles.todoText}>
@@ -466,7 +466,7 @@ export default function HomeScreen({ navigation }) {
                           )
                         }
                         color={
-                          todo.isCompleted ? "rgb(255, 139, 228)" : "lightgray"
+                          todo.isCompleted ? "#FD703C" : "lightgray"
                         }
                       />
                     </View>
@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: windowHeight * 0.01,
     padding: 15,
-    height: 150,
+    height: 140,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
@@ -705,16 +705,21 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontWeight: "bold",
-    fontSize: 12,
+    fontSize: 10,
     textAlign: "center",
   },
   eventTitle: {
     fontWeight: "bold",
-    fontSize: 18,
+    fontSize: 13,
+    color:'black',
     marginTop: 10,
+    
   },
   eventDescription: {
     marginTop: 5,
+    color:"#FD703C",
+    fontStyle:'italic',
+    fontSize:12,
   },
   sondage: {
     width: "48%",
