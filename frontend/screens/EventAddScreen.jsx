@@ -97,18 +97,54 @@ const EventAdd = ({ navigation, route }) => {
   };
 
   // Fonction pour vérifier les mots-clés dans le nom de l'événement et afficher une alerte avec un message aléatoire
+  // Fonction pour vérifier les mots-clés dans le nom de l'événement et afficher une alerte avec un message aléatoire
   const checkKeywordsInName = (name) => {
     if (!name || typeof name !== "string") {
       return;
     }
 
-    const motsCles = ["soirée", "apéro", "fête", "party", "fiesta"];
-    const messages = [
-      "L'apéro est lancé ! 🍹",
-      "Soirée en vue ! 🎉",
-      "Que la fête commence !🥳",
-      "J'espère que tu as pensé aux glaçons 🧊",
+    // Mots-clés pour les événements
+    const motsCles = [
+      "soirée",
+      "apéro",
+      "fête",
+      "party",
+      "fiesta", // Événements festifs
+      "anniversaire",
+      "noel",
+      "noël",
+      "réveillon",
+      "nouvel an", // Événements spéciaux
     ];
+
+    // Messages associés aux mots-clés
+    const messages = {
+      soirée: [
+        "L'apéro est lancé ! 🍹",
+        "Soirée en vue ! 🎉",
+        "Que la fête commence !🥳",
+        "J'espère que tu as pensé aux glaçons 🧊",
+      ],
+      anniversaire: [
+        "Joyeux anniversaire ! 🎂🎉",
+        "C'est le grand jour, fête bien ! 🥳",
+        "Un an de plus, mais qui compte ! 🎈",
+      ],
+      noel: [
+        "Joyeux Noël à tous ! 🎄",
+        "Le Père Noël est passé ! 🎅",
+        "C'est la magie de Noël ! ✨",
+      ],
+      "nouvel an": [
+        "Bonne année ! 🥂",
+        "Que 2024 soit encore mieux ! 🎉",
+        "Fêtons le début d'une nouvelle année ! 🎆",
+      ],
+      réveillon: [
+        "C'est le réveillon ! 🥳",
+        "Célébrons ensemble cette soirée magique ! 🍾",
+      ],
+    };
 
     // Convertir le nom en minuscule pour la comparaison
     const nameLower = name.toLowerCase();
@@ -116,8 +152,9 @@ const EventAdd = ({ navigation, route }) => {
     // Vérifier si un mot-clé est dans le nom
     for (let mot of motsCles) {
       if (nameLower.includes(mot)) {
+        // Trouver le type de message à afficher selon le mot-clé trouvé
         const randomMessage =
-          messages[Math.floor(Math.random() * messages.length)];
+          messages[mot][Math.floor(Math.random() * messages[mot].length)];
         Alert.alert("", randomMessage, [{ text: "OK" }]);
         return;
       }
