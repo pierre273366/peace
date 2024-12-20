@@ -250,39 +250,24 @@ export default function TodoList({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.containerProfil}>
-        <View>
-          <View style={styles.containerBtnTitle}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Home")}
-              style={styles.iconContainer}
-            >
-              <FontAwesome
-                name={"chevron-left"}
-                size={35}
-                color="#FD703C"
-              />
-            </TouchableOpacity>
+  <View style={styles.header}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("Home")}
+      style={styles.backButton}
+    >
+      <FontAwesome name="chevron-left" size={35} color="#FD703C" />
+    </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.Add}
-              onPress={() => navigation.navigate("TodoCrea")}
-            >
-              <Text style={styles.white}>+</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+    <Text style={styles.headerTitle}>Todo List</Text>
 
-        <Text
-          style={{
-            fontWeight: "bold",
-            fontSize: 25,
-            textAlign: "center",
-            paddingBottom: 20,
-          }}
-        >
-          Todo List
-        </Text>
-      </SafeAreaView>
+    <TouchableOpacity
+      style={styles.addButton}
+      onPress={() => navigation.navigate("TodoCrea")}
+    >
+      <Text style={styles.addButtonText}>+</Text>
+    </TouchableOpacity>
+  </View>
+</SafeAreaView>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="handled"
@@ -633,35 +618,96 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  Add: {
-    backgroundColor: "black",
-    borderRadius: 50,
+  addButton: {
+    backgroundColor: 'black',
+    borderRadius: 28,
     height: 56,
     width: 56,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   white: {
     color: "white",
     fontSize: 26,
   },
-  todoItem: {
-    marginBottom: 20,
-
-    backgroundColor: "white",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    marginLeft: 15,
-    marginRight: 15,
+  addButtonText: {
+    color: 'white',
+    fontSize: 26,
   },
-  todoHeader: {},
+  headerTitle: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    flex: 1,
+    textAlign: 'center',
+  },
+  backButton: {
+    padding: 5,
+  },
+  todoItem: {
+    marginHorizontal: 15,
+    marginBottom: 15,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    padding: 15,
+  },
+  todoHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   todoTextContainer: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
+    flex: 1,
+    marginHorizontal: 15,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    width: '100%',
+  },
+  todoTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  todoRecurrence: {
+    color: '#666',
+    fontSize: 14,
+  },
+  participantsContainer: {
+    flexDirection: 'row',
+    marginRight: 10,
+  },
+  usernameCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FD703C20',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  usernameText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FD703C',
+  },
+  checkboxContainer: {
+    padding: 5,
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#ddd',
   },
   scrollViewContent: {
     paddingVertical: 10,
@@ -685,17 +731,6 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 20,
   },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#ddd",
-  },
-  checkboxContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end", // Aligner à droite
-    alignItems: "center", // Centrer verticalement
-    marginRight: 5,
-  },
+ 
+  
 });

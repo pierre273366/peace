@@ -75,6 +75,19 @@ function Signup({ navigation }) {
     setSignUpBirth(formatted);
   };
 
+
+
+  const wheelColors = [
+    '#BEBFF5', // Couleur originale
+    '#AAAAF0', // Un peu plus foncé
+    '#9696EB', // Encore plus foncé
+    '#8282E6', // Plus foncé
+    '#6E6EE1', // Encore plus foncé
+    '#5A5ADC', // Le plus foncé
+  ];
+
+
+  
   // Gestion de la date
   const dateSet = (event, selectedDate) => {
     if (Platform.OS === "android") {

@@ -128,6 +128,20 @@ export default function HomeScreen({ navigation }) {
     fetchUserDetails();
   }, []);
 
+
+
+
+
+  const wheelColors = [
+    '#BEBFF5', // Couleur originale
+    '#AAAAF0', // Un peu plus foncé
+    '#9696EB', // Encore plus foncé
+    '#8282E6', // Plus foncé
+    '#6E6EE1', // Encore plus foncé
+    '#5A5ADC', // Le plus foncé
+  ];
+
+  
   // Fonction pour formater l'heure au format "00h00"
   const formatTime = (time) => {
     const hours = Math.floor(time / 100); // Extraire l'heure (ex: 1430 -> 14)
@@ -664,11 +678,11 @@ const styles = StyleSheet.create({
   },
   containerEvent: {
     width: "48%",
-    height: windowHeight * 0.25, // Ajusté pour être proportionnel
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
     marginTop: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
@@ -704,11 +718,11 @@ const styles = StyleSheet.create({
   },
   sondage: {
     width: "48%",
-    height: windowHeight * 0.25,
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
     marginTop: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 3 },
@@ -773,7 +787,7 @@ const styles = StyleSheet.create({
   },
   liste: {
     width: "48%",
-    height: windowHeight * 0.25,
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",
@@ -802,7 +816,7 @@ const styles = StyleSheet.create({
   },
   roue: {
     width: "48%",
-    height: windowHeight * 0.25,
+    height: windowHeight * 0.235, // Hauteur réduite
     backgroundColor: "#ffffff",
     borderRadius: 10,
     alignItems: "center",

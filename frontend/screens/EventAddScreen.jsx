@@ -19,12 +19,12 @@ const windowHeight = Dimensions.get("window").height;
 
 const EventAdd = ({ navigation, route }) => {
   const [eventName, setEventName] = useState("");
-  const [eventTime, setEventTime] = useState("");
+  const [eventTime, setEventTime] = useState(null);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [eventPlace, setEventPlace] = useState("");
   const [eventDescription, setEventDescription] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [timeError, setTimeError] = useState("");
   const colocToken = useSelector((state) => state.users.coloc.token);
   const backendUrl = "https://peace-chi.vercel.app";
 
@@ -37,26 +37,28 @@ const EventAdd = ({ navigation, route }) => {
     }
   };
 
-  const validateTime = (time) => {
-    const timePattern = /^([01]?[0-9]|2[0-3]):([0-5]?[0-9])$/;
-    if (!timePattern.test(time)) {
-      setTimeError("L'heure doit être au format HH:MM (ex: 14:30).");
-      return false;
+  const onTimeChange = (event, selectedTime) => {
+    if (Platform.OS === "android") {
+      setShowTimePicker(false);
     }
-    setTimeError("");
-    return true;
+    if (selectedTime) {
+      setEventTime(selectedTime);
+    }
   };
 
   const handleAddEvent = () => {
-    if (!validateTime(eventTime)) {
+    if (!eventTime) {
+      // Gérer le cas où aucune heure n'est sélectionnée
+      alert("Veuillez sélectionner une heure");
       return;
     }
 
-    const [hour, minutes] = eventTime.split(":").map(Number);
+    const hours = eventTime.getHours();
+    const minutes = eventTime.getMinutes();
 
     const newEvent = {
       name: eventName,
-      time: hour * 100 + minutes,
+      time: hours * 100 + minutes,
       place: eventPlace,
       description: eventDescription,
       date: selectedDate.toISOString().split("T")[0],
@@ -80,15 +82,16 @@ const EventAdd = ({ navigation, route }) => {
       });
   };
 
-  const handleTimeChange = (text) => {
-    let formattedText = text.replace(/[^0-9:]/g, "");
-    if (formattedText.length === 2 && !formattedText.includes(":")) {
-      formattedText += ":";
+  const formatTime = (date) => {
+    if (!date) return "";
+    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  };
+
+  const renderTimePickerContent = () => {
+    if (!eventTime) {
+      return <Text style={styles.placeholder}>Heure de l'événement</Text>;
     }
-    if (formattedText.length > 5) {
-      formattedText = formattedText.substring(0, 5);
-    }
-    setEventTime(formattedText);
+    return <Text style={styles.selectedTime}>{formatTime(eventTime)}</Text>;
   };
 
   // Fonction pour vérifier les mots-clés dans la description et afficher une alerte avec un message aléatoire
@@ -126,6 +129,7 @@ const EventAdd = ({ navigation, route }) => {
           <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
         </TouchableOpacity>
       </View>
+      
       <Image
         style={styles.imageLogo}
         source={require("../assets/peacelogo.png")}
@@ -139,15 +143,51 @@ const EventAdd = ({ navigation, route }) => {
         onChangeText={setEventName}
       />
 
-      <TextInput
-        style={[styles.input, timeError ? styles.inputError : null]}
-        placeholder="Heure de l'événement (ex: 14:30)"
-        value={eventTime}
-        onChangeText={handleTimeChange}
-        maxLength={5}
-        keyboardType="numeric"
-      />
-      {timeError ? <Text style={styles.errorText}>{timeError}</Text> : null}
+      {/* Time picker section */}
+      {Platform.OS === "ios" ? (
+        <>
+          {showTimePicker && (
+            <View style={styles.iosPickerContainer}>
+              <DateTimePicker
+                value={eventTime || new Date()}
+                mode="time"
+                display="spinner"
+                onChange={onTimeChange}
+              />
+              <TouchableOpacity
+                style={styles.iosButton}
+                onPress={() => setShowTimePicker(false)}
+              >
+                <Text style={styles.iosButtonText}>Valider</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          <TouchableOpacity
+            onPress={() => setShowTimePicker(true)}
+            style={styles.timeInput}
+          >
+            {renderTimePickerContent()}
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <TouchableOpacity
+            onPress={() => setShowTimePicker(true)}
+            style={styles.timeInput}
+          >
+            {renderTimePickerContent()}
+          </TouchableOpacity>
+          {showTimePicker && (
+            <DateTimePicker
+              value={eventTime || new Date()}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={onTimeChange}
+            />
+          )}
+        </>
+      )}
 
       <TextInput
         style={styles.input}
@@ -334,6 +374,28 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: Math.min(windowWidth, windowHeight) * 0.03,
     fontWeight: "600",
+  },
+  selectedTime: {
+    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
+    color: "rgb(0, 0, 0)",
+    paddingTop: 12,
+  },
+  timeInput: {
+    width: 340,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: "#E6E6FC",
+    marginTop: 10,
+    justifyContent: "center", // Centre verticalement
+    paddingHorizontal: 20,
+  },
+  selectedTime: {
+    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
+    color: "rgb(0, 0, 0)",
+  },
+  placeholder: {
+    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
+    color: "#666",
   },
 });
 

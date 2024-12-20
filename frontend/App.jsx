@@ -28,7 +28,7 @@ import GroceryListScreen from "./screens/GroceryListScreen";
 import AjoutProductScreen from "./screens/AjoutProductScreen";
 import WheelOfFortune from "./screens/WheelScreen";
 import { useState } from "react";
-
+import { Feather } from '@expo/vector-icons';
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import users from "./reducers/users";
@@ -108,7 +108,8 @@ const TabNavigator = ({ navigation }) => {
             style={{
               position: "absolute",
               bottom: 55,
-              left: "43%",
+              left: "50%",
+              transform: [{ translateX: -25 }], // La moitié de la largeur du bouton (50/2)
               backgroundColor: "#000",
               width: 50,
               height: 50,
@@ -120,7 +121,7 @@ const TabNavigator = ({ navigation }) => {
             }}
             onPress={() => setModalVisible(true)}
           >
-            <FontAwesome name="plus" size={24} color="#FFF" />
+            <Feather name="plus" size={24} color="#FFF" />
           </TouchableOpacity>
 
           <Modal
