@@ -80,6 +80,9 @@ const EventAdd = ({ navigation, route }) => {
       .catch((error) => {
         console.error("Erreur lors de l'ajout de l'événement :", error);
       });
+
+    // Vérifier les mots-clés dans le nom de l'événement lorsque l'utilisateur ajoute un événement
+    checkKeywordsInName(eventName);
   };
 
   const formatTime = (date) => {
@@ -102,13 +105,44 @@ const EventAdd = ({ navigation, route }) => {
       return;
     }
 
-    const motsCles = ["soirée", "apéro", "fête", "party", "fiesta"];
-    const messages = [
-      "L'apéro est lancé ! 🍹",
-      "Soirée en vue ! 🎉",
-      "Que la fête commence !🥳",
-      "J'espère que tu as pensé aux glaçons 🧊",
+    // Mots-clés pour les événements
+    const motsCles = [
+      "soirée",
+      "apéro",
+      "fête",
+      "party",
+      "fiesta", // Événements festifs
+      "anniversaire",
+      "noel",
+      "noël",
+      "réveillon",
+      "nouvel an", // Événements spéciaux
     ];
+
+    // Messages associés aux mots-clés
+    const messages = {
+      soirée: [
+        "L'apéro est lancé ! 🍹",
+        "Soirée en vue ! 🎉",
+        "Que la fête commence !🥳",
+        "J'espère que tu as pensé aux glaçons 🧊",
+      ],
+      anniversaire: [
+        "Joyeux anniversaire ! 🎂🎉",
+        "C'est le grand jour, fête bien ! 🥳",
+        "Un an de plus, mais qui compte ! 🎈",
+      ],
+      noel: ["Joyeux Noël à tous ! 🎄", "Le Père Noël est passé ! 🎅"],
+      "nouvel an": [
+        "Bonne année ! 🥂",
+        "Que 2024 soit encore mieux ! 🎉",
+        "Fêtons le début d'une nouvelle année ! 🎆",
+      ],
+      réveillon: [
+        "C'est le réveillon ! 🥳",
+        "Célébrons ensemble cette soirée magique ! 🍾",
+      ],
+    };
 
     // Convertir le nom en minuscule pour la comparaison
     const nameLower = name.toLowerCase();
@@ -116,8 +150,9 @@ const EventAdd = ({ navigation, route }) => {
     // Vérifier si un mot-clé est dans le nom
     for (let mot of motsCles) {
       if (nameLower.includes(mot)) {
+        // Trouver le type de message à afficher selon le mot-clé trouvé
         const randomMessage =
-          messages[Math.floor(Math.random() * messages.length)];
+          messages[mot][Math.floor(Math.random() * messages[mot].length)];
         Alert.alert("", randomMessage, [{ text: "OK" }]);
         return;
       }
@@ -145,10 +180,7 @@ const EventAdd = ({ navigation, route }) => {
         style={styles.input}
         placeholder="Nom de l'événement"
         value={eventName}
-        onChangeText={(text) => {
-          setEventName(text);
-          checkKeywordsInName(text); // Vérifier les mots-clés à chaque changement du nom
-        }}
+        onChangeText={setEventName}
       />
 
       {/* Time picker section */}
@@ -383,7 +415,6 @@ const styles = StyleSheet.create({
   selectedTime: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,
     color: "rgb(0, 0, 0)",
-    paddingTop: 12,
   },
   timeInput: {
     width: 340,
@@ -393,10 +424,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: "center", // Centre verticalement
     paddingHorizontal: 20,
-  },
-  selectedTime: {
-    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
-    color: "rgb(0, 0, 0)",
   },
   placeholder: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,
