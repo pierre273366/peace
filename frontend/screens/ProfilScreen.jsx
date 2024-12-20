@@ -126,15 +126,32 @@ export default function Profil({ navigation }) {
                 @{user.username}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 20 }}>
-                Ma coloc: {coloc.name}
+                <Text style={{ fontWeight: "bold" }}>Ma coloc</Text>:{" "}
+                {coloc.name}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 30 }}>
-                Adresse de la coloc: {coloc.address}
+                <Text style={{ fontWeight: "bold" }}>
+                  {" "}
+                  Adresse de la coloc:
+                </Text>{" "}
+                {coloc.address}
               </Text>
               <Text style={{ textAlign: "center", lineHeight: 30 }}>
                 🎂
-                {userDetails?.dateofbirth &&
-                  new Date(userDetails.dateofbirth).toISOString().split("T")[0]}
+                {userDetails?.dateofbirth && (
+                  <>
+                    {(() => {
+                      const birthDate = new Date(userDetails.dateofbirth);
+                      const day = String(birthDate.getDate()).padStart(2, "0"); // Jour (jj)
+                      const month = String(birthDate.getMonth() + 1).padStart(
+                        2,
+                        "0"
+                      ); // Mois (mm) - Les mois sont indexés de 0 à 11
+                      const year = birthDate.getFullYear(); // Année (aaaa)
+                      return `${day}/${month}/${year}`;
+                    })()}
+                  </>
+                )}
               </Text>
               {/* Affichage de la description */}
               <Text
@@ -182,20 +199,44 @@ export default function Profil({ navigation }) {
                 </TouchableOpacity>
               )}
             </View>
-            <Text>Tél: {userDetails?.phonenumber}</Text>
             <Text>
-              Date d'entrée dans la coloc:{" "}
-              {userDetails?.arrivaldate &&
-                userDetails.arrivaldate.split("T")[0]}
+              <Text style={{ fontWeight: "bold" }}>Tél:</Text>
+              <Text>
+                {userDetails?.phonenumber
+                  ? ` 0${userDetails.phonenumber}`
+                  : "Numéro non disponible"}
+              </Text>
             </Text>
-            <Text>Token de ma coloc :{coloc.token}</Text>
+            <Text>
+              <Text style={{ fontWeight: "bold" }}>
+                Date d'entrée dans la coloc:{" "}
+              </Text>
+              {userDetails?.arrivaldate && (
+                <>
+                  {(() => {
+                    const arrivalDate = new Date(userDetails.arrivaldate);
+                    const day = String(arrivalDate.getDate()).padStart(2, "0"); // Jour (jj)
+                    const month = String(arrivalDate.getMonth() + 1).padStart(
+                      2,
+                      "0"
+                    ); // Mois (mm)
+                    const year = arrivalDate.getFullYear(); // Année (aaaa)
+                    return `${day}/${month}/${year}`;
+                  })()}
+                </>
+              )}
+            </Text>
+            <Text>
+              <Text style={{ fontWeight: "bold" }}>Token de ma coloc : </Text>
+              {coloc.token}
+            </Text>
           </View>
           <View style={styles.mescolocs}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>Mes colocs</Text>
             {/* Affichage des colocataires sous forme d'images */}
-            {colocataires.length > 0 ? (
-              <ScrollView horizontal>
-                {colocataires.map((colocataire, index) => (
+            <ScrollView horizontal>
+              {colocataires.length > 0 ? (
+                colocataires.map((colocataire, index) => (
                   <TouchableOpacity
                     key={index}
                     onPress={() => openColocataireModal(colocataire)} // Ouvre la modal sur clic
@@ -214,11 +255,11 @@ export default function Profil({ navigation }) {
                       {colocataire.username}
                     </Text>
                   </TouchableOpacity>
-                ))}
-              </ScrollView>
-            ) : (
-              <Text>Aucun colocataire trouvé.</Text>
-            )}
+                ))
+              ) : (
+                <Text>Aucun colocataire trouvé.</Text>
+              )}
+            </ScrollView>
           </View>
         </View>
       </ScrollView>
@@ -226,24 +267,23 @@ export default function Profil({ navigation }) {
       {/* Modal de détails du colocataire */}
       <Modal
         visible={modalVisible}
-        onRequestClose={closeModal} // Ferme la modal quand l'utilisateur appuie en dehors
+        onRequestClose={closeModal}
         animationType="slide"
         transparent={true}
       >
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>
-              {selectedColocataire?.username}
+              {selectedColocataire?.username || "Colocataire inconnu"}
             </Text>
             <Text style={{ lineHeight: 20 }}>
               🎂{" "}
               {selectedColocataire?.dateofbirth &&
-                new Date(selectedColocataire.dateofbirth)
-                  .toISOString()
-                  .split("T")[0]}
+                new Date(selectedColocataire.dateofbirth).toLocaleDateString(
+                  "fr-FR"
+                )}
             </Text>
             <Text style={{ lineHeight: 40 }}>
-              {" "}
               {selectedColocataire?.description ||
                 "Pas de description disponible"}
             </Text>
@@ -277,9 +317,13 @@ export default function Profil({ navigation }) {
             <Text style={{ lineHeight: 20 }}>
               Date d'entrée :{" "}
               {selectedColocataire?.arrivaldate &&
-                selectedColocataire.arrivaldate.split("T")[0]}
+                new Date(selectedColocataire.arrivaldate).toLocaleDateString(
+                  "fr-FR"
+                )}
             </Text>
-            <Button title="Fermer" onPress={closeModal} />
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Fermer</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -362,7 +406,6 @@ const styles = StyleSheet.create({
   },
   colocUsername: {
     textAlign: "center",
-    marginTop: 5,
   },
   modalBackground: {
     flex: 1,

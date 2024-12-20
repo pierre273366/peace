@@ -9,16 +9,12 @@ import {
   Alert,
   Dimensions,
   StatusBar,
-  Platform
+  Platform,
 } from "react-native";
 import { useSelector } from "react-redux";
 import Checkbox from "expo-checkbox";
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-
-
-
-
 
 export default function GroceryListScreen({ navigation }) {
   const [products, setProducts] = useState([]);
@@ -41,15 +37,12 @@ export default function GroceryListScreen({ navigation }) {
 
   const handleDelete = async (productId) => {
     try {
-      const response = await fetch(
-        `${backendUrl}/product/${productId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(`${backendUrl}/product/${productId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.ok) {
         setProducts(products.filter((product) => product._id !== productId));
@@ -169,13 +162,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgb(247, 247, 255)",
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   header: {
     padding: 16,
     backgroundColor: "rgb(247, 247, 255)",
     zIndex: 1,
-    paddingTop: Platform.OS === 'android' ? 10 : 16,
+    paddingTop: Platform.OS === "android" ? 10 : 16,
   },
   containerBtnTitle: {
     flexDirection: "row",
@@ -212,7 +205,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 16,
     paddingTop: 8,
-    paddingBottom: Platform.OS === 'android' ? 24 : 16,
+    paddingBottom: Platform.OS === "android" ? 24 : 16,
   },
   urgentSection: {
     marginBottom: 24,
@@ -226,7 +219,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 12,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   urgentItem: {
     backgroundColor: "white",
@@ -282,4 +275,4 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
     color: "#888",
   },
- });
+});

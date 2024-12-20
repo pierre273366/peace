@@ -124,9 +124,7 @@ function Signin() {
             />
           </View>
         </View>
-        {usernameError && (
-          <Text style={styles.errorText}>{usernameError}</Text>
-        )}
+        {usernameError && <Text style={styles.errorText}>{usernameError}</Text>}
 
         <View style={styles.input}>
           <MaterialIcons
@@ -157,9 +155,7 @@ function Signin() {
             />
           </TouchableOpacity>
         </View>
-        {passwordError && (
-          <Text style={styles.errorText}>{passwordError}</Text>
-        )}
+        {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
       </View>
 
       <View style={styles.bottomContent}>
@@ -185,7 +181,7 @@ function Signin() {
     </>
   );
 
-  if (Platform.OS === 'ios') {
+  if (Platform.OS === "ios") {
     return (
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -197,9 +193,7 @@ function Signin() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        {content}
-      </View>
+      <View style={styles.container}>{content}</View>
     </SafeAreaView>
   );
 }
@@ -223,8 +217,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 30,
-    textAlign: 'center',
-    width: '100%'
+    textAlign: "center",
+    width: "100%",
   },
   containerInput: {
     width: "100%",
@@ -257,8 +251,8 @@ const styles = StyleSheet.create({
   inputText: {
     fontSize: 18,
     height: 35,
-    color: '#000',
-    textAlignVertical: 'center',
+    color: "#000",
+    textAlignVertical: "center",
     paddingVertical: 0,
     marginBottom: 8,
   },
@@ -276,8 +270,8 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 16,
     backgroundColor: "#F7F7FF",
-    paddingBottom: Platform.OS === 'ios' ? 20 : 40,
-    marginTop: 'auto',
+    paddingBottom: Platform.OS === "ios" ? 20 : 40,
+    marginTop: "auto",
   },
   buttonConnect: {
     alignItems: "center",
@@ -294,8 +288,8 @@ const styles = StyleSheet.create({
   },
   buttonSignUp: {
     padding: 10,
-    alignItems: 'center',
-    width: '100%',
+    alignItems: "center",
+    width: "100%",
   },
   textContent: {
     flexDirection: "row",

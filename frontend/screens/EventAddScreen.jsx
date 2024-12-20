@@ -8,6 +8,7 @@ import {
   Dimensions,
   Platform,
   Image,
+  Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
@@ -83,7 +84,9 @@ const EventAdd = ({ navigation, route }) => {
 
   const formatTime = (date) => {
     if (!date) return "";
-    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    return `${String(date.getHours()).padStart(2, "0")}:${String(
+      date.getMinutes()
+    ).padStart(2, "0")}`;
   };
 
   const renderTimePickerContent = () => {
@@ -93,22 +96,45 @@ const EventAdd = ({ navigation, route }) => {
     return <Text style={styles.selectedTime}>{formatTime(eventTime)}</Text>;
   };
 
+  // Fonction pour vérifier les mots-clés dans le nom de l'événement et afficher une alerte avec un message aléatoire
+  const checkKeywordsInName = (name) => {
+    if (!name || typeof name !== "string") {
+      return;
+    }
+
+    const motsCles = ["soirée", "apéro", "fête", "party", "fiesta"];
+    const messages = [
+      "L'apéro est lancé ! 🍹",
+      "Soirée en vue ! 🎉",
+      "Que la fête commence !🥳",
+      "J'espère que tu as pensé aux glaçons 🧊",
+    ];
+
+    // Convertir le nom en minuscule pour la comparaison
+    const nameLower = name.toLowerCase();
+
+    // Vérifier si un mot-clé est dans le nom
+    for (let mot of motsCles) {
+      if (nameLower.includes(mot)) {
+        const randomMessage =
+          messages[Math.floor(Math.random() * messages.length)];
+        Alert.alert("", randomMessage, [{ text: "OK" }]);
+        return;
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <View
-         style={styles.containerBtnTitle}>
-                          <TouchableOpacity
-                            onPress={() => navigation.navigate("Agenda")}
-                            style={styles.iconContainer}
-                          >
-                            <FontAwesome
-                              name={"chevron-left"}
-                              size={35}
-                              color="#FD703C"
-                            />
-                          </TouchableOpacity>
+      <View style={styles.containerBtnTitle}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Agenda")}
+          style={styles.iconContainer}
+        >
+          <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
+        </TouchableOpacity>
       </View>
-      
+
       <Image
         style={styles.imageLogo}
         source={require("../assets/peacelogo.png")}
@@ -119,7 +145,10 @@ const EventAdd = ({ navigation, route }) => {
         style={styles.input}
         placeholder="Nom de l'événement"
         value={eventName}
-        onChangeText={setEventName}
+        onChangeText={(text) => {
+          setEventName(text);
+          checkKeywordsInName(text); // Vérifier les mots-clés à chaque changement du nom
+        }}
       />
 
       {/* Time picker section */}
@@ -246,19 +275,16 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     width: "100%",
     height: "100%",
-    paddingBottom:300,
-    paddingTop:50,
-
+    paddingBottom: 300,
+    paddingTop: 50,
   },
-  imageLogo:{
-height:150
+  imageLogo: {
+    height: 150,
   },
-
-  iconContainer:{
-paddingTop: 220,
+  iconContainer: {
+    paddingTop: 220,
   },
-
-  containerBtnTitle:{
+  containerBtnTitle: {
     width: "100%",
     alignItems: "flex-end",
     padding: windowWidth * 0.1,
@@ -266,9 +292,7 @@ paddingTop: 220,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    
   },
-
   title: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.05,
     fontWeight: "bold",
@@ -321,7 +345,6 @@ paddingTop: 220,
     paddingLeft: 20,
     padding: windowHeight * 0.025,
     marginBottom: windowHeight * 0.03,
-    
   },
   selectedDate: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,
