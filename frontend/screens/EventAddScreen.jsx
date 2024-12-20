@@ -80,6 +80,9 @@ const EventAdd = ({ navigation, route }) => {
       .catch((error) => {
         console.error("Erreur lors de l'ajout de l'événement :", error);
       });
+
+    // Vérifier les mots-clés dans le nom de l'événement lorsque l'utilisateur ajoute un événement
+    checkKeywordsInName(eventName);
   };
 
   const formatTime = (date) => {
@@ -97,7 +100,6 @@ const EventAdd = ({ navigation, route }) => {
   };
 
   // Fonction pour vérifier les mots-clés dans le nom de l'événement et afficher une alerte avec un message aléatoire
-  // Fonction pour vérifier les mots-clés dans le nom de l'événement et afficher une alerte avec un message aléatoire
   const checkKeywordsInName = (name) => {
     if (!name || typeof name !== "string") {
       return;
@@ -111,7 +113,6 @@ const EventAdd = ({ navigation, route }) => {
       "party",
       "fiesta", // Événements festifs
       "anniversaire",
-      "noel",
       "noël",
       "réveillon",
       "nouvel an", // Événements spéciaux
@@ -130,11 +131,7 @@ const EventAdd = ({ navigation, route }) => {
         "C'est le grand jour, fête bien ! 🥳",
         "Un an de plus, mais qui compte ! 🎈",
       ],
-      noel: [
-        "Joyeux Noël à tous ! 🎄",
-        "Le Père Noël est passé ! 🎅",
-        "C'est la magie de Noël ! ✨",
-      ],
+      noël: ["Joyeux Noël à tous ! 🎄", "Le Père Noël est passé ! 🎅"],
       "nouvel an": [
         "Bonne année ! 🥂",
         "Que 2024 soit encore mieux ! 🎉",
@@ -182,10 +179,7 @@ const EventAdd = ({ navigation, route }) => {
         style={styles.input}
         placeholder="Nom de l'événement"
         value={eventName}
-        onChangeText={(text) => {
-          setEventName(text);
-          checkKeywordsInName(text); // Vérifier les mots-clés à chaque changement du nom
-        }}
+        onChangeText={setEventName}
       />
 
       {/* Time picker section */}
@@ -420,7 +414,6 @@ const styles = StyleSheet.create({
   selectedTime: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,
     color: "rgb(0, 0, 0)",
-    paddingTop: 12,
   },
   timeInput: {
     width: 340,
@@ -430,10 +423,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: "center", // Centre verticalement
     paddingHorizontal: 20,
-  },
-  selectedTime: {
-    fontSize: Math.min(windowWidth, windowHeight) * 0.035,
-    color: "rgb(0, 0, 0)",
   },
   placeholder: {
     fontSize: Math.min(windowWidth, windowHeight) * 0.035,

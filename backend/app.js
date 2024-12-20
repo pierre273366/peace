@@ -8,10 +8,10 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var tricountRouter = require("./routes/tricount");
 var eventRouter = require("./routes/event");
-var fileUpload = require("express-fileupload");
+var sondageRouter = require("./routes/sondage");
+const  fileUpload = require("express-fileupload");
 var productRouter = require("./routes/product");
 var todoRouter = require("./routes/todo");
-var sondageRouter = require("./routes/sondage");
 
 var app = express();
 const cors = require("cors");
