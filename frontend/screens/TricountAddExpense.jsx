@@ -17,6 +17,7 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function TricountAddExpense({ navigation, route }) {
   const colocToken = useSelector((state) => state.users.coloc.token);
@@ -35,9 +36,7 @@ export default function TricountAddExpense({ navigation, route }) {
 
   useEffect(() => {
     if (tricountId) {
-      fetch(
-        `${backendUrl}/tricount/tricount-participants/${tricountId}`
-      )
+      fetch(`${backendUrl}/tricount/tricount-participants/${tricountId}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
@@ -49,9 +48,7 @@ export default function TricountAddExpense({ navigation, route }) {
   }, [tricountId]);
 
   const fetchUserId = async (token) => {
-    const response = await fetch(
-      `${backendUrl}/tricount/user/${token}`
-    );
+    const response = await fetch(`${backendUrl}/tricount/user/${token}`);
     const data = await response.json();
     setUserId(data.userId);
     setPaidBy(data.userId);
@@ -126,11 +123,7 @@ export default function TricountAddExpense({ navigation, route }) {
             onPress={() => navigation.goBack()}
             style={styles.backButton}
           >
-            <FontAwesome
-                            name={"chevron-left"}
-                            size={35}
-                            color="#FD703C"
-                          />
+            <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
           </TouchableOpacity>
           <Text style={styles.title}>Ajouter une dépense</Text>
         </View>
