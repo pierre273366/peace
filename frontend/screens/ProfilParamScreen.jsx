@@ -103,11 +103,7 @@ export default function ProfilParam({ navigation }) {
             onPress={() => navigation.navigate("Profil")}
             style={styles.iconContainer}
           >
-            <FontAwesome
-              name={"chevron-left"}
-              size={35}
-              color="#FD703C"
-            />
+            <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
           </TouchableOpacity>
         </View>
         <View style={styles.parametre}>
@@ -146,7 +142,7 @@ export default function ProfilParam({ navigation }) {
             style={styles.buttonConnect}
             activeOpacity={0.8}
           >
-            <Text style={{ fontSize: 18, color: "white" }}>
+            <Text style={{ fontSize: 16, color: "white", fontWeight: "bold" }}>
               Sauvegarder le profil
             </Text>
           </TouchableOpacity>
@@ -157,7 +153,7 @@ export default function ProfilParam({ navigation }) {
             style={[styles.buttonConnect, { backgroundColor: "red" }]}
             activeOpacity={0.8}
           >
-            <Text style={{ fontSize: 18, color: "white" }}>
+            <Text style={{ fontSize: 16, color: "white", fontWeight: "bold" }}>
               Quitter la coloc
             </Text>
           </TouchableOpacity>
@@ -183,21 +179,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   descriptionInput: {
-    width: "80%",
+    width: 340,
     height: 50,
+    borderRadius: 10,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 10,
     padding: 10,
     marginBottom: 20,
     textAlignVertical: "top",
-    borderBottomColor: "#ec6e5b",
+
     borderBottomWidth: 1,
+    backgroundColor: "#E6E6FC",
   },
   buttonConnect: {
     alignItems: "center",
     justifyContent: "center",
-    width: 250,
+    width: 200,
     height: 50,
     marginTop: 30,
     backgroundColor: "#EC794C",
