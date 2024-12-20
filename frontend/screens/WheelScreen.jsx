@@ -5,7 +5,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-const WHEEL_SIZE = Math.min(screenWidth - 32, screenHeight * 0.5); // Ajusté pour éviter le débordement vertical
+const WHEEL_SIZE = Math.min(screenWidth - 32, screenHeight * 0.35); // Réduit de 0.5 à 0.35
 
 
 const WheelPage = ({ navigation }) => {
@@ -164,16 +164,22 @@ const WheelPage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <TouchableOpacity
-              onPress={() => navigation.navigate("Home")}
-              style={styles.iconContainer}
-            >
-              <FontAwesome
-                name={"chevron-left"}
-                size={35}
-                color="#FD703C"
-              />
-            </TouchableOpacity>
+      <View style={styles.containerHeader}>
+  <View style={styles.navBarContainer}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("Home")}
+      style={styles.iconContainer}
+    >
+      <FontAwesome
+        name={"chevron-left"} 
+        size={35}
+        color="#FD703C"
+      />
+    </TouchableOpacity>
+    <Text style={styles.titleHeader}>Tirage au sort</Text>
+  </View>
+</View>
+            
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -267,7 +273,7 @@ const styles = StyleSheet.create({
     minHeight: Platform.OS === 'android' ? 46 : 40,
   },
   addButton: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#FD703C',
     justifyContent: 'center',
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -280,7 +286,7 @@ const styles = StyleSheet.create({
   },
   optionsList: {
     marginBottom: 16,
-    maxHeight: screenHeight * 0.3,
+    maxHeight: screenHeight * 0.25, // Réduit de 0.3 à 0.25
   },
   optionsGrid: {
     flexDirection: 'row',
@@ -380,7 +386,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   spinButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#FD703C',
     padding: Platform.OS === 'android' ? 12 : 15,
     borderRadius: 25,
     marginTop: 20,
@@ -420,6 +426,35 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     color: '#1976D2',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: '600',
+    marginLeft: 12,
+    color: '#000',
+  },
+  containerHeader: {
+    paddingTop: 20,
+    paddingHorizontal: 20,
+  },
+  navBarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15,
+  },
+  titleHeader: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#000',
+  },
+  iconContainer: {
+    padding: 5,
   },
 });
 
