@@ -249,6 +249,28 @@ export default function Signup({ navigation }) {
                 </View>
               </View>
               {emailInvalid && <Text style={styles.errorText}>Email manquant ou invalide</Text>}
+
+              {/* Input Phone */}
+              <View style={styles.input}>
+                <MaterialIcons
+                  name="phone"
+                  size={24}
+                  color="#FD703C"
+                  style={styles.icon}
+                />
+                <View style={styles.inputContent}>
+                  <Text style={styles.label}>Téléphone</Text>
+                  <TextInput
+                    placeholder="Entrez votre numéro"
+                    onChangeText={(value) => setSignUpPhone(value)}
+                    value={signUpPhone}
+                    style={styles.inputText}
+                    placeholderTextColor="#999"
+                    keyboardType="phone-pad"
+                  />
+                </View>
+              </View>
+              {phoneInvalid && <Text style={styles.errorText}>Numéro de téléphone invalide</Text>}
   
               {/* Input Password */}
               <View style={styles.input}>
@@ -278,28 +300,6 @@ export default function Signup({ navigation }) {
                 </TouchableOpacity>
               </View>
               {passwordInvalid && <Text style={styles.errorText}>Mot de passe manquant ou invalide</Text>}
-  
-              {/* Input Phone */}
-              <View style={styles.input}>
-                <MaterialIcons
-                  name="phone"
-                  size={24}
-                  color="#FD703C"
-                  style={styles.icon}
-                />
-                <View style={styles.inputContent}>
-                  <Text style={styles.label}>Téléphone</Text>
-                  <TextInput
-                    placeholder="Entrez votre numéro"
-                    onChangeText={(value) => setSignUpPhone(value)}
-                    value={signUpPhone}
-                    style={styles.inputText}
-                    placeholderTextColor="#999"
-                    keyboardType="phone-pad"
-                  />
-                </View>
-              </View>
-              {phoneInvalid && <Text style={styles.errorText}>Numéro de téléphone invalide</Text>}
   
               {/* Row pour Date et Expérience */}
               <View style={styles.rowContainer}>
