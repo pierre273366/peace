@@ -27,8 +27,10 @@ import TodoListCreaScreen from "./screens/TodoListCreaScreen";
 import GroceryListScreen from "./screens/GroceryListScreen";
 import AjoutProductScreen from "./screens/AjoutProductScreen";
 import WheelOfFortune from "./screens/WheelScreen";
+import ColocProfilScreen from "./screens/ColocProfilScreen";
+import ColocProfilParam from "./screens/ColocProfilParam";
 import { useState } from "react";
-import { Feather } from '@expo/vector-icons';
+import { Feather } from "@expo/vector-icons";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import users from "./reducers/users";
@@ -97,9 +99,20 @@ const TabNavigator = ({ navigation }) => {
           options={{ tabBarButton: () => null }}
         />
         <Tab.Screen
-          name="GroceryList" component={GroceryListScreen} options={{ tabBarButton: () => null }}/>
-          <Tab.Screen name="Sondage" component={SondageScreen} options={{ tabBarButton: () => null }}/>
-          <Tab.Screen name="WheelScreen" component={WheelOfFortune} options={{ tabBarButton: () => null }}/>
+          name="GroceryList"
+          component={GroceryListScreen}
+          options={{ tabBarButton: () => null }}
+        />
+        <Tab.Screen
+          name="Sondage"
+          component={SondageScreen}
+          options={{ tabBarButton: () => null }}
+        />
+        <Tab.Screen
+          name="WheelScreen"
+          component={WheelOfFortune}
+          options={{ tabBarButton: () => null }}
+        />
       </Tab.Navigator>
 
       {currentTab === "Home" && (
@@ -229,7 +242,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: false }}>
+        <Stack.Navigator
+          screenOptions={{ headerShown: false, gestureEnabled: false }}
+        >
           <Stack.Screen name="Accueil" component={AccueilScreen} />
           <Stack.Screen name="Signin" component={SigninScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
@@ -249,6 +264,8 @@ export default function App() {
           <Stack.Screen name="CreateSondage" component={CreateSondageScreen} />
           <Stack.Screen name="DetailSondage" component={DetailSondageScreen} />
           <Stack.Screen name="AjoutProduct" component={AjoutProductScreen} />
+          <Stack.Screen name="ColocProfil" component={ColocProfilScreen} />
+          <Stack.Screen name="ColocParams" component={ColocProfilParam} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
       </NavigationContainer>

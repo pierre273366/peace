@@ -403,6 +403,11 @@ export default function HomeScreen({ navigation }) {
     });
   };
 
+  const handleColocPress = () => {
+    // Navigation vers la page ColocProfil
+    navigation.navigate("ColocProfil");
+  };
+
   //REAL RETURN
   return (
     <SafeAreaView style={styles.container}>
@@ -410,7 +415,19 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.welcomeSection}>
           <Text style={styles.titleBienvenue}>Bienvenue</Text>
           <Text style={styles.title}>
-            à {coloc.name} {user.username} !
+            à{" "}
+            <TouchableOpacity onPress={handleColocPress}>
+              <Text
+                style={{
+                  textDecorationLine: "underline",
+                  fontWeight: "bold",
+                  fontSize: 24,
+                }}
+              >
+                {coloc.name}
+              </Text>
+            </TouchableOpacity>{" "}
+            {user.username} !
           </Text>
         </View>
         <TouchableOpacity
@@ -460,9 +477,7 @@ export default function HomeScreen({ navigation }) {
                             todo.isCompleted
                           )
                         }
-                        color={
-                          todo.isCompleted ? "#FD703C" : "lightgray"
-                        }
+                        color={todo.isCompleted ? "#FD703C" : "lightgray"}
                       />
                     </View>
                     <Text style={styles.recurrenceText}>{todo.récurrence}</Text>
@@ -706,15 +721,14 @@ const styles = StyleSheet.create({
   eventTitle: {
     fontWeight: "bold",
     fontSize: 13,
-    color:'black',
+    color: "black",
     marginTop: 10,
-    
   },
   eventDescription: {
     marginTop: 5,
-    color:"#FD703C",
-    fontStyle:'italic',
-    fontSize:12,
+    color: "#FD703C",
+    fontStyle: "italic",
+    fontSize: 12,
   },
   sondage: {
     width: "48%",

@@ -335,6 +335,29 @@ router.put("/updateProfile", async (req, res) => {
   }
 });
 
+//ROUTE COLOC INFO
+router.put("/updateColoc", async (req, res) => {
+  const coloc = await Coloc.findOne({ token: req.body.token });
+  if (!coloc) {
+    return res.json({ result: false, error: "Coloc not found" });
+  }
+  try {
+    // Mise à jour des infos,
+    coloc.codeWifi = req.body.codeWifi || coloc.codeWifi; // Si le code wifi est présente, on la met à jour
+    coloc.loyer = req.body.loyer || coloc.loyer; // Mise à jour du loyer, s'il est présent
+    coloc.infoVoisinage = req.body.infoVoisinage || coloc.infoVoisinage; // Mise à jour des infos voisinages
+    coloc.regleColoc = req.body.regleColoc || coloc.regleColoc;
+
+    // Sauvegarde des modifications
+    await coloc.save();
+
+    return res.json({ result: true });
+  } catch (error) {
+    console.error(error);
+    return res.json({ result: false, error: "Erreur serveur" });
+  }
+});
+
 //ROUTE Post pour photo
 router.post("/uploadpicture/:usertoken", async (req, res) => {
   try {
