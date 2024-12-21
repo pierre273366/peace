@@ -11,12 +11,11 @@ import {
   Image,
   Platform,
   Modal,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import ModalSelector from "react-native-modal-selector"; // Importer ModalSelector
-
 
 export default function TodoListCrea({ navigation, route }) {
   const [showDatePicker, setShowDatePicker] = useState(false); // Contrôle pour afficher ou non le DatePicker
@@ -24,10 +23,7 @@ export default function TodoListCrea({ navigation, route }) {
   const [recurrenceType, setRecurrenceType] = useState("Quotidienne"); // Type de récurrence
   const [selectTache, setSelectTache] = useState("");
   const backendUrl = "https://peace-chi.vercel.app";
-  const [tempDate, setTempDate] = useState(new Date());  // Pour stocker la date temporaire pendant la sélection
-
-
-
+  const [tempDate, setTempDate] = useState(new Date()); // Pour stocker la date temporaire pendant la sélection
 
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
@@ -118,20 +114,28 @@ export default function TodoListCrea({ navigation, route }) {
   };
 
   // Fonction pour gérer la sélection de la date
+  // Utilisez une fonction utilitaire pour vérifier si la date est valide
+  const isValidDate = (date) => {
+    return date instanceof Date && !isNaN(date);
+  };
+
+  // Mise à jour de la date dans `onDateChange` avec vérification
   const onDateChange = (event, selected) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-      if (selected) {
-        setSelectedDate(selected);
-      }
+    const currentDate = selected || selectedDate;
+
+    // Vérifier si la date est valide avant de la mettre à jour
+    if (!isValidDate(currentDate)) {
+      console.error("La date sélectionnée est invalide !");
+      return; // Empêche de mettre à jour une date invalide
+    }
+
+    if (Platform.OS === "android") {
+      setSelectedDate(currentDate); // Mise à jour pour Android
+      setShowDatePicker(false); // Masquer le DateTimePicker
     } else {
-      // Sur iOS, on met à jour la date temporaire
-      if (selected) {
-        setTempDate(selected);
-      }
+      setTempDate(currentDate); // Mise à jour pour iOS (temporaire avant confirmation)
     }
   };
-  
 
   // Données pour ModalSelector (types de récurrence)
   const recurrenceOptions = [
@@ -163,7 +167,10 @@ export default function TodoListCrea({ navigation, route }) {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContainer}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContainer}
+    >
       <SafeAreaView style={styles.containerProfil}>
         <View style={styles.header}>
           <TouchableOpacity
@@ -175,7 +182,7 @@ export default function TodoListCrea({ navigation, route }) {
           <Text style={styles.headerTitle}>Todo List</Text>
         </View>
       </SafeAreaView>
-  
+
       <View style={styles.containerCrea}>
         <View style={styles.input}>
           <FontAwesome name="users" size={24} color="#FD703C" />
@@ -183,7 +190,7 @@ export default function TodoListCrea({ navigation, route }) {
             <View style={styles.participantsHeader}>
               <Text>Participants</Text>
               <TouchableOpacity
-                onPress={() => setSelectedUsers(users.map(user => user._id))}
+                onPress={() => setSelectedUsers(users.map((user) => user._id))}
                 style={styles.selectAllButton}
               >
                 <Text style={styles.selectAllText}>Tout sélectionner</Text>
@@ -202,14 +209,13 @@ export default function TodoListCrea({ navigation, route }) {
                         {item.username.charAt(0).toUpperCase()}
                       </Text>
                     </View>
-                    <Text style={styles.participantName}>
-                      {item.username}
-                    </Text>
+                    <Text style={styles.participantName}>{item.username}</Text>
                   </View>
                   <View
                     style={[
                       styles.checkbox,
-                      selectedUsers.includes(item._id) && styles.checkboxSelected,
+                      selectedUsers.includes(item._id) &&
+                        styles.checkboxSelected,
                     ]}
                   >
                     {selectedUsers.includes(item._id) && (
@@ -222,15 +228,20 @@ export default function TodoListCrea({ navigation, route }) {
             {selectedUsers.length > 0 && (
               <Text style={styles.selectedCount}>
                 {selectedUsers.length} participant
-                {selectedUsers.length > 1 ? 's' : ''} sélectionné
-                {selectedUsers.length > 1 ? 's' : ''}
+                {selectedUsers.length > 1 ? "s" : ""} sélectionné
+                {selectedUsers.length > 1 ? "s" : ""}
               </Text>
             )}
           </View>
         </View>
-  
+
         <View style={styles.input}>
-          <FontAwesome name="tasks" size={24} color="#FD703C" style={styles.inputIcon} />
+          <FontAwesome
+            name="tasks"
+            size={24}
+            color="#FD703C"
+            style={styles.inputIcon}
+          />
           <View style={styles.inputContent}>
             <Text>Nom de la tâche</Text>
             <TextInput
@@ -241,9 +252,14 @@ export default function TodoListCrea({ navigation, route }) {
             />
           </View>
         </View>
-  
+
         <View style={styles.input}>
-          <FontAwesome name="calendar" size={24} color="#FD703C" style={styles.inputIcon} />
+          <FontAwesome
+            name="calendar"
+            size={24}
+            color="#FD703C"
+            style={styles.inputIcon}
+          />
           <View style={styles.inputContent}>
             <Text>Sélectionner une date</Text>
             <TouchableOpacity
@@ -255,20 +271,20 @@ export default function TodoListCrea({ navigation, route }) {
             >
               <Text style={styles.dateText}>{formatDate(selectedDate)}</Text>
             </TouchableOpacity>
-  
+
             {showDatePicker && (
               <View style={styles.datePickerContainer}>
-                {Platform.OS === 'ios' && (
+                {Platform.OS === "ios" && (
                   <View style={styles.iosButtonsContainer}>
-                    <TouchableOpacity 
-                      onPress={() => setShowDatePicker(false)}
+                    <TouchableOpacity
+                      onPress={() => setShowDatePicker(false)} // Annuler la sélection
                       style={styles.iosButton}
                     >
                       <Text style={styles.iosButtonTextCancel}>Annuler</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                       onPress={() => {
-                        setSelectedDate(tempDate);
+                        setSelectedDate(tempDate); // Valider la date pour iOS
                         setShowDatePicker(false);
                       }}
                       style={styles.iosButton}
@@ -277,22 +293,24 @@ export default function TodoListCrea({ navigation, route }) {
                     </TouchableOpacity>
                   </View>
                 )}
-                <View style={styles.datePickerWrapper}>
-                  <DateTimePicker
-                    value={Platform.OS === 'ios' ? tempDate : selectedDate}
-                    mode="date"
-                    display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                    onChange={onDateChange}
-                    style={styles.datePicker}
-                  />
-                </View>
+                <DateTimePicker
+                  value={Platform.OS === "ios" ? tempDate : selectedDate}
+                  mode="date"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  onChange={onDateChange}
+                />
               </View>
             )}
           </View>
         </View>
-  
+
         <View style={styles.input}>
-          <FontAwesome name="refresh" size={24} color="#FD703C" style={styles.inputIcon} />
+          <FontAwesome
+            name="refresh"
+            size={24}
+            color="#FD703C"
+            style={styles.inputIcon}
+          />
           <View style={styles.inputContent}>
             <Text>Type de récurrence</Text>
             <ModalSelector
@@ -307,11 +325,14 @@ export default function TodoListCrea({ navigation, route }) {
               </View>
             </ModalSelector>
             <Text style={styles.nextOccurrence}>
-              Prochaine tâche: {formatDate(calculateNextOccurrence(selectedDate, recurrenceType))}
+              Prochaine tâche:{" "}
+              {formatDate(
+                calculateNextOccurrence(selectedDate, recurrenceType)
+              )}
             </Text>
           </View>
         </View>
-  
+
         <TouchableOpacity
           style={styles.partager}
           onPress={() => handleSubmit()}
@@ -331,15 +352,14 @@ const styles = StyleSheet.create({
   containerProfil: {
     width: "100%",
     marginBottom: 5, // Réduit l'espace entre le header et le contenu
-
   },
   headerTitle: {
     fontSize: 25,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 15,
     gap: 15,
@@ -358,7 +378,7 @@ const styles = StyleSheet.create({
   containerCrea: {
     alignItems: "center",
     justifyContent: "center",
-    gap:15
+    gap: 15,
   },
   input: {
     flexDirection: "row",
@@ -367,7 +387,7 @@ const styles = StyleSheet.create({
     alignItems: "center", // Aligne les éléments verticalement au centre
     gap: 15,
     borderRadius: 8,
-    width: '90%',
+    width: "90%",
   },
   dateTitle: {
     fontSize: 18,
@@ -387,19 +407,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "rgb(0, 0, 0)",
   },
-   imageLogo: {
-      width: '60%',
-      height: undefined,
-      aspectRatio: 1.25, // 250/200
-      resizeMode: 'contain',
-      marginTop: Platform.OS === 'android' ? 10 : 20,
-      marginTop: 100, // Ajoutez cette ligne pour décaler le logo vers le bas
-      paddingTop: 10,
-      justifyContent: "center",
-      alignItems: "center",
-      width: 250,
-      height: 200,
-    },
+  imageLogo: {
+    width: "60%",
+    height: undefined,
+    aspectRatio: 1.25, // 250/200
+    resizeMode: "contain",
+    marginTop: Platform.OS === "android" ? 10 : 20,
+    marginTop: 100, // Ajoutez cette ligne pour décaler le logo vers le bas
+    paddingTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 250,
+    height: 200,
+  },
 
   modalSelector: {
     width: "70%",
@@ -444,13 +464,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 15,
     borderRadius: 8,
-    width: '90%',
+    width: "90%",
   },
   inputContent: {
     gap: 10,
     flex: 1,
   },
-  
+
   participantsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -522,14 +542,14 @@ const styles = StyleSheet.create({
   },
   nextOccurrence: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
     marginTop: 5,
   },
   dateButton: {
     backgroundColor: "#F7F7FF",
     padding: 10,
     borderRadius: 8,
-    width: '100%',
+    width: "100%",
   },
   dateText: {
     fontSize: 16,
@@ -537,43 +557,43 @@ const styles = StyleSheet.create({
   modalSelector: {
     width: "100%",
   },
-   datePickerContainer: {
-    width: '100%',
-    alignItems: 'center',
-    backgroundColor: '#f8f8f8',
+  datePickerContainer: {
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "#f8f8f8",
     borderRadius: 8,
     marginTop: 8,
   },
   datePickerWrapper: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   datePicker: {
-    width: Platform.OS === 'ios' ? 320 : undefined, // Largeur fixe pour iOS
-    height: Platform.OS === 'ios' ? 120 : undefined,
+    width: Platform.OS === "ios" ? 320 : undefined, // Largeur fixe pour iOS
+    height: Platform.OS === "ios" ? 120 : undefined,
   },
   iosButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 8,
-    width: '100%',
+    width: "100%",
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   iosButton: {
     padding: 8,
     minWidth: 60,
-    alignItems: 'center',
+    alignItems: "center",
   },
   iosButtonTextCancel: {
-    color: '#666',
+    color: "#666",
     fontSize: 16,
   },
   iosButtonTextConfirm: {
-    color: '#FD703C',
+    color: "#FD703C",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
 });
