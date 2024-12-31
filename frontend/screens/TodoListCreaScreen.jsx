@@ -15,28 +15,27 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import ModalSelector from "react-native-modal-selector"; // Importer ModalSelector
+import ModalSelector from "react-native-modal-selector";
 
 export default function TodoListCrea({ navigation, route }) {
-  const [showDatePicker, setShowDatePicker] = useState(false); // Contrôle pour afficher ou non le DatePicker
-  const [selectedDate, setSelectedDate] = useState(new Date()); // Date de l'événement, initialisée à la date actuelle
-  const [recurrenceType, setRecurrenceType] = useState("Quotidienne"); // Type de récurrence
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [timePickerDate, setTimePickerDate] = useState(new Date());
+  const [recurrenceType, setRecurrenceType] = useState("Quotidienne");
   const [selectTache, setSelectTache] = useState("");
   const backendUrl = "https://peace-chi.vercel.app";
-  const [tempDate, setTempDate] = useState(new Date()); // Pour stocker la date temporaire pendant la sélection
 
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
 
-  const [users, setUsers] = useState([]); //personnes de la coloc
+  const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [colocId, setColocId] = useState(null);
   const dispatch = useDispatch();
 
-  //RECHERCHE D'UN ID COLOC
   useEffect(() => {
     const getUsers = async () => {
-      if (!userToken) return; // Protection si le token n'est pas encore disponible
+      if (!userToken) return;
 
       const usersData = await fetchUsers(userToken);
       if (usersData) {
@@ -46,34 +45,15 @@ export default function TodoListCrea({ navigation, route }) {
     getUsers();
   }, [userToken]);
 
-  //fetch de tous les utilisateurs de la colocs
   const fetchUsers = async (userToken) => {
-    const response = await fetch(
-      `${backendUrl}/tricount/getcolocusers/${userToken}`
-    );
+    const response = await fetch(`${backendUrl}/tricount/getcolocusers/${userToken}`);
     const data = await response.json();
 
     if (data.result) {
-      console.log(data.users);
       return data.users;
     }
     return null;
   };
-
-  const userChoice = users.map((user, i) => {
-    return (
-      <View key={i} style={styles.containerCheck}>
-        <Checkbox
-          style={styles.checkbox}
-          value={selectedUsers.includes(user._id)}
-          onValueChange={() => handleCheckboxChange(user)}
-          // Ajoutez ces props pour une meilleure visibilité
-          color={selectedUsers.includes(user._id) ? "#FD703C" : undefined}
-        />
-        <Text>{user.username}</Text>
-      </View>
-    );
-  });
 
   const handleCheckboxChange = (user) => {
     if (selectedUsers.includes(user._id)) {
@@ -83,61 +63,57 @@ export default function TodoListCrea({ navigation, route }) {
     }
   };
 
-  // Fonction pour formater la date au format "JJ/MM/AAAA"
   const formatDate = (date) => {
     const day = date.getDate();
-    const month = date.getMonth() + 1; // Les mois commencent à 0 en JavaScript, donc on ajoute 1
+    const month = date.getMonth() + 1;
     const year = date.getFullYear();
-    return `${day < 10 ? "0" + day : day}/${
-      month < 10 ? "0" + month : month
-    }/${year}`;
+    return `${day < 10 ? "0" + day : day}/${month < 10 ? "0" + month : month}/${year}`;
   };
 
-  // Fonction pour calculer la prochaine occurrence en fonction du type de récurrence
   const calculateNextOccurrence = (selectedDate, recurrenceType) => {
     let nextOccurrence = new Date(selectedDate);
 
-    switch (recurrenceType) {
+    switch (recurrenceType.toLowerCase()) {
       case "quotidienne":
-        nextOccurrence.setDate(nextOccurrence.getDate() + 1); // Ajouter 1 jour pour récurrence quotidienne
+        nextOccurrence.setDate(nextOccurrence.getDate() + 1);
         break;
       case "hebdomadaire":
-        nextOccurrence.setDate(nextOccurrence.getDate() + 7); // Ajouter 7 jours pour récurrence hebdomadaire
+        nextOccurrence.setDate(nextOccurrence.getDate() + 7);
         break;
-      case "mensuel":
-        nextOccurrence.setMonth(nextOccurrence.getMonth() + 1); // Ajouter 1 mois pour récurrence mensuelle
-        break;
-      default:
+      case "mensuelle":
+        nextOccurrence.setMonth(nextOccurrence.getMonth() + 1);
         break;
     }
     return nextOccurrence;
   };
 
-  // Fonction pour gérer la sélection de la date
-  // Utilisez une fonction utilitaire pour vérifier si la date est valide
   const isValidDate = (date) => {
     return date instanceof Date && !isNaN(date);
   };
 
-  // Mise à jour de la date dans `onDateChange` avec vérification
   const onDateChange = (event, selected) => {
-    const currentDate = selected || selectedDate;
-
-    // Vérifier si la date est valide avant de la mettre à jour
-    if (!isValidDate(currentDate)) {
-      console.error("La date sélectionnée est invalide !");
-      return; // Empêche de mettre à jour une date invalide
-    }
-
     if (Platform.OS === "android") {
-      setSelectedDate(currentDate); // Mise à jour pour Android
-      setShowDatePicker(false); // Masquer le DateTimePicker
+      setShowDatePicker(false);
+      if (selected) {
+        setSelectedDate(selected);
+      }
     } else {
-      setTempDate(currentDate); // Mise à jour pour iOS (temporaire avant confirmation)
+      if (selected && isValidDate(selected)) {
+        setTimePickerDate(selected);
+      }
     }
   };
 
-  // Données pour ModalSelector (types de récurrence)
+  const handleConfirmDate = () => {
+    setSelectedDate(timePickerDate);
+    setShowDatePicker(false);
+  };
+
+  const handleCancelDate = () => {
+    setTimePickerDate(selectedDate);
+    setShowDatePicker(false);
+  };
+
   const recurrenceOptions = [
     { key: "Quotidienne", label: "Quotidienne" },
     { key: "Hebdomadaire", label: "Hebdomadaire" },
@@ -153,7 +129,7 @@ export default function TodoListCrea({ navigation, route }) {
       body: JSON.stringify({
         participants: selectedUsers,
         tâche: selectTache,
-        date: selectedDate.toISOString().split("T")[0], // Formater la date au format YYYY-MM-DD
+        date: selectedDate.toISOString().split("T")[0],
         récurrence: recurrenceType,
         colocToken: colocToken,
       }),
@@ -161,22 +137,15 @@ export default function TodoListCrea({ navigation, route }) {
     const data = await response.json();
 
     if (data.result) {
-      console.log("Tâche créé !");
       navigation.goBack();
     }
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.scrollContainer}
-    >
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.containerProfil}>
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("TodoList")}
-            style={styles.backButton}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("TodoList")} style={styles.backButton}>
             <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Todo List</Text>
@@ -189,62 +158,38 @@ export default function TodoListCrea({ navigation, route }) {
           <View style={styles.inputContent}>
             <View style={styles.participantsHeader}>
               <Text>Participants</Text>
-              <TouchableOpacity
-                onPress={() => setSelectedUsers(users.map((user) => user._id))}
-                style={styles.selectAllButton}
-              >
+              <TouchableOpacity onPress={() => setSelectedUsers(users.map(user => user._id))} style={styles.selectAllButton}>
                 <Text style={styles.selectAllText}>Tout sélectionner</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.participantsList}>
-              {users.map((item) => (
-                <TouchableOpacity
-                  key={item._id}
-                  style={styles.participantItem}
-                  onPress={() => handleCheckboxChange(item)}
-                >
+              {users.map(item => (
+                <TouchableOpacity key={item._id} style={styles.participantItem} onPress={() => handleCheckboxChange(item)}>
                   <View style={styles.participantInfo}>
                     <View style={styles.avatarCircle}>
-                      <Text style={styles.avatarText}>
-                        {item.username.charAt(0).toUpperCase()}
-                      </Text>
+                      <Text style={styles.avatarText}>{item.username.charAt(0).toUpperCase()}</Text>
                     </View>
                     <Text style={styles.participantName}>{item.username}</Text>
                   </View>
-                  <View
-                    style={[
-                      styles.checkbox,
-                      selectedUsers.includes(item._id) &&
-                        styles.checkboxSelected,
-                    ]}
-                  >
-                    {selectedUsers.includes(item._id) && (
-                      <Text style={styles.checkmark}>✓</Text>
-                    )}
+                  <View style={[styles.checkbox, selectedUsers.includes(item._id) && styles.checkboxSelected]}>
+                    {selectedUsers.includes(item._id) && <Text style={styles.checkmark}>✓</Text>}
                   </View>
                 </TouchableOpacity>
               ))}
             </View>
             {selectedUsers.length > 0 && (
               <Text style={styles.selectedCount}>
-                {selectedUsers.length} participant
-                {selectedUsers.length > 1 ? "s" : ""} sélectionné
-                {selectedUsers.length > 1 ? "s" : ""}
+                {selectedUsers.length} participant{selectedUsers.length > 1 ? "s" : ""} sélectionné{selectedUsers.length > 1 ? "s" : ""}
               </Text>
             )}
           </View>
         </View>
 
         <View style={styles.input}>
-          <FontAwesome
-            name="tasks"
-            size={24}
-            color="#FD703C"
-            style={styles.inputIcon}
-          />
+          <FontAwesome name="tasks" size={24} color="#FD703C" style={styles.inputIcon} />
           <View style={styles.inputContent}>
             <Text>Nom de la tâche</Text>
-            <TextInput
+            <TextInput 
               placeholder="Exemple: Faire les courses"
               value={selectTache}
               onChangeText={setSelectTache}
@@ -254,18 +199,13 @@ export default function TodoListCrea({ navigation, route }) {
         </View>
 
         <View style={styles.input}>
-          <FontAwesome
-            name="calendar"
-            size={24}
-            color="#FD703C"
-            style={styles.inputIcon}
-          />
+          <FontAwesome name="calendar" size={24} color="#FD703C" style={styles.inputIcon} />
           <View style={styles.inputContent}>
             <Text>Sélectionner une date</Text>
             <TouchableOpacity
               onPress={() => {
                 setShowDatePicker(true);
-                setTempDate(selectedDate);
+                setTimePickerDate(selectedDate);
               }}
               style={styles.dateButton}
             >
@@ -276,28 +216,21 @@ export default function TodoListCrea({ navigation, route }) {
               <View style={styles.datePickerContainer}>
                 {Platform.OS === "ios" && (
                   <View style={styles.iosButtonsContainer}>
-                    <TouchableOpacity
-                      onPress={() => setShowDatePicker(false)} // Annuler la sélection
-                      style={styles.iosButton}
-                    >
+                    <TouchableOpacity onPress={handleCancelDate} style={styles.iosButton}>
                       <Text style={styles.iosButtonTextCancel}>Annuler</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setSelectedDate(tempDate); // Valider la date pour iOS
-                        setShowDatePicker(false);
-                      }}
-                      style={styles.iosButton}
-                    >
+                    <TouchableOpacity onPress={handleConfirmDate} style={styles.iosButton}>
                       <Text style={styles.iosButtonTextConfirm}>Valider</Text>
                     </TouchableOpacity>
                   </View>
                 )}
                 <DateTimePicker
-                  value={Platform.OS === "ios" ? tempDate : selectedDate}
+                  value={Platform.OS === "ios" ? timePickerDate : selectedDate}
                   mode="date"
                   display={Platform.OS === "ios" ? "spinner" : "default"}
                   onChange={onDateChange}
+                  minimumDate={new Date()}
+                  maximumDate={new Date(2100, 11, 31)}
                 />
               </View>
             )}
@@ -305,12 +238,7 @@ export default function TodoListCrea({ navigation, route }) {
         </View>
 
         <View style={styles.input}>
-          <FontAwesome
-            name="refresh"
-            size={24}
-            color="#FD703C"
-            style={styles.inputIcon}
-          />
+          <FontAwesome name="refresh" size={24} color="#FD703C" style={styles.inputIcon} />
           <View style={styles.inputContent}>
             <Text>Type de récurrence</Text>
             <ModalSelector
@@ -318,25 +246,18 @@ export default function TodoListCrea({ navigation, route }) {
               initValue={recurrenceType}
               onChange={(option) => setRecurrenceType(option.key)}
               style={styles.modalSelector}
-              selectedItemTextStyle={styles.selectedItemText}
             >
               <View style={styles.dateButton}>
                 <Text style={styles.dateText}>{recurrenceType}</Text>
               </View>
             </ModalSelector>
             <Text style={styles.nextOccurrence}>
-              Prochaine tâche:{" "}
-              {formatDate(
-                calculateNextOccurrence(selectedDate, recurrenceType)
-              )}
+              Prochaine tâche: {formatDate(calculateNextOccurrence(selectedDate, recurrenceType))}
             </Text>
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.partager}
-          onPress={() => handleSubmit()}
-        >
+        <TouchableOpacity style={styles.partager} onPress={handleSubmit}>
           <Text style={styles.white}>Créer</Text>
         </TouchableOpacity>
       </View>
