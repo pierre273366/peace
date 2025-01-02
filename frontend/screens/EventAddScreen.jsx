@@ -27,7 +27,7 @@ const EventAdd = ({ navigation, route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const colocToken = useSelector((state) => state.users.coloc.token);
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const onDateChange = (event, selectedDate) => {
     if (Platform.OS === "android") {

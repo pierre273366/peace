@@ -19,7 +19,7 @@ function CreateColocScreen({ navigation }) {
   const [address, setAddress] = useState("");
   const [number, setNumber] = useState(0);
   const dispatch = useDispatch();
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const createBtn = async () => {
     const infos = {

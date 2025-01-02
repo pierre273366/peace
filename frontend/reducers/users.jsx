@@ -42,14 +42,9 @@ export const userSlice = createSlice({
     },
 
     login: (state, action) => {
-      // Action de connexion : elle met à jour l'état de l'utilisateur avec les valeurs fournies par l'action.
-      // Les informations (token, username) sont récupérées à partir de 'action.payload'.
-      state.user = {
-        ...state.user,
-        token: action.payload.token,
-        username: action.payload.username,
-        name: action.payload.name
-      };
+      state.user.token = action.payload.token;
+      state.user.username = action.payload.username;
+      state.user.name = action.payload.name;
     },
 
     logout: (state) => {

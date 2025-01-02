@@ -23,7 +23,7 @@ function Signin() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.value);
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   const [signInUsername, setSignInUsername] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
@@ -60,13 +60,9 @@ function Signin() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Données reçues:", data)
+        console.log("Données reçues du backend:", data); // Log de la réponse
         if (data.result) {
-          console.log("Dispatching login with:", {
-            token: data.token,
-            username: signInUsername,
-            name: data.name
-          });
+          console.log("Utilisateur connecté:", data);
           dispatch(
             login({
               token: data.token,
@@ -76,6 +72,7 @@ function Signin() {
           );
 
           if (data.hasColoc && data.colocInfo) {
+            console.log("Coloc trouvée, dispatch coloc:", data.colocInfo);
             dispatch(
               coloc({
                 name: data.colocInfo.name,
@@ -89,8 +86,10 @@ function Signin() {
           setSignInUsername("");
           setSignInPassword("");
 
-          navigation.navigate(data.redirect);
+          
+          navigation.navigate("TabNavigator");
         } else {
+          console.error("Erreur lors de la connexion:", data.error);
           if (data.message === "Invalid username") {
             setUsernameError("Nom d'utilisateur invalide.");
           } else if (data.message === "Invalid password") {

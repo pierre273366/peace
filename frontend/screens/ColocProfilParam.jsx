@@ -19,7 +19,7 @@ export default function ColocParam({ navigation }) {
   const [infoVoisinage, setInfoVoisinage] = useState(""); // État pour info voisinage
   const [regleColoc, setRegleColoc] = useState(""); // État pour info voisinage
 
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "https://peace-chi.vercel.app";
 
   // Fonction pour mettre à jour les infos colocs
   const updateColoc = async () => {
