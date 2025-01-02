@@ -19,7 +19,8 @@ const windowHeight = Dimensions.get("window").height;
 
 const EventAdd = ({ navigation, route }) => {
   const [eventName, setEventName] = useState("");
-  const [eventTime, setEventTime] = useState(null);
+  const [eventTime, setEventTime] = useState(new Date());
+  const [timePickerDate, setTimePickerDate] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [eventPlace, setEventPlace] = useState("");
   const [eventDescription, setEventDescription] = useState("");
@@ -41,14 +42,23 @@ const EventAdd = ({ navigation, route }) => {
     if (Platform.OS === "android") {
       setShowTimePicker(false);
     }
+    
     if (selectedTime) {
-      setEventTime(selectedTime);
+      if (Platform.OS === "ios") {
+        setTimePickerDate(selectedTime);
+      } else {
+        setEventTime(selectedTime);
+      }
     }
+  };
+
+  const handleTimeConfirm = () => {
+    setEventTime(timePickerDate);
+    setShowTimePicker(false);
   };
 
   const handleAddEvent = () => {
     if (!eventTime) {
-      // Gérer le cas où aucune heure n'est sélectionnée
       alert("Veuillez sélectionner une heure");
       return;
     }
@@ -81,7 +91,6 @@ const EventAdd = ({ navigation, route }) => {
         console.error("Erreur lors de l'ajout de l'événement :", error);
       });
 
-    // Vérifier les mots-clés dans le nom de l'événement lorsque l'utilisateur ajoute un événement
     checkKeywordsInName(eventName);
   };
 
@@ -99,59 +108,45 @@ const EventAdd = ({ navigation, route }) => {
     return <Text style={styles.selectedTime}>{formatTime(eventTime)}</Text>;
   };
 
-  // Fonction pour vérifier les mots-clés dans le nom de l'événement et afficher une alerte avec un message aléatoire
   const checkKeywordsInName = (name) => {
     if (!name || typeof name !== "string") {
       return;
     }
 
-    // Mots-clés pour les événements
     const motsCles = [
-      "soirée",
-      "apéro",
-      "fête",
-      "party",
-      "fiesta", // Événements festifs
-      "anniversaire",
-      "noël",
-      "réveillon",
-      "nouvel an", // Événements spéciaux
+      "soirée", "apéro", "fête", "party", "fiesta",
+      "anniversaire", "noël", "réveillon", "nouvel an"
     ];
 
-    // Messages associés aux mots-clés
     const messages = {
       soirée: [
         "L'apéro est lancé ! 🍹",
         "Soirée en vue ! 🎉",
         "Que la fête commence !🥳",
-        "J'espère que tu as pensé aux glaçons 🧊",
+        "J'espère que tu as pensé aux glaçons 🧊"
       ],
       anniversaire: [
         "Joyeux anniversaire ! 🎂🎉",
         "C'est le grand jour, fête bien ! 🥳",
-        "Un an de plus, mais qui compte ! 🎈",
+        "Un an de plus, mais qui compte ! 🎈"
       ],
       noël: ["Joyeux Noël à tous ! 🎄", "Le Père Noël est passé ! 🎅"],
       "nouvel an": [
         "Bonne année ! 🥂",
         "Que 2024 soit encore mieux ! 🎉",
-        "Fêtons le début d'une nouvelle année ! 🎆",
+        "Fêtons le début d'une nouvelle année ! 🎆"
       ],
       réveillon: [
         "C'est le réveillon ! 🥳",
-        "Célébrons ensemble cette soirée magique ! 🍾",
-      ],
+        "Célébrons ensemble cette soirée magique ! 🍾"
+      ]
     };
 
-    // Convertir le nom en minuscule pour la comparaison
     const nameLower = name.toLowerCase();
 
-    // Vérifier si un mot-clé est dans le nom
     for (let mot of motsCles) {
       if (nameLower.includes(mot)) {
-        // Trouver le type de message à afficher selon le mot-clé trouvé
-        const randomMessage =
-          messages[mot][Math.floor(Math.random() * messages[mot].length)];
+        const randomMessage = messages[mot][Math.floor(Math.random() * messages[mot].length)];
         Alert.alert("", randomMessage, [{ text: "OK" }]);
         return;
       }
@@ -182,27 +177,33 @@ const EventAdd = ({ navigation, route }) => {
         onChangeText={setEventName}
       />
 
-      {/* Time picker section */}
       {Platform.OS === "ios" ? (
         <>
           {showTimePicker && (
             <View style={styles.iosPickerContainer}>
               <DateTimePicker
-                value={eventTime || new Date()}
+                value={timePickerDate}
                 mode="time"
                 display="spinner"
                 onChange={onTimeChange}
+                is24Hour={true}
+                minuteInterval={1}
+                minimumDate={new Date(1970, 0, 1)}
+                maximumDate={new Date(2100, 0, 1)}
               />
               <TouchableOpacity
                 style={styles.iosButton}
-                onPress={() => setShowTimePicker(false)}
+                onPress={handleTimeConfirm}
               >
                 <Text style={styles.iosButtonText}>Valider</Text>
               </TouchableOpacity>
             </View>
           )}
           <TouchableOpacity
-            onPress={() => setShowTimePicker(true)}
+            onPress={() => {
+              setTimePickerDate(eventTime);
+              setShowTimePicker(true);
+            }}
             style={styles.timeInput}
           >
             {renderTimePickerContent()}
@@ -218,7 +219,7 @@ const EventAdd = ({ navigation, route }) => {
           </TouchableOpacity>
           {showTimePicker && (
             <DateTimePicker
-              value={eventTime || new Date()}
+              value={eventTime}
               mode="time"
               is24Hour={true}
               display="default"
@@ -252,6 +253,7 @@ const EventAdd = ({ navigation, route }) => {
                 mode="date"
                 display="spinner"
                 onChange={onDateChange}
+                minimumDate={new Date()}
               />
               <TouchableOpacity
                 style={styles.iosButton}
@@ -297,6 +299,7 @@ const EventAdd = ({ navigation, route }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
