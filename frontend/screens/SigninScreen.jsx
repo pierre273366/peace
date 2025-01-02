@@ -60,11 +60,17 @@ function Signin() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("Données reçues:", data)
         if (data.result) {
+          console.log("Dispatching login with:", {
+            token: data.token,
+            username: signInUsername,
+            name: data.name
+          });
           dispatch(
             login({
-              username: signInUsername,
               token: data.token,
+              username: data.username || signInUsername,
               name: data.name,
             })
           );

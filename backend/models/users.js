@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
   email: String,
   password: String,
   google_id: String,
-  token: String,
+  token: { type: String, required: true },
   phonenumber: Number,
   dateofbirth: String,
   firstcoloc: String,
