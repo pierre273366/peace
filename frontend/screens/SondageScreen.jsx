@@ -23,7 +23,7 @@ export default function SondageScreen({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [sondages, setSondages] = useState([]);
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   useFocusEffect(
     useCallback(() => {

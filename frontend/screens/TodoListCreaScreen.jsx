@@ -22,7 +22,7 @@ export default function TodoListCrea({ navigation, route }) {
   const [selectedDate, setSelectedDate] = useState(new Date()); // Date de l'événement, initialisée à la date actuelle
   const [recurrenceType, setRecurrenceType] = useState("Quotidienne"); // Type de récurrence
   const [selectTache, setSelectTache] = useState("");
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
   const [tempDate, setTempDate] = useState(new Date()); // Pour stocker la date temporaire pendant la sélection
 
   const colocToken = useSelector((state) => state.users.coloc.token);

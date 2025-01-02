@@ -22,7 +22,7 @@ export default function CreateSondageScreen({ navigation }) {
   const userName = useSelector((state) => state.users.user.username);
   const [title, setTitle] = useState("");
   const [responses, setResponses] = useState([""]);
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   useEffect(() => {
     if (Platform.OS === "android") {

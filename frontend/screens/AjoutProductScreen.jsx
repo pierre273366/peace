@@ -21,7 +21,7 @@ export default function AjoutProductScreen({ navigation }) {
   const [productName, setProductName] = useState("");
   const [isUrgent, setIsUrgent] = useState(false);
   const colocToken = useSelector((state) => state.users.coloc.token);
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   useEffect(() => {
     if (Platform.OS === "android") {

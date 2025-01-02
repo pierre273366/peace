@@ -29,7 +29,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function Signup({ navigation }) {
   const dispatch = useDispatch();
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   useEffect(() => {
     if (Platform.OS === "android") {
