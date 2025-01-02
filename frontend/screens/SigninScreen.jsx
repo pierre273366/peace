@@ -87,10 +87,7 @@ function Signin() {
           setSignInPassword("");
 
           
-          navigation.reset({
-            index: 0,
-            routes: [{ name: "Home" }],
-          });
+          navigation.navigate("TabNavigator");
         } else {
           console.error("Erreur lors de la connexion:", data.error);
           if (data.message === "Invalid username") {
