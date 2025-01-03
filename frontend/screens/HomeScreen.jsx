@@ -419,9 +419,10 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity onPress={handleColocPress}>
               <Text
                 style={{
-                  textDecorationLine: "underline",
-                  fontWeight: "bold",
                   fontSize: 24,
+                  fontWeight: "bold",
+                  color: "#333",
+                  letterSpacing: 0.5,
                 }}
               >
                 {coloc.name}
