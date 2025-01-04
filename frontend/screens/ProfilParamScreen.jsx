@@ -10,11 +10,11 @@ import {
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector, useDispatch } from "react-redux";
-import { supColoc } from "../reducers/users";
+import { supColoc, logout } from "../reducers/users";
 
 export default function ProfilParam({ navigation }) {
   const user = useSelector((state) => state.users.user); // Récupération de l'utilisateur depuis Redux
-  const userToken = user.token;
+  const userToken = useSelector((state) => state.users.user.token);
   const [description, setDescription] = useState(""); // État pour la description
   const [facebook, setFacebook] = useState(""); // État pour le lien Facebook
   const [instagram, setInstagram] = useState(""); // État pour le lien Instagram
@@ -49,6 +49,26 @@ export default function ProfilParam({ navigation }) {
         "Une erreur est survenue lors de la mise à jour du profil."
       );
     }
+  };
+
+  const logoutUser = () => {
+    Alert.alert(
+      "Confirmation",
+      "Êtes-vous sûr de vouloir vous déconnecter ?",
+      [
+        {
+          text: "Annuler",
+          style: "cancel",
+        },
+        {
+          text: "Se déconnecter",
+          onPress: () => {
+            dispatch(logout()); // Seulement nettoyer le state Redux
+            navigation.replace("Signin");
+          },
+        },
+      ]
+    );
   };
 
   // Fonction pour quitter la coloc avec confirmation
@@ -144,6 +164,17 @@ export default function ProfilParam({ navigation }) {
           >
             <Text style={{ fontSize: 16, color: "white", fontWeight: "bold" }}>
               Sauvegarder le profil
+            </Text>
+          </TouchableOpacity>
+
+ {/* Bouton pour se déconnecter */}
+ <TouchableOpacity
+            onPress={logoutUser}
+            style={styles.buttonConnect}
+            activeOpacity={0.8}
+          >
+            <Text style={{ fontSize: 16, color: "white", fontWeight: "bold" }}>
+              Se déconnecter
             </Text>
           </TouchableOpacity>
 
