@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-const mongoose = require("mongoose");
 
 const Todo = require("../models/todo");
 const Coloc = require("../models/coloc");

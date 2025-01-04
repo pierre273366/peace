@@ -269,7 +269,7 @@ router.get("/:token", async (req, res) => {
   try {
     const userDet = await User.findOne({
       token: req.params.token,
-    }); // Récupérer tous les événements dans la base de données
+    }); // Récupérer tous les users  dans la base de données
     if (userDet) {
       res.json({ userDet }); // Répondre avec les événements au format JSON
     } else {
@@ -284,6 +284,7 @@ router.get("/:token", async (req, res) => {
   }
 });
 
+// Route pour quitter la coloc
 router.delete("/:token", async (req, res) => {
   User.findOne({ token: req.params.token }).then((user) => {
     if (user) {
