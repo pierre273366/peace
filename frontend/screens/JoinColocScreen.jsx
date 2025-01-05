@@ -18,19 +18,20 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 export default function JoinColoc({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const dispatch = useDispatch();
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   const [token, setToken] = useState(null);
 
   const handleSubmit = () => {
     fetch(`${backendUrl}/users/joincoloc`, {
-      method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
-      headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+      method: "POST", 
+      headers: { "Content-Type": "application/json" }, 
       body: JSON.stringify({ token: token, user: userToken }),
     })
-      .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
+      .then((response) => response.json()) 
       .then((data) => {
         if (data.result) {
+// Màj store Redux avec les infos de la coloc
           dispatch(
             coloc({
               name: data.colocInfo.name,

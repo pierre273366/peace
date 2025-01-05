@@ -19,7 +19,7 @@ export default function ProfilParam({ navigation }) {
   const [facebook, setFacebook] = useState(""); // État pour le lien Facebook
   const [instagram, setInstagram] = useState(""); // État pour le lien Instagram
   const dispatch = useDispatch();
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   // Fonction pour mettre à jour la description et les liens sociaux
   const updateProfile = async () => {
@@ -64,7 +64,7 @@ export default function ProfilParam({ navigation }) {
           text: "Se déconnecter",
           onPress: () => {
             dispatch(logout()); // Seulement nettoyer le state Redux
-            navigation.replace("Signin");
+            navigation.navigate("Signin");
           },
         },
       ]
@@ -93,8 +93,8 @@ export default function ProfilParam({ navigation }) {
               if (data.result) {
                 console.log("Utilisateur supprimé avec succès de la coloc");
                 dispatch(supColoc()); // Suppression de la coloc dans Redux
-                // Redirection vers la page d'accueil après suppression
-                navigation.navigate("Home"); // Exemple de navigation
+                // Redirige vers la page de connexion
+                navigation.navigate("Signin"); 
               } else {
                 console.error(
                   "Erreur lors de la suppression de l'utilisateur :",

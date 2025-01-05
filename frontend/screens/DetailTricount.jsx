@@ -17,7 +17,7 @@ export default function DetailTricount({ navigation, route }) {
   const [tricountData, setTricountData] = useState(null);
   const tricountId = route.params.tricountId;
   const [userId, setUserId] = useState("");
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   useFocusEffect(
     React.useCallback(() => {
