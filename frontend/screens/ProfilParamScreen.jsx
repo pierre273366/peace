@@ -19,7 +19,7 @@ export default function ProfilParam({ navigation }) {
   const [facebook, setFacebook] = useState(""); // État pour le lien Facebook
   const [instagram, setInstagram] = useState(""); // État pour le lien Instagram
   const dispatch = useDispatch();
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   // Fonction pour mettre à jour la description et les liens sociaux
   const updateProfile = async () => {
@@ -52,23 +52,19 @@ export default function ProfilParam({ navigation }) {
   };
 
   const logoutUser = () => {
-    Alert.alert(
-      "Confirmation",
-      "Êtes-vous sûr de vouloir vous déconnecter ?",
-      [
-        {
-          text: "Annuler",
-          style: "cancel",
+    Alert.alert("Confirmation", "Êtes-vous sûr de vouloir vous déconnecter ?", [
+      {
+        text: "Annuler",
+        style: "cancel",
+      },
+      {
+        text: "Se déconnecter",
+        onPress: () => {
+          dispatch(logout()); // Seulement nettoyer le state Redux
+          navigation.navigate("Signin");
         },
-        {
-          text: "Se déconnecter",
-          onPress: () => {
-            dispatch(logout()); // Seulement nettoyer le state Redux
-            navigation.navigate("Signin");
-          },
-        },
-      ]
-    );
+      },
+    ]);
   };
 
   // Fonction pour quitter la coloc avec confirmation
@@ -94,7 +90,7 @@ export default function ProfilParam({ navigation }) {
                 console.log("Utilisateur supprimé avec succès de la coloc");
                 dispatch(supColoc()); // Suppression de la coloc dans Redux
                 // Redirige vers la page de connexion
-                navigation.navigate("Signin"); 
+                navigation.navigate("Signin");
               } else {
                 console.error(
                   "Erreur lors de la suppression de l'utilisateur :",
@@ -167,8 +163,8 @@ export default function ProfilParam({ navigation }) {
             </Text>
           </TouchableOpacity>
 
- {/* Bouton pour se déconnecter */}
- <TouchableOpacity
+          {/* Bouton pour se déconnecter */}
+          <TouchableOpacity
             onPress={logoutUser}
             style={styles.buttonConnect}
             activeOpacity={0.8}

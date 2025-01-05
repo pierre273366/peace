@@ -50,11 +50,17 @@ export default function ColocProfil({ navigation }) {
             </Text>
           </View>
           <View>
-            <Text style={{ lineHeight: 40 }}>Code wifi de la coloc:</Text>
-            <Text style={{ lineHeight: 40 }}>Montant du loyer:</Text>
-            <Text style={{ lineHeight: 40 }}>Infos voisinages:</Text>
             <Text style={{ lineHeight: 40 }}>
-              Les 10 commandements de la coloc 🫡 :
+              Code wifi de la coloc:{coloc.codeWifi}
+            </Text>
+            <Text style={{ lineHeight: 40 }}>
+              Montant du loyer:{coloc.loyer}
+            </Text>
+            <Text style={{ lineHeight: 40 }}>
+              Infos voisinages:{coloc.infoVoisinage}
+            </Text>
+            <Text style={{ lineHeight: 40 }}>
+              Les 10 commandements de la coloc 🫡 : {coloc.regleColoc}
             </Text>
           </View>
         </View>

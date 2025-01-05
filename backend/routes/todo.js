@@ -53,14 +53,11 @@ router.get("/recuptodo/:userToken", (req, res) => {
 router.post("/createtodo", (req, res) => {
   console.log("route");
   const { participants, colocToken, tâche, date, récurrence } = req.body;
-
   if (!participants || !colocToken || !tâche || !date || !récurrence) {
     return res.json({ result: false, error: "Tous les champs sont requis" });
   }
-
   // Convertir la date en objet Date
   const initialDate = new Date(date);
-
   // Calcul de nextOccurrence en fonction de la récurrence
   let nextOccurrence = null;
   if (récurrence === "Hebdomadaire") {
@@ -75,7 +72,6 @@ router.post("/createtodo", (req, res) => {
     // Si la récurrence n'est pas reconnue, laisse nextOccurrence à null
     nextOccurrence = null;
   }
-
   // Créer un nouvel objet Todo avec `completed` à false par défaut
   const newTodo = new Todo({
     participants,
@@ -89,7 +85,6 @@ router.post("/createtodo", (req, res) => {
     completedMensuel: false, // Initialisation du champ completed à false
     nextOccurrence,
   });
-
   newTodo
     .save()
     .then((newDoc) => {

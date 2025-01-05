@@ -29,7 +29,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function Signup({ navigation }) {
   const dispatch = useDispatch();
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -64,7 +64,9 @@ export default function Signup({ navigation }) {
   const confirmDate = () => {
     setShowPicker(false);
     setDate(tempDate);
-    const formatted = `${tempDate.getDate()}/${tempDate.getMonth() + 1}/${tempDate.getFullYear()}`;
+    const formatted = `${tempDate.getDate()}/${
+      tempDate.getMonth() + 1
+    }/${tempDate.getFullYear()}`;
     setSignUpBirth(formatted);
   };
 
@@ -73,7 +75,9 @@ export default function Signup({ navigation }) {
       setShowPicker(false);
       if (selectedDate) {
         setDate(selectedDate);
-        const formatted = `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
+        const formatted = `${selectedDate.getDate()}/${
+          selectedDate.getMonth() + 1
+        }/${selectedDate.getFullYear()}`;
         setSignUpBirth(formatted);
       }
     } else {
@@ -170,7 +174,7 @@ export default function Signup({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
@@ -183,7 +187,7 @@ export default function Signup({ navigation }) {
         >
           <View style={styles.mainContent}>
             <Text style={styles.title}>Inscription</Text>
-  
+
             <View style={styles.containerInput}>
               {/* Input Name */}
               <View style={styles.input}>
@@ -204,8 +208,10 @@ export default function Signup({ navigation }) {
                   />
                 </View>
               </View>
-              {nameInvalid && <Text style={styles.errorText}>Nom manquant ou invalide</Text>}
-  
+              {nameInvalid && (
+                <Text style={styles.errorText}>Nom manquant ou invalide</Text>
+              )}
+
               {/* Input Username */}
               <View style={styles.input}>
                 <MaterialIcons
@@ -225,8 +231,12 @@ export default function Signup({ navigation }) {
                   />
                 </View>
               </View>
-              {usernameInvalid && <Text style={styles.errorText}>Username manquant ou invalide</Text>}
-  
+              {usernameInvalid && (
+                <Text style={styles.errorText}>
+                  Username manquant ou invalide
+                </Text>
+              )}
+
               {/* Input Email */}
               <View style={styles.input}>
                 <MaterialIcons
@@ -248,7 +258,9 @@ export default function Signup({ navigation }) {
                   />
                 </View>
               </View>
-              {emailInvalid && <Text style={styles.errorText}>Email manquant ou invalide</Text>}
+              {emailInvalid && (
+                <Text style={styles.errorText}>Email manquant ou invalide</Text>
+              )}
 
               {/* Input Phone */}
               <View style={styles.input}>
@@ -270,8 +282,12 @@ export default function Signup({ navigation }) {
                   />
                 </View>
               </View>
-              {phoneInvalid && <Text style={styles.errorText}>Numéro de téléphone invalide</Text>}
-  
+              {phoneInvalid && (
+                <Text style={styles.errorText}>
+                  Numéro de téléphone invalide
+                </Text>
+              )}
+
               {/* Input Password */}
               <View style={styles.input}>
                 <MaterialIcons
@@ -291,7 +307,10 @@ export default function Signup({ navigation }) {
                     placeholderTextColor="#999"
                   />
                 </View>
-                <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
+                <TouchableOpacity
+                  style={styles.eyeIcon}
+                  onPress={() => setShowPassword(!showPassword)}
+                >
                   <MaterialIcons
                     name={showPassword ? "visibility-off" : "visibility"}
                     size={24}
@@ -299,11 +318,18 @@ export default function Signup({ navigation }) {
                   />
                 </TouchableOpacity>
               </View>
-              {passwordInvalid && <Text style={styles.errorText}>Mot de passe manquant ou invalide</Text>}
-  
+              {passwordInvalid && (
+                <Text style={styles.errorText}>
+                  Mot de passe manquant ou invalide
+                </Text>
+              )}
+
               {/* Row pour Date et Expérience */}
               <View style={styles.rowContainer}>
-                <TouchableOpacity style={{ flex: 1 }} onPress={() => setShowPicker(true)}>
+                <TouchableOpacity
+                  style={{ flex: 1 }}
+                  onPress={() => setShowPicker(true)}
+                >
                   <View style={styles.halfInput}>
                     <MaterialIcons
                       name="calendar-today"
@@ -323,7 +349,7 @@ export default function Signup({ navigation }) {
                     </View>
                   </View>
                 </TouchableOpacity>
-  
+
                 <View style={styles.halfInput}>
                   <MaterialIcons
                     name="home"
@@ -338,15 +364,22 @@ export default function Signup({ navigation }) {
                       onPress={toggleFirstColoc}
                     >
                       <Text style={styles.checkboxText}>Oui</Text>
-                      <View style={[styles.checkbox, signUpFirstColoc === "Yes" && styles.checked]}>
-                        {signUpFirstColoc === "Yes" && <Text style={styles.checkmark}>✓</Text>}
+                      <View
+                        style={[
+                          styles.checkbox,
+                          signUpFirstColoc === "Yes" && styles.checked,
+                        ]}
+                      >
+                        {signUpFirstColoc === "Yes" && (
+                          <Text style={styles.checkmark}>✓</Text>
+                        )}
                       </View>
                     </TouchableOpacity>
                   </View>
                 </View>
               </View>
             </View>
-  
+
             <View style={styles.bottomContent}>
               <TouchableOpacity
                 onPress={() => SignUpBtn()}
@@ -355,7 +388,7 @@ export default function Signup({ navigation }) {
               >
                 <Text style={styles.textButtonConnect}>S'inscrire</Text>
               </TouchableOpacity>
-  
+
               <TouchableOpacity
                 onPress={() => navigation.navigate("Signin")}
                 style={styles.buttonSignUp}
@@ -370,9 +403,9 @@ export default function Signup({ navigation }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-  
+
       {/* Date Picker pour iOS */}
-      {Platform.OS === 'ios' && showPicker && (
+      {Platform.OS === "ios" && showPicker && (
         <View style={styles.pickerContainer}>
           <DateTimePicker
             testID="dateTimePicker"
@@ -383,18 +416,26 @@ export default function Signup({ navigation }) {
             maximumDate={new Date()}
           />
           <View style={styles.pickerButtonContainer}>
-            <TouchableOpacity onPress={cancelDate} style={styles.pickerCancelButton}>
-              <Text style={[styles.pickerButtonText, { color: '#666' }]}>Annuler</Text>
+            <TouchableOpacity
+              onPress={cancelDate}
+              style={styles.pickerCancelButton}
+            >
+              <Text style={[styles.pickerButtonText, { color: "#666" }]}>
+                Annuler
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={confirmDate} style={styles.pickerValidateButton}>
+            <TouchableOpacity
+              onPress={confirmDate}
+              style={styles.pickerValidateButton}
+            >
               <Text style={styles.pickerButtonText}>Valider</Text>
             </TouchableOpacity>
           </View>
         </View>
       )}
-  
+
       {/* Date Picker pour Android */}
-      {Platform.OS === 'android' && showPicker && (
+      {Platform.OS === "android" && showPicker && (
         <DateTimePicker
           value={date}
           mode="date"
@@ -609,5 +650,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-

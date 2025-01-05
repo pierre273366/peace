@@ -28,7 +28,7 @@ router.post("/signup", (req, res) => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.password, 10);
 
-      // On crée un nouvel utilisateur 
+      // On crée un nouvel utilisateur
       const newUser = new User({
         name: req.body.name,
         username: req.body.username,
@@ -44,7 +44,6 @@ router.post("/signup", (req, res) => {
       newUser.save().then((newDoc) => {
         res.json({ result: true, token: newDoc.token });
       });
-      ;
     } else {
       res.json({ result: false, error: "User already exists" });
     }
@@ -92,8 +91,8 @@ router.post("/signin", (req, res) => {
         });
       } else {
         // Le token de colocation existe mais la colocation n'est pas trouvée
-        User.updateOne({ _id: data._id }, { $unset: { colocToken: 1 } })
-          .then(() => {
+        User.updateOne({ _id: data._id }, { $unset: { colocToken: 1 } }).then(
+          () => {
             res.json({
               result: true,
               token: data.token,
@@ -101,7 +100,8 @@ router.post("/signin", (req, res) => {
               hasColoc: false,
               redirect: "Choice",
             });
-          });
+          }
+        );
       }
     });
   });
@@ -114,7 +114,7 @@ router.post("/createcoloc", (req, res) => {
     return;
   }
 
-  // Recherche l'utilisateur correspondant au token fourni dans la requête  
+  // Recherche l'utilisateur correspondant au token fourni dans la requête
   User.findOne({ token: req.body.user }).then((user) => {
     if (user) {
       Coloc.findOne({ name: req.body.name }).then((data) => {
@@ -130,7 +130,7 @@ router.post("/createcoloc", (req, res) => {
           });
           //save la coloc dans la BDD
           newColoc.save().then((newDoc) => {
-            //màj de l'utilisateur pour inclure le token de sa coloc            
+            //màj de l'utilisateur pour inclure le token de sa coloc
             return User.updateOne(
               { _id: user._id },
               {
@@ -157,21 +157,21 @@ router.post("/joincoloc", (req, res) => {
     return;
   }
 
-// Trouver la coloc en fonction du token
+  // Trouver la coloc en fonction du token
   Coloc.findOne({ token: req.body.token })
     .then((coloc) => {
       if (!coloc) {
         return res.json({ result: false, error: "Coloc not found" });
       }
 
-// Trouver l'utilisateur en fonction du token
+      // Trouver l'utilisateur en fonction du token
       User.findOne({ token: req.body.user })
         .then((user) => {
           if (!user) {
             return res.json({ result: false, error: "User not found" });
           }
 
-// check si utilisateur est déjà dans la liste des utilisateurs de la coloc
+          // check si utilisateur est déjà dans la liste des utilisateurs de la coloc
           const userId = user._id;
           const userAlreadyInColoc = coloc.users.includes(userId);
 
@@ -182,15 +182,18 @@ router.post("/joincoloc", (req, res) => {
             });
           }
 
-// Si l'utilisateur n'est pas encore dans la coloc, on l'ajoute
+          // Si l'utilisateur n'est pas encore dans la coloc, on l'ajoute
           coloc.users.push(userId);
-// Mettre à jour le token de la coloc dans l'utilisateur
+          // Mettre à jour le token de la coloc dans l'utilisateur
           user.colocToken = coloc.token;
-// Sauvegarder la coloc et l'utilisateur avec les modifications
-          coloc.save()
-            .then(() => { user.save()
+          // Sauvegarder la coloc et l'utilisateur avec les modifications
+          coloc
+            .save()
+            .then(() => {
+              user
+                .save()
                 .then(() => {
-// Trouver à nouveau la coloc pour renvoyer les informations à jour
+                  // Trouver à nouveau la coloc pour renvoyer les informations à jour
                   Coloc.findOne({ token: req.body.token })
                     .then((colocInfo) => {
                       if (colocInfo) {
@@ -268,14 +271,14 @@ router.get("/:token", async (req, res) => {
 router.delete("/:token", async (req, res) => {
   User.findOne({ token: req.params.token }).then((user) => {
     if (user) {
-// Si l'utilisateur est trouvé, on met à jour la colocation
+      // Si l'utilisateur est trouvé, on met à jour la colocation
       Coloc.updateOne(
         { token: user.colocToken },
         { $pull: { users: user._id } }
       ).then((info) => {
-// Si la mise à jour de la colocation est réussie
+        // Si la mise à jour de la colocation est réussie
         if (info.acknowledged) {
-// Supprime le token de la colocation de l'utilisateur
+          // Supprime le token de la colocation de l'utilisateur
           user.colocToken = "";
           user.save().then(() =>
             res.json({
@@ -321,23 +324,36 @@ router.put("/updateProfile", async (req, res) => {
 
 //ROUTE COLOC INFO
 router.put("/updateColoc", async (req, res) => {
-  const coloc = await Coloc.findOne({ token: req.body.token });
-  if (!coloc) {
-    return res.json({ result: false, error: "Coloc not found" });
+  // Récupérer le token de l'utilisateur dans Redux via le frontend (que tu envoies dans req.body)
+  const userToken = req.body.token;
+
+  if (!userToken) {
+    console.log("Token d'utilisateur manquant dans la requête");
+    return res.json({ result: false, error: "Token d'utilisateur manquant" });
   }
+
+  // Rechercher la coloc correspondante avec ce token
   try {
-    // Mise à jour des infos,
-    coloc.codeWifi = req.body.codeWifi || coloc.codeWifi; // Si le code wifi est présente, on la met à jour
-    coloc.loyer = req.body.loyer || coloc.loyer; // Mise à jour du loyer, s'il est présent
-    coloc.infoVoisinage = req.body.infoVoisinage || coloc.infoVoisinage; // Mise à jour des infos voisinages
+    const coloc = await Coloc.findOne({ token: userToken });
+
+    if (!coloc) {
+      console.log("Coloc non trouvée pour le token : ", userToken);
+      return res.json({ result: false, error: "Coloc not found" });
+    }
+
+    // Mise à jour des informations de la coloc
+    coloc.codeWifi = req.body.codeWifi || coloc.codeWifi;
+    coloc.loyer = req.body.loyer || coloc.loyer;
+    coloc.infoVoisinage = req.body.infoVoisinage || coloc.infoVoisinage;
     coloc.regleColoc = req.body.regleColoc || coloc.regleColoc;
 
-    // Sauvegarde des modifications
+    // Sauvegarder les modifications
     await coloc.save();
+    console.log("Coloc mise à jour avec succès : ", coloc);
 
     return res.json({ result: true });
   } catch (error) {
-    console.error(error);
+    console.error("Erreur lors de la mise à jour de la coloc :", error);
     return res.json({ result: false, error: "Erreur serveur" });
   }
 });

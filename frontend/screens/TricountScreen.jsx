@@ -9,24 +9,20 @@ import {
   Alert,
   Dimensions,
   Platform,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
-
-
-
 
 export default function TricountScreen({ navigation }) {
   const [tricounts, setTricounts] = useState([]);
   const userToken = useSelector((state) => state.users.user.token);
-  const backendUrl = "http://192.168.1.20:3000" ;
-//https://peace-chi.vercel.app
+  const backendUrl = "http://192.168.1.11:3000";
+  //https://peace-chi.vercel.app
 
   useFocusEffect(
     useCallback(() => {
@@ -34,11 +30,10 @@ export default function TricountScreen({ navigation }) {
     }, [])
   );
 
-
   useEffect(() => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       StatusBar.setTranslucent(true);
-      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setBackgroundColor("transparent");
     }
   }, []);
 
@@ -125,18 +120,14 @@ export default function TricountScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.containerView}>
         <View style={styles.containerBtnTitle}>
-           <View style={styles.containerBtnTitle}>
-                              <TouchableOpacity
-                                onPress={() => navigation.navigate("Home")}
-                                style={styles.iconContainer}
-                              >
-                                <FontAwesome
-                                  name={"chevron-left"}
-                                  size={35}
-                                  color="#FD703C"
-                                />
-                              </TouchableOpacity>
-                            </View>
+          <View style={styles.containerBtnTitle}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Home")}
+              style={styles.iconContainer}
+            >
+              <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.title}>Tricount</Text>
           <TouchableOpacity
             style={styles.Add}
@@ -163,19 +154,19 @@ export default function TricountScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "white",
-      alignItems: "center",
-      // Ajouter un paddingTop conditionnel selon la plateforme
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-    },
-    containerView: {
-      width: "100%",
-      padding: 16,
-      // Ajustement du padding vertical
-      paddingVertical: Platform.OS === 'android' ? 10 : 16,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+    alignItems: "center",
+    // Ajouter un paddingTop conditionnel selon la plateforme
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+  containerView: {
+    width: "100%",
+    padding: 16,
+    // Ajustement du padding vertical
+    paddingVertical: Platform.OS === "android" ? 10 : 16,
+  },
   containerText: {
     width: "100%",
     padding: 16,
