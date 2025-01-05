@@ -16,12 +16,11 @@ import {
 import { AntDesign, MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-
 export default function TricountCreaScreen({ navigation, route }) {
   const dispatch = useDispatch();
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -63,20 +62,17 @@ export default function TricountCreaScreen({ navigation, route }) {
   };
 
   const handleSubmit = async () => {
-    const response = await fetch(
-      `${backendUrl}/tricount/createtricount`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          participants: selectedUsers,
-          colocToken: colocToken,
-        }),
-      }
-    );
+    const response = await fetch(`${backendUrl}/tricount/createtricount`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        participants: selectedUsers,
+        colocToken: colocToken,
+      }),
+    });
     const data = await response.json();
 
     if (data.result) {
@@ -136,11 +132,7 @@ export default function TricountCreaScreen({ navigation, route }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome
-        name={"chevron-left"}
-        size={35}
-        color="#FD703C"
-        />
+          <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
         </TouchableOpacity>
         <Text style={styles.title}>Créer un Tricount</Text>
         <View style={{ width: 24 }} />

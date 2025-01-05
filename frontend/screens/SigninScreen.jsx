@@ -23,7 +23,7 @@ function Signin() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.value);
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   const [signInUsername, setSignInUsername] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
@@ -79,14 +79,12 @@ function Signin() {
               })
             );
             navigation.navigate("TabNavigator");
-          }else {
+          } else {
             navigation.navigate("Choice");
           }
 
           setSignInUsername("");
           setSignInPassword("");
-
-          
         } else {
           console.error("Erreur lors de la connexion:", data.error);
           if (data.message === "Invalid username") {

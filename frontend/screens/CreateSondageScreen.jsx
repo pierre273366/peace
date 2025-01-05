@@ -22,7 +22,7 @@ export default function CreateSondageScreen({ navigation }) {
   const userName = useSelector((state) => state.users.user.username);
   const [title, setTitle] = useState("");
   const [responses, setResponses] = useState([""]);
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -74,7 +74,7 @@ export default function CreateSondageScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView 
+      <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardView}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
@@ -89,11 +89,7 @@ export default function CreateSondageScreen({ navigation }) {
               onPress={() => navigation.navigate("Sondage")}
               style={styles.iconContainer}
             >
-              <FontAwesome
-                name={"chevron-left"}
-                size={35}
-                color="#FD703C"
-              />
+              <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
             </TouchableOpacity>
 
             <Image

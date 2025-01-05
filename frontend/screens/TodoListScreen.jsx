@@ -15,7 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export default function TodoList({ navigation }) {
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
   const userToken = useSelector((state) => state.users.user.token);
 
   const formatDateForComparison = (time) => {
@@ -250,24 +250,24 @@ export default function TodoList({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.containerProfil}>
-  <View style={styles.header}>
-    <TouchableOpacity
-      onPress={() => navigation.navigate("Home")}
-      style={styles.backButton}
-    >
-      <FontAwesome name="chevron-left" size={35} color="#FD703C" />
-    </TouchableOpacity>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Home")}
+            style={styles.backButton}
+          >
+            <FontAwesome name="chevron-left" size={35} color="#FD703C" />
+          </TouchableOpacity>
 
-    <Text style={styles.headerTitle}>Todo List</Text>
+          <Text style={styles.headerTitle}>Todo List</Text>
 
-    <TouchableOpacity
-      style={styles.addButton}
-      onPress={() => navigation.navigate("TodoCrea")}
-    >
-      <Text style={styles.addButtonText}>+</Text>
-    </TouchableOpacity>
-  </View>
-</SafeAreaView>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => navigation.navigate("TodoCrea")}
+          >
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
       <ScrollView
         contentContainerStyle={styles.scrollViewContent}
         keyboardShouldPersistTaps="handled"
@@ -619,26 +619,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   addButton: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 28,
     height: 56,
     width: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   white: {
     color: "white",
     fontSize: 26,
   },
   addButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 26,
   },
   headerTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 25,
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
   },
   backButton: {
     padding: 5,
@@ -646,9 +646,9 @@ const styles = StyleSheet.create({
   todoItem: {
     marginHorizontal: 15,
     marginBottom: 15,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -656,48 +656,48 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   todoHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   todoTextContainer: {
     flex: 1,
     marginHorizontal: 15,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    width: '100%',
+    width: "100%",
   },
   todoTitle: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 18,
     marginBottom: 5,
   },
   todoRecurrence: {
-    color: '#666',
+    color: "#666",
     fontSize: 14,
   },
   participantsContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginRight: 10,
   },
   usernameCircle: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#FD703C20',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#FD703C20",
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 5,
   },
   usernameText: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#FD703C',
+    fontWeight: "bold",
+    color: "#FD703C",
   },
   checkboxContainer: {
     padding: 5,
@@ -707,7 +707,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   scrollViewContent: {
     paddingVertical: 10,
@@ -731,6 +731,4 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginTop: 20,
   },
- 
-  
 });

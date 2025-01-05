@@ -324,23 +324,36 @@ router.put("/updateProfile", async (req, res) => {
 
 //ROUTE COLOC INFO
 router.put("/updateColoc", async (req, res) => {
-  const coloc = await Coloc.findOne({ token: req.body.token });
-  if (!coloc) {
-    return res.json({ result: false, error: "Coloc not found" });
+  // Récupérer le token de l'utilisateur dans Redux via le frontend (que tu envoies dans req.body)
+  const userToken = req.body.token;
+
+  if (!userToken) {
+    console.log("Token d'utilisateur manquant dans la requête");
+    return res.json({ result: false, error: "Token d'utilisateur manquant" });
   }
+
+  // Rechercher la coloc correspondante avec ce token
   try {
-    // Mise à jour des infos,
-    coloc.codeWifi = req.body.codeWifi || coloc.codeWifi; // Si le code wifi est présente, on la met à jour
-    coloc.loyer = req.body.loyer || coloc.loyer; // Mise à jour du loyer, s'il est présent
-    coloc.infoVoisinage = req.body.infoVoisinage || coloc.infoVoisinage; // Mise à jour des infos voisinages
+    const coloc = await Coloc.findOne({ token: userToken });
+
+    if (!coloc) {
+      console.log("Coloc non trouvée pour le token : ", userToken);
+      return res.json({ result: false, error: "Coloc not found" });
+    }
+
+    // Mise à jour des informations de la coloc
+    coloc.codeWifi = req.body.codeWifi || coloc.codeWifi;
+    coloc.loyer = req.body.loyer || coloc.loyer;
+    coloc.infoVoisinage = req.body.infoVoisinage || coloc.infoVoisinage;
     coloc.regleColoc = req.body.regleColoc || coloc.regleColoc;
 
-    // Sauvegarde des modifications
+    // Sauvegarder les modifications
     await coloc.save();
+    console.log("Coloc mise à jour avec succès : ", coloc);
 
     return res.json({ result: true });
   } catch (error) {
-    console.error(error);
+    console.error("Erreur lors de la mise à jour de la coloc :", error);
     return res.json({ result: false, error: "Erreur serveur" });
   }
 });

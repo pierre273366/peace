@@ -19,7 +19,7 @@ const MyCalendar = ({ navigation }) => {
   // et un `selectedDate` pour la gestion de la date actuellement sélectionnée dans le calendrier.
   const [events, setEvents] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
-  const backendUrl = "http://192.168.1.20:3000"; // URL de l'API de ton backend
+  const backendUrl = "http://192.168.1.11:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
 
   // useEffect pour récupérer les événements depuis le backend lors du premier rendu du composant

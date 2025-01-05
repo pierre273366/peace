@@ -23,7 +23,7 @@ export default function TodoListCrea({ navigation, route }) {
   const [timePickerDate, setTimePickerDate] = useState(new Date());
   const [recurrenceType, setRecurrenceType] = useState("Quotidienne");
   const [selectTache, setSelectTache] = useState("");
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);
@@ -46,7 +46,9 @@ export default function TodoListCrea({ navigation, route }) {
   }, [userToken]);
 
   const fetchUsers = async (userToken) => {
-    const response = await fetch(`${backendUrl}/tricount/getcolocusers/${userToken}`);
+    const response = await fetch(
+      `${backendUrl}/tricount/getcolocusers/${userToken}`
+    );
     const data = await response.json();
 
     if (data.result) {
@@ -67,7 +69,9 @@ export default function TodoListCrea({ navigation, route }) {
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
-    return `${day < 10 ? "0" + day : day}/${month < 10 ? "0" + month : month}/${year}`;
+    return `${day < 10 ? "0" + day : day}/${
+      month < 10 ? "0" + month : month
+    }/${year}`;
   };
 
   const calculateNextOccurrence = (selectedDate, recurrenceType) => {
@@ -142,10 +146,16 @@ export default function TodoListCrea({ navigation, route }) {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContainer}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.scrollContainer}
+    >
       <SafeAreaView style={styles.containerProfil}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.navigate("TodoList")} style={styles.backButton}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("TodoList")}
+            style={styles.backButton}
+          >
             <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Todo List</Text>
@@ -158,38 +168,62 @@ export default function TodoListCrea({ navigation, route }) {
           <View style={styles.inputContent}>
             <View style={styles.participantsHeader}>
               <Text>Participants</Text>
-              <TouchableOpacity onPress={() => setSelectedUsers(users.map(user => user._id))} style={styles.selectAllButton}>
+              <TouchableOpacity
+                onPress={() => setSelectedUsers(users.map((user) => user._id))}
+                style={styles.selectAllButton}
+              >
                 <Text style={styles.selectAllText}>Tout sélectionner</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.participantsList}>
-              {users.map(item => (
-                <TouchableOpacity key={item._id} style={styles.participantItem} onPress={() => handleCheckboxChange(item)}>
+              {users.map((item) => (
+                <TouchableOpacity
+                  key={item._id}
+                  style={styles.participantItem}
+                  onPress={() => handleCheckboxChange(item)}
+                >
                   <View style={styles.participantInfo}>
                     <View style={styles.avatarCircle}>
-                      <Text style={styles.avatarText}>{item.username.charAt(0).toUpperCase()}</Text>
+                      <Text style={styles.avatarText}>
+                        {item.username.charAt(0).toUpperCase()}
+                      </Text>
                     </View>
                     <Text style={styles.participantName}>{item.username}</Text>
                   </View>
-                  <View style={[styles.checkbox, selectedUsers.includes(item._id) && styles.checkboxSelected]}>
-                    {selectedUsers.includes(item._id) && <Text style={styles.checkmark}>✓</Text>}
+                  <View
+                    style={[
+                      styles.checkbox,
+                      selectedUsers.includes(item._id) &&
+                        styles.checkboxSelected,
+                    ]}
+                  >
+                    {selectedUsers.includes(item._id) && (
+                      <Text style={styles.checkmark}>✓</Text>
+                    )}
                   </View>
                 </TouchableOpacity>
               ))}
             </View>
             {selectedUsers.length > 0 && (
               <Text style={styles.selectedCount}>
-                {selectedUsers.length} participant{selectedUsers.length > 1 ? "s" : ""} sélectionné{selectedUsers.length > 1 ? "s" : ""}
+                {selectedUsers.length} participant
+                {selectedUsers.length > 1 ? "s" : ""} sélectionné
+                {selectedUsers.length > 1 ? "s" : ""}
               </Text>
             )}
           </View>
         </View>
 
         <View style={styles.input}>
-          <FontAwesome name="tasks" size={24} color="#FD703C" style={styles.inputIcon} />
+          <FontAwesome
+            name="tasks"
+            size={24}
+            color="#FD703C"
+            style={styles.inputIcon}
+          />
           <View style={styles.inputContent}>
             <Text>Nom de la tâche</Text>
-            <TextInput 
+            <TextInput
               placeholder="Exemple: Faire les courses"
               value={selectTache}
               onChangeText={setSelectTache}
@@ -199,7 +233,12 @@ export default function TodoListCrea({ navigation, route }) {
         </View>
 
         <View style={styles.input}>
-          <FontAwesome name="calendar" size={24} color="#FD703C" style={styles.inputIcon} />
+          <FontAwesome
+            name="calendar"
+            size={24}
+            color="#FD703C"
+            style={styles.inputIcon}
+          />
           <View style={styles.inputContent}>
             <Text>Sélectionner une date</Text>
             <TouchableOpacity
@@ -216,10 +255,16 @@ export default function TodoListCrea({ navigation, route }) {
               <View style={styles.datePickerContainer}>
                 {Platform.OS === "ios" && (
                   <View style={styles.iosButtonsContainer}>
-                    <TouchableOpacity onPress={handleCancelDate} style={styles.iosButton}>
+                    <TouchableOpacity
+                      onPress={handleCancelDate}
+                      style={styles.iosButton}
+                    >
                       <Text style={styles.iosButtonTextCancel}>Annuler</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={handleConfirmDate} style={styles.iosButton}>
+                    <TouchableOpacity
+                      onPress={handleConfirmDate}
+                      style={styles.iosButton}
+                    >
                       <Text style={styles.iosButtonTextConfirm}>Valider</Text>
                     </TouchableOpacity>
                   </View>
@@ -238,7 +283,12 @@ export default function TodoListCrea({ navigation, route }) {
         </View>
 
         <View style={styles.input}>
-          <FontAwesome name="refresh" size={24} color="#FD703C" style={styles.inputIcon} />
+          <FontAwesome
+            name="refresh"
+            size={24}
+            color="#FD703C"
+            style={styles.inputIcon}
+          />
           <View style={styles.inputContent}>
             <Text>Type de récurrence</Text>
             <ModalSelector
@@ -252,7 +302,10 @@ export default function TodoListCrea({ navigation, route }) {
               </View>
             </ModalSelector>
             <Text style={styles.nextOccurrence}>
-              Prochaine tâche: {formatDate(calculateNextOccurrence(selectedDate, recurrenceType))}
+              Prochaine tâche:{" "}
+              {formatDate(
+                calculateNextOccurrence(selectedDate, recurrenceType)
+              )}
             </Text>
           </View>
         </View>

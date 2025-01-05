@@ -12,37 +12,58 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useSelector } from "react-redux";
 
 export default function ColocParam({ navigation }) {
-  const coloc = useSelector((state) => state.users.coloc.token); // Récupération du token
-  const colocToken = coloc.token;
+  const colocToken = useSelector((state) => state.users.coloc.token);
+  const userToken = useSelector((state) => state.users.userToken); // Récupérer le token de l'utilisateur depuis le Redux store
   const [codeWifi, setCodeWifi] = useState(""); // État pour la wifi
   const [loyer, setLoyer] = useState(""); // État pour le loyer
   const [infoVoisinage, setInfoVoisinage] = useState(""); // État pour info voisinage
   const [regleColoc, setRegleColoc] = useState(""); // État pour info voisinage
-
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   // Fonction pour mettre à jour les infos colocs
   const updateColoc = async () => {
+    // Vérifier que le token est présent avant de faire la requête
+    if (!colocToken) {
+      Alert.alert("Erreur", "Token de la coloc manquant !");
+      return;
+    }
+
+    // Affichage des données envoyées
+    console.log("Données envoyées :", {
+      token: colocToken,
+      codeWifi,
+      loyer,
+      infoVoisinage,
+      regleColoc,
+    });
+
     try {
+      // Envoi de la requête PUT au backend
       const response = await fetch(`${backendUrl}/users/updateColoc`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          token: colocToken,
-          codeWifi: codeWifi,
-          loyer: loyer,
-          infoVoisinage: infoVoisinage,
-          regleColoc: regleColoc,
+          token: colocToken, // Envoi du token de la coloc
+          codeWifi,
+          loyer,
+          infoVoisinage,
+          regleColoc,
         }),
       });
 
       const data = await response.json();
+
       if (data.result) {
         Alert.alert("Succès", "Infos coloc mises à jour avec succès");
       } else {
-        Alert.alert("Erreur", "Échec de la mise à jour des infos coloc");
+        Alert.alert(
+          "Erreur",
+          `Échec de la mise à jour des infos coloc: ${
+            data.error || "Erreur inconnue"
+          }`
+        );
       }
     } catch (error) {
       console.error("Erreur lors de la mise à jour des infos coloc", error);

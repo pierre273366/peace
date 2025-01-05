@@ -14,67 +14,83 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useSelector } from "react-redux";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
+// Récupération des dimensions de l'écran pour gérer les tailles responsives
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const EventAdd = ({ navigation, route }) => {
-  const [eventName, setEventName] = useState("");
-  const [eventTime, setEventTime] = useState(new Date());
-  const [timePickerDate, setTimePickerDate] = useState(new Date());
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [eventPlace, setEventPlace] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const colocToken = useSelector((state) => state.users.coloc.token);
-  const backendUrl = "http://192.168.1.20:3000";
+  // Déclaration des états locaux pour gérer les valeurs des champs du formulaire
+  const [eventName, setEventName] = useState(""); // Nom de l'événement
+  const [eventTime, setEventTime] = useState(new Date()); // Heure de l'événement
+  const [timePickerDate, setTimePickerDate] = useState(new Date()); // Date de sélection dans le sélecteur d'heure
+  const [showTimePicker, setShowTimePicker] = useState(false); // Affichage ou non du sélecteur d'heure
+  const [eventPlace, setEventPlace] = useState(""); // Lieu de l'événement
+  const [eventDescription, setEventDescription] = useState(""); // Description de l'événement
+  const [selectedDate, setSelectedDate] = useState(new Date()); // Date de l'événement
+  const [showDatePicker, setShowDatePicker] = useState(false); // Affichage ou non du sélecteur de date
+  const colocToken = useSelector((state) => state.users.coloc.token); // Récupère le token de la colocation depuis Redux
+  const backendUrl = "http://192.168.1.11:3000";
 
+  // Fonction appelée lorsque l'utilisateur sélectionne une date dans le sélecteur de date
   const onDateChange = (event, selectedDate) => {
     if (Platform.OS === "android") {
+      // Sur Android, on ferme le sélecteur après la sélection
       setShowDatePicker(false);
     }
     if (selectedDate) {
+      // Si une date est sélectionnée, on met à jour l'état de la date sélectionnée
       setSelectedDate(selectedDate);
     }
   };
 
+  // Fonction appelée lorsque l'utilisateur sélectionne une heure dans le sélecteur d'heure
   const onTimeChange = (event, selectedTime) => {
     if (Platform.OS === "android") {
+      // Sur Android, on ferme le sélecteur après la sélection
       setShowTimePicker(false);
     }
-    
+
     if (selectedTime) {
+      // Si une heure est sélectionnée, on met à jour l'état de l'heure sélectionnée
       if (Platform.OS === "ios") {
+        // Pour iOS, on garde la date de sélection dans un état séparé
         setTimePickerDate(selectedTime);
       } else {
+        // Pour Android, l'heure est directement stockée dans `eventTime`
         setEventTime(selectedTime);
       }
     }
   };
 
+  // Fonction appelée pour confirmer l'heure sélectionnée sur iOS
   const handleTimeConfirm = () => {
-    setEventTime(timePickerDate);
-    setShowTimePicker(false);
+    setEventTime(timePickerDate); // On met à jour `eventTime` avec la valeur choisie dans `timePickerDate`
+    setShowTimePicker(false); // On ferme le sélecteur d'heure
   };
 
+  // Fonction pour ajouter un événement via une requête POST vers le backend
   const handleAddEvent = () => {
     if (!eventTime) {
+      // Si l'heure n'est pas sélectionnée, on affiche une alerte
       alert("Veuillez sélectionner une heure");
       return;
     }
 
+    // Récupération des heures et minutes à partir de l'objet Date
     const hours = eventTime.getHours();
     const minutes = eventTime.getMinutes();
 
+    // Création de l'objet de l'événement à envoyer au backend
     const newEvent = {
       name: eventName,
-      time: hours * 100 + minutes,
+      time: hours * 100 + minutes, // Heure formatée en `HHmm`
       place: eventPlace,
       description: eventDescription,
-      date: selectedDate.toISOString().split("T")[0],
+      date: selectedDate.toISOString().split("T")[0], // Date de l'événement au format ISO (sans l'heure)
       colocToken,
     };
 
+    // Envoi de la requête POST au backend pour ajouter l'événement
     fetch(`${backendUrl}/event`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -82,73 +98,91 @@ const EventAdd = ({ navigation, route }) => {
     })
       .then((response) => response.json())
       .then(() => {
+        // Si la route parent a une fonction `addEvent`, on l'appelle pour mettre à jour les événements dans le parent
         if (route.params?.addEvent) {
           route.params.addEvent(newEvent);
         }
-        navigation.goBack();
+        navigation.goBack(); // On revient à l'écran précédent après l'ajout
       })
       .catch((error) => {
-        console.error("Erreur lors de l'ajout de l'événement :", error);
+        console.error("Erreur lors de l'ajout de l'événement :", error); // On affiche l'erreur si l'ajout échoue
       });
 
-    checkKeywordsInName(eventName);
+    checkKeywordsInName(eventName); // On vérifie si le nom de l'événement contient des mots-clés spéciaux
   };
 
+  // Fonction pour formater l'heure en chaîne de caractères `HH:mm`
   const formatTime = (date) => {
-    if (!date) return "";
+    if (!date) return ""; // Si la date est invalide, on retourne une chaîne vide
     return `${String(date.getHours()).padStart(2, "0")}:${String(
       date.getMinutes()
-    ).padStart(2, "0")}`;
+    ).padStart(2, "0")}`; // Format de l'heure avec deux chiffres pour les heures et les minutes
   };
 
+  // Rendu conditionnel de l'heure sélectionnée
   const renderTimePickerContent = () => {
     if (!eventTime) {
+      // Si l'heure n'est pas définie, afficher un texte de remplacement
       return <Text style={styles.placeholder}>Heure de l'événement</Text>;
     }
-    return <Text style={styles.selectedTime}>{formatTime(eventTime)}</Text>;
+    return <Text style={styles.selectedTime}>{formatTime(eventTime)}</Text>; // Sinon, afficher l'heure formatée
   };
 
+  // Fonction pour vérifier si le nom de l'événement contient des mots-clés spécifiques
   const checkKeywordsInName = (name) => {
     if (!name || typeof name !== "string") {
-      return;
+      return; // Si le nom n'est pas une chaîne de caractères, on arrête la fonction
     }
 
+    // Liste de mots-clés à rechercher dans le nom de l'événement
     const motsCles = [
-      "soirée", "apéro", "fête", "party", "fiesta",
-      "anniversaire", "noël", "réveillon", "nouvel an"
+      "soirée",
+      "apéro",
+      "fête",
+      "party",
+      "fiesta",
+      "anniversaire",
+      "noël",
+      "réveillon",
+      "nouvel an",
     ];
 
+    // Messages associés à chaque mot-clé
     const messages = {
       soirée: [
         "L'apéro est lancé ! 🍹",
         "Soirée en vue ! 🎉",
         "Que la fête commence !🥳",
-        "J'espère que tu as pensé aux glaçons 🧊"
+        "J'espère que tu as pensé aux glaçons 🧊",
       ],
       anniversaire: [
         "Joyeux anniversaire ! 🎂🎉",
         "C'est le grand jour, fête bien ! 🥳",
-        "Un an de plus, mais qui compte ! 🎈"
+        "Un an de plus, mais qui compte ! 🎈",
       ],
       noël: ["Joyeux Noël à tous ! 🎄", "Le Père Noël est passé ! 🎅"],
       "nouvel an": [
         "Bonne année ! 🥂",
         "Que 2024 soit encore mieux ! 🎉",
-        "Fêtons le début d'une nouvelle année ! 🎆"
+        "Fêtons le début d'une nouvelle année ! 🎆",
       ],
       réveillon: [
         "C'est le réveillon ! 🥳",
-        "Célébrons ensemble cette soirée magique ! 🍾"
-      ]
+        "Célébrons ensemble cette soirée magique ! 🍾",
+      ],
     };
 
-    const nameLower = name.toLowerCase();
+    const nameLower = name.toLowerCase(); // On met le nom en minuscule pour comparer sans case-sensitive
 
+    // Recherche des mots-clés dans le nom de l'événement
     for (let mot of motsCles) {
       if (nameLower.includes(mot)) {
-        const randomMessage = messages[mot][Math.floor(Math.random() * messages[mot].length)];
-        Alert.alert("", randomMessage, [{ text: "OK" }]);
-        return;
+        // Si un mot-clé est trouvé dans le nom
+        // Choisir un message aléatoire parmi les messages associés à ce mot-clé
+        const randomMessage =
+          messages[mot][Math.floor(Math.random() * messages[mot].length)];
+        Alert.alert("", randomMessage, [{ text: "OK" }]); // Afficher une alerte avec ce message
+        return; // On sort de la fonction dès qu'un mot-clé est trouvé
       }
     }
   };
@@ -299,7 +333,6 @@ const EventAdd = ({ navigation, route }) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {

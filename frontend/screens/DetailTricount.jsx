@@ -17,7 +17,7 @@ export default function DetailTricount({ navigation, route }) {
   const [tricountData, setTricountData] = useState(null);
   const tricountId = route.params.tricountId;
   const [userId, setUserId] = useState("");
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   useFocusEffect(
     React.useCallback(() => {
@@ -41,9 +41,7 @@ export default function DetailTricount({ navigation, route }) {
 
   const fetchUserId = async (token) => {
     try {
-      const response = await fetch(
-        `${backendUrl}/tricount/user/${token}`
-      );
+      const response = await fetch(`${backendUrl}/tricount/user/${token}`);
       const data = await response.json();
       setUserId(data.userId);
     } catch (error) {
@@ -185,11 +183,7 @@ export default function DetailTricount({ navigation, route }) {
               onPress={() => navigation.navigate("Tricount")}
               style={styles.backButton}
             >
-              <FontAwesome
-                              name={"chevron-left"}
-                              size={35}
-                              color="#FD703C"
-                            />
+              <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
             </TouchableOpacity>
             <Text style={styles.title}>{route.params.tricountTitle}</Text>
           </View>

@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   Dimensions,
   Platform,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -23,7 +23,7 @@ export default function SondageScreen({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [sondages, setSondages] = useState([]);
-  const backendUrl = "http://192.168.1.20:3000";
+  const backendUrl = "http://192.168.1.11:3000";
 
   useFocusEffect(
     useCallback(() => {
@@ -32,9 +32,9 @@ export default function SondageScreen({ navigation }) {
   );
 
   useEffect(() => {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       StatusBar.setTranslucent(true);
-      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setBackgroundColor("transparent");
     }
   }, []);
 
@@ -80,14 +80,11 @@ export default function SondageScreen({ navigation }) {
 
   const fetchDeleteSondage = async (_id) => {
     try {
-      const response = await fetch(
-        `${backendUrl}/sondage/deleteSondage`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ _id }),
-        }
-      );
+      const response = await fetch(`${backendUrl}/sondage/deleteSondage`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ _id }),
+      });
       const data = await response.json();
 
       if (data.result) {
@@ -108,14 +105,11 @@ export default function SondageScreen({ navigation }) {
         userToken: user.token,
       };
 
-      const response = await fetch(
-        `${backendUrl}/sondage/deleteVote`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(votes),
-        }
-      );
+      const response = await fetch(`${backendUrl}/sondage/deleteVote`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(votes),
+      });
       const data = await response.json();
 
       if (data.result) {
@@ -177,11 +171,7 @@ export default function SondageScreen({ navigation }) {
           onPress={() => navigation.navigate("Home")}
           style={styles.iconContainer}
         >
-          <FontAwesome
-            name={"chevron-left"}
-            size={35}
-            color="#FD703C"
-          />
+          <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
         </TouchableOpacity>
         <Text style={styles.title1}>Sondages</Text>
         <TouchableOpacity
@@ -235,27 +225,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F9F9FF",
     alignItems: "center",
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
     paddingHorizontal: 20,
     marginTop: 10,
     height: 50,
   },
   iconContainer: {
     width: 50,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   title1: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#333",
     flex: 1,
-    textAlign: 'center',
+    textAlign: "center",
   },
   scrollView: {
     flex: 1,
