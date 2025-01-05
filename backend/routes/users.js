@@ -57,9 +57,8 @@ router.post("/signin", (req, res) => {
     return;
   }
 
+  // Recherche l'utilisateur dans la base de données par son nom d'utilisateur
   User.findOne({ username: req.body.username }).then((data) => {
-    console.log("Requête reçue:", req.body);
-    console.log("Utilisateur trouvé:", data);
     if (!data || !bcrypt.compareSync(req.body.password, data.password)) {
       res.json({ result: false, error: "User not found or wrong password" });
       return;
@@ -108,6 +107,7 @@ router.post("/signin", (req, res) => {
   });
 });
 
+// Route POST pour créer une colocation
 router.post("/createcoloc", (req, res) => {
   if (!checkBody(req.body, ["name", "address", "peoples"])) {
     res.json({ result: false, error: "Missing or empty fields" });
@@ -171,7 +171,7 @@ router.post("/joincoloc", (req, res) => {
             return res.json({ result: false, error: "User not found" });
           }
 
-          // Vérifier si l'utilisateur est déjà dans la liste des utilisateurs de la coloc
+          // check si utilisateur est déjà dans la liste des utilisateurs de la coloc
           const userId = user._id;
           const userAlreadyInColoc = coloc.users.includes(userId);
 
@@ -184,10 +184,8 @@ router.post("/joincoloc", (req, res) => {
 
           // Si l'utilisateur n'est pas encore dans la coloc, on l'ajoute
           coloc.users.push(userId);
-
           // Mettre à jour le token de la coloc dans l'utilisateur
           user.colocToken = coloc.token;
-
           // Sauvegarder la coloc et l'utilisateur avec les modifications
           coloc
             .save()
