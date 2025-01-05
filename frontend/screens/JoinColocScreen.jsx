@@ -24,11 +24,11 @@ export default function JoinColoc({ navigation }) {
 
   const handleSubmit = () => {
     fetch(`${backendUrl}/users/joincoloc`, {
-      method: "POST", // Utilisation de la méthode POST pour envoyer les données au serveur
-      headers: { "Content-Type": "application/json" }, // Indication du type de contenu envoyé (JSON)
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: token, user: userToken }),
     })
-      .then((response) => response.json()) // Conversion de la réponse du serveur en format JSON
+      .then((response) => response.json())
       .then((data) => {
         if (data.result) {
           dispatch(

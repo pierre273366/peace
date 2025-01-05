@@ -59,7 +59,7 @@ router.post("/signup", (req, res) => {
         // Sauvegarder l'utilisateur dans la base de données
         newUser.save().then((newDoc) => {
           console.log("Document avant envoi:", newUser);
-  console.log("Document sauvegardé:", newDoc);
+          console.log("Document sauvegardé:", newDoc);
           res.json({ result: true, token: newDoc.token });
         });
       });
@@ -74,19 +74,16 @@ router.post("/signin", (req, res) => {
     res.json({ result: false, error: "Missing or empty fields" });
     return;
   }
- 
   User.findOne({ username: req.body.username }).then((data) => {
     console.log("Requête reçue:", req.body);
-console.log("Utilisateur trouvé:", data);
+    console.log("Utilisateur trouvé:", data);
     if (!data || !bcrypt.compareSync(req.body.password, data.password)) {
       console.error("Utilisateur introuvable ou mauvais mot de passe");
       res.json({ result: false, error: "User not found or wrong password" });
       return;
     }
- 
     let redirect = "Home";
     let hasColoc = false;
- 
     // Si l'utilisateur n'a pas de token de colocation
     if (!data.colocToken) {
       redirect = "Choice";
@@ -99,7 +96,6 @@ console.log("Utilisateur trouvé:", data);
       });
       return;
     }
- 
     // Si l'utilisateur a un token de colocation, chercher la coloc
     hasColoc = true;
     Coloc.findOne({ token: data.colocToken }).then((colocInfo) => {
@@ -114,20 +110,21 @@ console.log("Utilisateur trouvé:", data);
         });
       } else {
         // Le token de colocation existe mais la colocation n'est pas trouvée
-        User.updateOne({ _id: data._id }, { $unset: { colocToken: 1 } }).then(() => {
-          res.json({
-            result: true,
-            token: data.token,
-            name: data.name,
-            hasColoc: false,
-            redirect: "Choice",
-          });
-        });
+        User.updateOne({ _id: data._id }, { $unset: { colocToken: 1 } }).then(
+          () => {
+            res.json({
+              result: true,
+              token: data.token,
+              name: data.name,
+              hasColoc: false,
+              redirect: "Choice",
+            });
+          }
+        );
       }
     });
   });
- });
-
+});
 
 router.post("/createcoloc", (req, res) => {
   if (!checkBody(req.body, ["name", "address", "peoples"])) {
@@ -174,21 +171,18 @@ router.post("/joincoloc", (req, res) => {
     res.json({ result: false, error: "Missing or empty fields" });
     return;
   }
-
   // Trouver la coloc en fonction du token
   Coloc.findOne({ token: req.body.token })
     .then((coloc) => {
       if (!coloc) {
         return res.json({ result: false, error: "Coloc not found" });
       }
-
       // Trouver l'utilisateur en fonction du token
       User.findOne({ token: req.body.user })
         .then((user) => {
           if (!user) {
             return res.json({ result: false, error: "User not found" });
           }
-
           // Vérifier si l'utilisateur est déjà dans la liste des utilisateurs de la coloc
           const userId = user._id;
           const userAlreadyInColoc = coloc.users.includes(userId);
@@ -199,13 +193,10 @@ router.post("/joincoloc", (req, res) => {
               error: "User already in the coloc",
             });
           }
-
           // Si l'utilisateur n'est pas encore dans la coloc, on l'ajoute
           coloc.users.push(userId);
-
           // Mettre à jour le token de la coloc dans l'utilisateur
           user.colocToken = coloc.token;
-
           // Sauvegarder la coloc et l'utilisateur avec les modifications
           coloc
             .save()
