@@ -28,7 +28,7 @@ router.post("/signup", (req, res) => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.password, 10);
 
-      // On crée un nouvel utilisateur 
+      // On crée un nouvel utilisateur
       const newUser = new User({
         name: req.body.name,
         username: req.body.username,
@@ -40,14 +40,10 @@ router.post("/signup", (req, res) => {
         firstcoloc: req.body.firstcoloc,
       });
 
-        // Sauvegarder l'utilisateur dans la base de données
-        newUser.save().then((newDoc) => {
-          console.log("Document avant envoi:", newUser);
-  console.log("Document sauvegardé:", newDoc);
-          res.json({ result: true, token: newDoc.token });
-        });
+      // On save l'utilisateur dans la BDD
+      newUser.save().then((newDoc) => {
+        res.json({ result: true, token: newDoc.token });
       });
-      ;
     } else {
       res.json({ result: false, error: "User already exists" });
     }
@@ -60,18 +56,18 @@ router.post("/signin", (req, res) => {
     res.json({ result: false, error: "Missing or empty fields" });
     return;
   }
- 
+
   User.findOne({ username: req.body.username }).then((data) => {
     console.log("Requête reçue:", req.body);
-console.log("Utilisateur trouvé:", data);
+    console.log("Utilisateur trouvé:", data);
     if (!data || !bcrypt.compareSync(req.body.password, data.password)) {
       res.json({ result: false, error: "User not found or wrong password" });
       return;
     }
- 
+
     let redirect = "Home";
     let hasColoc = false;
- 
+
     // Si l'utilisateur n'a pas de token de colocation
     if (!data.colocToken) {
       res.json({
@@ -81,7 +77,7 @@ console.log("Utilisateur trouvé:", data);
       });
       return;
     }
- 
+
     // Si l'utilisateur a un token de colocation, chercher la coloc
     hasColoc = true;
     Coloc.findOne({ token: data.colocToken }).then((colocInfo) => {
@@ -96,20 +92,21 @@ console.log("Utilisateur trouvé:", data);
         });
       } else {
         // Le token de colocation existe mais la colocation n'est pas trouvée
-        User.updateOne({ _id: data._id }, { $unset: { colocToken: 1 } }).then(() => {
-          res.json({
-            result: true,
-            token: data.token,
-            name: data.name,
-            hasColoc: false,
-            redirect: "Choice",
-          });
-        });
+        User.updateOne({ _id: data._id }, { $unset: { colocToken: 1 } }).then(
+          () => {
+            res.json({
+              result: true,
+              token: data.token,
+              name: data.name,
+              hasColoc: false,
+              redirect: "Choice",
+            });
+          }
+        );
       }
     });
   });
 });
-
 
 router.post("/createcoloc", (req, res) => {
   if (!checkBody(req.body, ["name", "address", "peoples"])) {
@@ -117,7 +114,7 @@ router.post("/createcoloc", (req, res) => {
     return;
   }
 
-  // Recherche l'utilisateur correspondant au token fourni dans la requête  
+  // Recherche l'utilisateur correspondant au token fourni dans la requête
   User.findOne({ token: req.body.user }).then((user) => {
     if (user) {
       Coloc.findOne({ name: req.body.name }).then((data) => {
@@ -133,7 +130,7 @@ router.post("/createcoloc", (req, res) => {
           });
           //save la coloc dans la BDD
           newColoc.save().then((newDoc) => {
-            //màj de l'utilisateur pour inclure le token de sa coloc            
+            //màj de l'utilisateur pour inclure le token de sa coloc
             return User.updateOne(
               { _id: user._id },
               {
@@ -198,7 +195,7 @@ router.post("/joincoloc", (req, res) => {
               user
                 .save()
                 .then(() => {
-// Trouver à nouveau la coloc pour renvoyer les informations à jour
+                  // Trouver à nouveau la coloc pour renvoyer les informations à jour
                   Coloc.findOne({ token: req.body.token })
                     .then((colocInfo) => {
                       if (colocInfo) {
@@ -276,14 +273,14 @@ router.get("/:token", async (req, res) => {
 router.delete("/:token", async (req, res) => {
   User.findOne({ token: req.params.token }).then((user) => {
     if (user) {
-// Si l'utilisateur est trouvé, on met à jour la colocation
+      // Si l'utilisateur est trouvé, on met à jour la colocation
       Coloc.updateOne(
         { token: user.colocToken },
         { $pull: { users: user._id } }
       ).then((info) => {
-// Si la mise à jour de la colocation est réussie
+        // Si la mise à jour de la colocation est réussie
         if (info.acknowledged) {
-// Supprime le token de la colocation de l'utilisateur
+          // Supprime le token de la colocation de l'utilisateur
           user.colocToken = "";
           user.save().then(() =>
             res.json({
