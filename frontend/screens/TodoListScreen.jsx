@@ -37,12 +37,17 @@ export default function TodoList({ navigation }) {
   const fetchTodos = useCallback(async () => {
     try {
       const response = await fetch(`${backendUrl}/todo/recuptodo/${userToken}`);
+//Requête GET au backend pour récup tâches de l'user identifié par `userToken`
       const data = await response.json();
       if (data.result) {
         const today = formatDateForComparison(new Date());
+
         const tomorrow = new Date();
+        // Crée un nouvel objet Date représentant aujourd'hui
         tomorrow.setDate(tomorrow.getDate() + 1);
+        // Ajoute un jour pour obtenir la date de demain
         const tomorrowFormatted = formatDateForComparison(tomorrow);
+        // Formate la date de demain pour comparaison
         const nextWeek = new Date();
         nextWeek.setDate(nextWeek.getDate() + 7);
         const nextWeekFormatted = formatDateForComparison(nextWeek);
@@ -51,37 +56,44 @@ export default function TodoList({ navigation }) {
         const nextMonthFormatted = formatDateForComparison(nextMonth);
 
         const updatedTodos = data.todos.map((todo) => {
-          console.log(todo);
+        //Parcourt chaque tâche (`todo`) renvoyée pour mettre à jour son état
 
           const nextOccurrenceFormatted = todo.nextOccurrence
             ? formatDateForComparison(todo.nextOccurrence)
+        // Formate la prochaine occurrence de la tâche, si elle existe
             : null;
+        // Si aucune prochaine occurrence, retourne `null`
 
           let completed = todo.completed;
+        // Initialise l'état "complété" à celui déjà enregistré pour la tâche
           let completedTomorrow = todo.completedTomorrow;
           let completedHebdomadaire = todo.completedHebdomadaire;
           let completedMensuel = todo.completedMensuel;
-          // Si la tâche a une prochaine occurrence pour aujourd'hui, elle doit rester cochée
+
+          //Si la prochaine occurrence est aujourd'hui
           if (nextOccurrenceFormatted === today) {
-            completed = true;
+            completed = true; //La tâche reste complétée
           }
-          // Si la prochaine occurrence est demain, la tâche sera affichée comme non complétée pour demain
+          //Si la prochaine occurrence est demain
           if (nextOccurrenceFormatted === tomorrowFormatted) {
             completedTomorrow = false;
           }
+          //Si la prochaine occurrence est dans une semaine
           if (nextOccurrenceFormatted === nextWeekFormatted) {
             completedHebdomadaire = false;
           }
+          //Si la prochaine occurrence est dans un mois
           if (nextOccurrenceFormatted === nextMonthFormatted) {
             completedMensuel = false;
           }
           return {
-            ...todo,
+            ...todo, //Conserve toutes les autres propriétés de la tâche
             completed,
             completedTomorrow,
             completedHebdomadaire,
             completedMensuel,
             nextOccurrenceFormatted,
+            //Ajoute ou met à jour les champs calculés
           };
         });
 
