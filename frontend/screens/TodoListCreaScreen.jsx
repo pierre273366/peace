@@ -23,7 +23,7 @@ export default function TodoListCrea({ navigation, route }) {
   const [timePickerDate, setTimePickerDate] = useState(new Date());
   const [recurrenceType, setRecurrenceType] = useState("Quotidienne");
   const [selectTache, setSelectTache] = useState("");
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   const colocToken = useSelector((state) => state.users.coloc.token);
   const userToken = useSelector((state) => state.users.user.token);

@@ -18,7 +18,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 export default function JoinColoc({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const dispatch = useDispatch();
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   const [token, setToken] = useState(null);
 
@@ -31,6 +31,7 @@ export default function JoinColoc({ navigation }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
+          // Màj store Redux avec les infos de la coloc
           dispatch(
             coloc({
               name: data.colocInfo.name,

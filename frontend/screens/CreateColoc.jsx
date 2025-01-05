@@ -19,7 +19,7 @@ function CreateColocScreen({ navigation }) {
   const [address, setAddress] = useState("");
   const [number, setNumber] = useState(0);
   const dispatch = useDispatch();
-  const backendUrl = "https://peace-chi.vercel.app";
+  const backendUrl = "http://192.168.1.20:3000";
 
   const createBtn = async () => {
     const infos = {
@@ -37,6 +37,7 @@ function CreateColocScreen({ navigation }) {
     const data = await resp.json();
     if (data.result) {
       console.log(data);
+// Màj store Redux avec infoss de la nouvelle colocation      
       dispatch(
         coloc({
           name: data.coloc.name,
@@ -45,11 +46,11 @@ function CreateColocScreen({ navigation }) {
           token: data.coloc.token,
         })
       );
-      // Réinitialisation des champs du formulaire
+// Réinitialisation des champs du formulaire
       setHouseName("");
       setAddress("");
       setNumber("");
-      // Redirection vers la page /share après la création de la nouvelle colocation
+// Redirection vers la page /share 
       navigation.navigate("ShareColoc");
     }
   };
