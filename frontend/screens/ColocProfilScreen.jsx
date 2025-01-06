@@ -90,22 +90,26 @@ export default function ColocProfil({ navigation }) {
             resizeMode="contain"
           />
           <View style={styles.textContainer}>
-            <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
               Ici tu retrouves toutes les infos utiles de la Coloc !
             </Text>
           </View>
           <View>
-            <Text style={{ lineHeight: 40 }}>
-              Code wifi de la coloc: {coloc.codeWifi}
+            <Text style={{ lineHeight: 40, fontSize: 18 }}>
+              <Text style={{ fontWeight: "bold" }}>Code wifi:</Text>{" "}
+              {coloc.codeWifi}
             </Text>
-            <Text style={{ lineHeight: 40 }}>
-              Montant du loyer: {coloc.loyer} €
+            <Text style={{ lineHeight: 40, fontSize: 18 }}>
+              <Text style={{ fontWeight: "bold" }}>Montant du loyer:</Text>{" "}
+              {coloc.loyer} €
             </Text>
-            <Text style={{ lineHeight: 40 }}>
-              Infos voisinages: {coloc.infoVoisinage}
+            <Text style={{ lineHeight: 40, fontSize: 18 }}>
+              <Text style={{ fontWeight: "bold" }}>Infos voisinages:</Text>{" "}
+              {coloc.infoVoisinage}
             </Text>
-            <Text style={{ lineHeight: 40 }}>
-              Les 10 commandements de la coloc 🫡 : {coloc.regleColoc}
+            <Text style={{ lineHeight: 40, fontSize: 18 }}>
+              <Text style={{ fontWeight: "bold" }}>Règlement :</Text>{" "}
+              {coloc.regleColoc}
             </Text>
           </View>
         </View>
@@ -154,7 +158,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageLogo: {
-    marginTop: 180,
+    marginTop: 200,
     width: windowWidth * 1,
     height: windowHeight * 0.19,
   },
