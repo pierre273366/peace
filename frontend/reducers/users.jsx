@@ -11,7 +11,16 @@ const initialState = {
     name: null,
     password: null,
   },
-  coloc: { name: null, address: null, peoples: null, token: null },
+  coloc: {
+    name: null,
+    address: null,
+    peoples: null,
+    codeWifi: null,
+    loyer: null,
+    infoVoisinage: null,
+    regleColoc: null,
+    token: null,
+  },
 };
 
 export const userSlice = createSlice({
@@ -52,21 +61,38 @@ export const userSlice = createSlice({
       // Garder state.user.token inchangé
       state.user = {
         ...initialState.user,
-        token: state.user.token
+        token: state.user.token,
       };
     },
 
     coloc: (state, action) => {
-      const { name, address, peoples, token } = action.payload;
+      const {
+        name,
+        address,
+        peoples,
+        codeWifi,
+        loyer,
+        infoVoisinage,
+        regleColoc,
+        token,
+      } = action.payload;
       state.coloc.name = name;
       state.coloc.address = address;
       state.coloc.peoples = peoples;
+      state.coloc.codeWifi = codeWifi;
+      state.coloc.loyer = loyer;
+      state.coloc.infoVoisinage = infoVoisinage;
+      state.coloc.regleColoc = regleColoc;
       state.coloc.token = token;
     },
     supColoc: (state, action) => {
       state.coloc.name = null;
       state.coloc.address = null;
       state.coloc.peoples = null;
+      state.coloc.codeWifi = null;
+      state.coloc.loyer = null;
+      state.coloc.infoVoisinage = null;
+      state.coloc.regleColoc = null;
       state.coloc.token = null;
     },
   },
