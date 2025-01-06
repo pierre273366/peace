@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,20 +7,62 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useSelector } from "react-redux";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function ColocProfil({ navigation }) {
-  const coloc = useSelector((state) => state.users.coloc); // Détails de la coloc
+  const [coloc, setColoc] = useState(null); // État local pour stocker les infos de la coloc
+  const [error, setError] = useState(null); // État pour gérer les erreurs
+  const backendUrl = "http://192.168.1.11:3000";
 
-  const handleColocPress = () => {
-    // Navigation vers la page ColocParams
-    navigation.navigate("ColocParams");
+  // Récupération du token de la coloc via Redux
+  const colocToken = useSelector((state) => state.users.coloc.token);
+
+  // Fonction pour récupérer les infos de la coloc via l'API avec fetch
+  const fetchColocData = async () => {
+    if (!colocToken) {
+      setError("Token de la coloc manquant !");
+      return;
+    }
+
+    try {
+      // Requête GET en utilisant le token de la coloc dans l'URL
+      const response = await fetch(
+        `${backendUrl}/users/getColoc/${colocToken}`
+      );
+      const data = await response.json(); // Convertir la réponse en JSON
+
+      if (data.result) {
+        // Stocke les données de la coloc dans l'état
+        setColoc(data.coloc);
+      } else {
+        setError(
+          data.error || "Erreur lors de la récupération des données de la coloc"
+        );
+      }
+    } catch (error) {
+      setError("Erreur de connexion au serveur");
+      console.error("Erreur lors de la récupération des données :", error);
+    }
   };
+
+  useEffect(() => {
+    // Récupérer les données dès que le composant est monté
+    fetchColocData();
+  }, []);
+
+  // Affichage en cas d'erreur ou de chargement
+  if (error) {
+    return <Text>{error}</Text>;
+  }
+
+  if (!coloc) {
+    return <Text>Chargement...</Text>; // Afficher un message de chargement tant que les données ne sont pas récupérées
+  }
 
   return (
     <View style={styles.container}>
@@ -32,7 +75,10 @@ export default function ColocProfil({ navigation }) {
             <FontAwesome name={"chevron-left"} size={35} color="#FD703C" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleColocPress} style={styles.button}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ColocParams")}
+          style={styles.button}
+        >
           <Text style={styles.buttonAdd}>+</Text>
         </TouchableOpacity>
       </View>
@@ -43,7 +89,6 @@ export default function ColocProfil({ navigation }) {
             source={require("../assets/peacelogo.png")}
             resizeMode="contain"
           />
-
           <View style={styles.textContainer}>
             <Text style={{ fontWeight: "bold", fontSize: 15 }}>
               Ici tu retrouves toutes les infos utiles de la Coloc !
@@ -51,13 +96,13 @@ export default function ColocProfil({ navigation }) {
           </View>
           <View>
             <Text style={{ lineHeight: 40 }}>
-              Code wifi de la coloc:{coloc.codeWifi}
+              Code wifi de la coloc: {coloc.codeWifi}
             </Text>
             <Text style={{ lineHeight: 40 }}>
-              Montant du loyer:{coloc.loyer}
+              Montant du loyer: {coloc.loyer} €
             </Text>
             <Text style={{ lineHeight: 40 }}>
-              Infos voisinages:{coloc.infoVoisinage}
+              Infos voisinages: {coloc.infoVoisinage}
             </Text>
             <Text style={{ lineHeight: 40 }}>
               Les 10 commandements de la coloc 🫡 : {coloc.regleColoc}
@@ -79,13 +124,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgb(247, 247, 255)",
-  },
-
   containerButton: {
     width: "100%",
     alignItems: "flex-end",

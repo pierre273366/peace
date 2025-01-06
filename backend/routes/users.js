@@ -358,6 +358,35 @@ router.put("/updateColoc", async (req, res) => {
   }
 });
 
+// Route pour récupérer les informations de la coloc
+router.get("/getColoc/:token", async (req, res) => {
+  const userToken = req.params.token; // Récupérer le token passé dans l'URL
+
+  try {
+    // Recherche de la coloc correspondant au token de l'utilisateur
+    const coloc = await Coloc.findOne({ token: userToken });
+
+    if (!coloc) {
+      console.log("Coloc non trouvée pour le token : ", userToken);
+      return res.json({ result: false, error: "Coloc non trouvée" });
+    }
+
+    // Retourner les informations de la coloc (codeWifi, loyer, etc.)
+    return res.json({
+      result: true,
+      coloc: {
+        codeWifi: coloc.codeWifi,
+        loyer: coloc.loyer,
+        infoVoisinage: coloc.infoVoisinage,
+        regleColoc: coloc.regleColoc,
+      },
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la coloc :", error);
+    return res.json({ result: false, error: "Erreur serveur" });
+  }
+});
+
 //ROUTE Post pour photo
 router.post("/uploadpicture/:usertoken", async (req, res) => {
   try {
