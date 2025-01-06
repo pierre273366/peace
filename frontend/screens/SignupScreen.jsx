@@ -29,7 +29,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function Signup({ navigation }) {
   const dispatch = useDispatch();
-  const backendUrl = "http://192.168.1.11:3000";
+  const backendUrl = "http://192.168.1.20:3000";
 
   useEffect(() => {
     if (Platform.OS === "android") {

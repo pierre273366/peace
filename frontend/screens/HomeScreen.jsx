@@ -29,7 +29,7 @@ export default function HomeScreen({ navigation }) {
   const [isChecked, setChecked] = useState(false);
   const [events, setEvents] = useState([]); // Liste des événements
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]); // Date du jour
-  const backendUrl = "http://192.168.1.11:3000"; // URL de l'API de ton backend
+  const backendUrl = "http://192.168.1.20:3000"; // URL de l'API de ton backend
   const colocToken = useSelector((state) => state.users.coloc.token);
   const [products, setProducts] = useState([]);
   const [todos, setTodos] = useState([]); // Tableau pour stocker tous les todos

@@ -9,6 +9,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+
 // Récupérer les dimensions de l'écran
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

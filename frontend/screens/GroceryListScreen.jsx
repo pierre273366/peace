@@ -20,7 +20,7 @@ export default function GroceryListScreen({ navigation }) {
   const [products, setProducts] = useState([]);
   const [checkedItems, setCheckedItems] = useState(new Set());
   const colocToken = useSelector((state) => state.users.coloc.token);
-  const backendUrl = "http://192.168.1.11:3000";
+  const backendUrl = "http://192.168.1.20:3000";
 
   const fetchProducts = async (colocToken) => {
     if (!colocToken) {

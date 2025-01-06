@@ -18,7 +18,7 @@ export default function ColocParam({ navigation }) {
   const [loyer, setLoyer] = useState(""); // État pour le loyer
   const [infoVoisinage, setInfoVoisinage] = useState(""); // État pour info voisinage
   const [regleColoc, setRegleColoc] = useState(""); // État pour info voisinage
-  const backendUrl = "http://192.168.1.11:3000";
+  const backendUrl = "http://192.168.1.20:3000";
 
   // Fonction pour mettre à jour les infos colocs
   const updateColoc = async () => {

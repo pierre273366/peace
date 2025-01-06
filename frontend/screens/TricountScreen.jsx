@@ -21,7 +21,7 @@ const windowHeight = Dimensions.get("window").height;
 export default function TricountScreen({ navigation }) {
   const [tricounts, setTricounts] = useState([]);
   const userToken = useSelector((state) => state.users.user.token);
-  const backendUrl = "http://192.168.1.11:3000";
+  const backendUrl = "http://192.168.1.20:3000";
   //https://peace-chi.vercel.app
 
   useFocusEffect(

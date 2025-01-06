@@ -18,7 +18,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 export default function JoinColoc({ navigation }) {
   const userToken = useSelector((state) => state.users.user.token);
   const dispatch = useDispatch();
-  const backendUrl = "http://192.168.1.11:3000";
+  const backendUrl = "http://192.168.1.20:3000";
 
   const [token, setToken] = useState(null);
 

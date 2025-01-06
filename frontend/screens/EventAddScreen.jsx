@@ -29,7 +29,7 @@ const EventAdd = ({ navigation, route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date()); // Date de l'événement
   const [showDatePicker, setShowDatePicker] = useState(false); // Affichage ou non du sélecteur de date
   const colocToken = useSelector((state) => state.users.coloc.token); // Récupère le token de la colocation depuis Redux
-  const backendUrl = "http://192.168.1.11:3000";
+  const backendUrl = "http://192.168.1.20:3000";
 
   // Fonction appelée lorsque l'utilisateur sélectionne une date dans le sélecteur de date
   const onDateChange = (event, selectedDate) => {

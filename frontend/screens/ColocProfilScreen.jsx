@@ -9,9 +9,11 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import React, { useState } from "react";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
+const [colocDetails, setColocDetails] = useState(null); // Détails de la coloc
 
 export default function ColocProfil({ navigation }) {
   const coloc = useSelector((state) => state.users.coloc); // Détails de la coloc
@@ -20,6 +22,7 @@ export default function ColocProfil({ navigation }) {
     // Navigation vers la page ColocParams
     navigation.navigate("ColocParams");
   };
+
 
   return (
     <View style={styles.container}>
